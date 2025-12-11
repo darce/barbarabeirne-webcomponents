@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dax Carousel Demo</title>
+  <link rel="stylesheet" href="reset.css">
+  <link rel="stylesheet" href="main.css">
+  <script type="module" src="./src/dax-carousel.js"></script>
+  <style>
+    body {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    dax-carousel {
+      margin: 24px 0;
+    }
+    dax-carousel img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .demo-copy {
+      font-family: 'Jost', sans-serif;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <h1>Dax Carousel Demo</h1>
+  <p class="demo-copy">This page shows the new <code>dax-carousel</code> Web Component in isolation. It is not wired into the existing galleries yet.</p>
+
+  <dax-carousel interval="4000" autoplay>
+    <img src="./appalachian/images/1a.jpg" alt="Appalachian photo 1">
+    <img src="./appalachian/images/11a.jpg" alt="Appalachian photo 2">
+    <img src="./appalachian/images/13a.jpg" alt="Appalachian photo 3">
+    <img src="./appalachian/images/15a.jpg" alt="Appalachian photo 4">
+  </dax-carousel>
+
+  <p class="demo-copy">Use the arrows to navigate, the dots to jump to a slide, or the play/pause button to toggle auto-play.</p>
+</body>
+</html>
