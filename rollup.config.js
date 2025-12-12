@@ -38,4 +38,20 @@ module.exports = [
             }),
         ],
     },
+    {
+        input: path.resolve(__dirname, 'src/components/gallery-intro-toggle/gallery-intro-toggle.js'),
+        output: {
+            file: path.resolve(__dirname, 'lib/components/gallery-intro-toggle/gallery-intro-toggle.js'),
+            format: 'esm',
+            sourcemap: true,
+        },
+        plugins: [
+            nodeResolve({ browser: true }),
+            scss({ output: false }),
+            babel({
+                babelHelpers: 'bundled',
+                exclude: 'node_modules/**',
+            }),
+        ],
+    },
 ];

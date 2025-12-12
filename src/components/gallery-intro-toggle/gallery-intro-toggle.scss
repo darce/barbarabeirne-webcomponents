@@ -1,0 +1,55 @@
+// gallery-intro-toggle - Light DOM styles
+@use '../../styles/shared' as *;
+
+gallery-intro-toggle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--intro-triangle-size, 160px);
+    height: var(--intro-triangle-size, 160px);
+    background: $color-black;
+    color: $color-white;
+    clip-path: polygon(0 0, 100% 0, 0 100%, 0 0);
+    -webkit-clip-path: polygon(0 0, 100% 0, 0 100%, 0 0);
+    font-size: var(--font-size-subheader, 16px);
+    font-weight: bold;
+    display: flex;
+    justify-content: flex-start;
+    padding: calc(var(--spacer-medium, 12px) * 1.2);
+    cursor: pointer;
+    z-index: $z-index-controls;
+    border: 0;
+    opacity: 0;
+    transition: opacity $transition-fast;
+    text-transform: uppercase;
+    outline: none;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: var(--intro-triangle-size, 160px);
+        height: var(--intro-triangle-size, 160px);
+        clip-path: polygon(0 0, 100% 0, 0 100%, 0 0);
+        -webkit-clip-path: polygon(0 0, 100% 0, 0 100%, 0 0);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    &:focus-visible {
+        opacity: 1;
+
+        &::before {
+            opacity: 1;
+        }
+    }
+
+    &.show-controls {
+        opacity: 1;
+    }
+
+    &:hover{
+        background: $color-hover-gray;
+    }
+}
