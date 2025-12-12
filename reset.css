@@ -83,3 +83,32 @@ ul {
 a {
   text-decoration: none;
 }
+
+/*
+  Hide custom elements until they are defined.
+  Prevents FOUC (flash of unstyled content) before JS loads.
+*/
+:not(:defined) {
+  visibility: hidden;
+}
+
+/*
+  Critical font-faces - loaded early to prevent FOUC.
+  These are duplicated from main.css but placed here so they load
+  with reset.css (first stylesheet) for faster font discovery.
+*/
+@font-face {
+  font-family: "Jost";
+  src: url("fonts/jost.woff2") format("woff2");
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Material Symbols Sharp";
+  src: url("fonts/material-symbols-sharp.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
