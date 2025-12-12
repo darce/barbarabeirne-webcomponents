@@ -17,11 +17,13 @@
     "@babel/core": "^7.28.5",
     "@babel/preset-env": "^7.28.5",
     "@rollup/plugin-babel": "6.1.0",
+    "@rollup/plugin-node-resolve": "^16.0.3",
     "eslint": "^8.2.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.32.0",
     "rollup": "^4.53.2",
-    "rollup-plugin-scss": "^4.0.1"
+    "rollup-plugin-scss": "^4.0.1",
+    "sass": "^1.96.0"
   },
   "babel": {
     "presets": [
@@ -75,6 +77,21 @@
         "error",
         {
           "variables": false
+        }
+      ],
+      "no-param-reassign": [
+        "error",
+        {
+          "props": true,
+          "ignorePropertyModificationsFor": [
+            "el",
+            "slideEl",
+            "slide",
+            "dot",
+            "host",
+            "refs",
+            "state"
+          ]
         }
       ]
     }
