@@ -14,8 +14,11 @@
     Photography, Women of Appalachia, Becoming American, Bellfast,
     Praise, Children, Dismal Harmony, Smithsonian Institute, Childrens
     books, portraits, landscapes, documentary">
-    <link rel="stylesheet" type="text/css" media="screen" href="./reset.css">
-    <link rel="stylesheet" type="text/css" media="screen" href="./main.css">
+    <link rel="preload" as="font" type="font/woff2" href="fonts/jost.woff2" crossorigin>
+    <link rel="preload" as="font" type="font/woff2" href="fonts/material-symbols-sharp.woff2" crossorigin>
+    <link rel="stylesheet" type="text/css" media="screen" href="reset.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css">
+    
 </head>
 
 <body>
@@ -49,6 +52,7 @@
             </nav>
         </section>
         <main class="js-gallery-container">
+            <dax-carousel fullscreen autoplay no-controls>
             <ul class="image-carousel js-image-carousel" data-image-counter="false">
                 <li class="current">
                     <img src="./becoming/images/1a.jpg"
@@ -83,7 +87,10 @@
                     "></img>
                 </li>
             </ul>
+            </dax-carousel>
         </main>
     </div>
-    <script src="./lib/init.js"></script></body>
+    <script src="./lib/init.js"></script>
+    <script type="module" src="./lib/components/dax-carousel/dax-carousel.js"></script>
+</body>
 </html>

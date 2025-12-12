@@ -14,11 +14,11 @@
     Photography, Women of Appalachia, Becoming American, Bellfast,
     Praise, Children, Dismal Harmony, Smithsonian Institute, Childrens
     books, portraits, landscapes, documentary">
+    <link rel="preload" as="font" type="font/woff2" href="../fonts/jost.woff2" crossorigin>
+    <link rel="preload" as="font" type="font/woff2" href="../fonts/material-symbols-sharp.woff2" crossorigin>
     <link rel="stylesheet" type="text/css" media="screen" href="../reset.css">
     <link rel="stylesheet" type="text/css" media="screen" href="../main.css">
     <link rel="stylesheet" type="text/css" media="screen" href="../gallery.css">
-    <!-- <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" as="font" type="font/woff2" href="../fonts/material-symbols-sharp.woff2" crossorigin> -->
 </head>
 
 <body>
@@ -52,7 +52,7 @@
             </nav>
         </section>
         <main class="gallery-container js-gallery-container">
-            <button tabindex="0" class="toggle-gallery-intro" type="button" aria-controls="gallery-intro" aria-expanded="false">Intro</button>
+            <gallery-intro-toggle aria-controls="gallery-intro"></gallery-intro-toggle>            
             <section class="gallery-intro" id="gallery-intro" aria-hidden="true">
                 <h2>Serving Home and Community:<br />Women of Southern Appalachia</h2>
                 <p>Ravenswood, Ivanhoe, Pippa Passes, Cherokee—the picturesque place names of the southern Appalachian highlands can belie the harsh realities of daily life in these hills. In a land of coal mines and company towns, the women of this lovely but isolated region have faced uncommon challenges in their struggles to keep their families, communities, and cultures intact. Many of these women have demonstrated admirable determination and dignity in the midst of unemployment, illness, and natural disaster. Their resourcefulness and perseverance are testaments to the American spirit.</p>
@@ -82,7 +82,8 @@
                     <li>Wrather West Kentucky Museum, Murray, KY</li>
                 </ul>
             </section>
-            <ul class="image-carousel js-image-carousel">
+            <dax-carousel interval="4000" autoplay>
+            <ul>
                 <li>
                     <figure>
                         <img src="images/1a.jpg">
@@ -295,64 +296,7 @@
                     </figure>
                 </li>
             </ul>
-            <div class="gallery-controls js-gallery-controls">
-                <!-- <div class="gallery-help js-gallery-help">
-                    <div class="gallery-help-item">
-                        <div class="gallery-help-key">
-                            <span class="material-symbols-sharp">arrow_back</span>
-                        </div>
-                        <span class="gallery-help-description">Previous image</span>
-                    </div>
-                    <div class="gallery-help-item">
-                        <div class="gallery-help-key">spacebar</div>
-                        <span class="gallery-help-description">Start / Stop</span>
-                    </div>
-                    <div class="gallery-help-item">
-                        <div class="gallery-help-key">
-                            <span class="material-symbols-sharp">arrow_forward</span>
-                        </div>
-                        <span class="gallery-help-description">Next image</span>
-                    </div>
-                    <div class="gallery-help-item">
-                        <div class="gallery-help-key">F</div>
-                        <span class="gallery-help-description">Fullscreen</span>
-                    </div>
-                    <div class="gallery-help-item">
-                        <div class="gallery-help-key">I</div>
-                        <span class="gallery-help-description">Captions</span>
-                    </div>
-                    <div class="gallery-help-item">
-                        <div class="gallery-help-key">H</div>
-                        <span class="gallery-help-description">Help</span>
-                    </div>
-                </div> -->
-                <div class="gallery-buttons js-gallery-buttons">
-                    <button class="js-prev-button"><span class="material-symbols-sharp">
-                            skip_previous
-                        </span>
-                    </button>
-                    <button class="js-start-button"><span class="material-symbols-sharp">
-                            play_arrow
-                        </span>
-                    </button>
-                    <!-- <button class="js-next-button"><span class="material-symbols-sharp">
-                            skip_next
-                        </span>
-                    </button> -->
-                    <!-- <button class="js-fullscreen"><span class="material-symbols-sharp">
-                            fullscreen
-                        </span>
-                    </button>
-                    <button class="js-display-captions"><span class="material-symbols-sharp">
-                            info
-                        </span>
-                    </button>
-                    <button class="js-display-help"><span class="material-symbols-sharp">
-                            help
-                        </span>
-                    </button> -->
-                </div>
-            </div>
+        </dax-carousel>
         </main>
     </div>
 <script src="../lib/init.js"></script>

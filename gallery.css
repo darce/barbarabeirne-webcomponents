@@ -163,7 +163,7 @@ article>p:last-child,
     padding: var(--spacer-medium) 0;
 }
 
-figcaption {
+/* figcaption {
     display: block;
     width: 100%;
     max-width: 100%;
@@ -193,10 +193,10 @@ figcaption .location {
 
 .show-captions figcaption {
 
-}
+} */
 
 /** Image carousel */
-.image-carousel {
+/* .image-carousel {
     padding-top: calc(2 *var(--spacer-medium));
     width: 100%;
     height: 100%;
@@ -207,7 +207,7 @@ figcaption .location {
 }
 
 .image-carousel li {
-    /* opacity: 0; */
+    opacity: 0;
     width: inherit;
     height: auto;
 }
@@ -226,10 +226,10 @@ figcaption .location {
 .item-indicators {
     position: absolute;
     width: 100%;
-}
+} */
 
 /** Image counter */
-.image-counter {
+/* .image-counter {
     position: absolute;
     display: block;
     left: calc(100% - 60px);
@@ -242,7 +242,7 @@ figcaption .location {
 
 .show-controls .image-counter {
     opacity: 1;
-}
+} */
 
 /** Gallery intro */
 
@@ -329,7 +329,7 @@ figcaption .location {
 }
 
 /** Gallery controls */
-.gallery-controls {
+/* .gallery-controls {
     position: absolute;
     opacity: 0;
     bottom: 50%;
@@ -358,19 +358,19 @@ figcaption .location {
 .gallery-help {
     position: absolute;
     bottom: 110px;
-}
+} */
 
-.gallery-buttons,
+/* .gallery-buttons,
 .gallery-help {
-    /* padding: var(--spacer-small);
+    padding: var(--spacer-small);
     background: rgba(238, 238, 238, 0.7);
-    backdrop-filter: blur(5px); */
+    backdrop-filter: blur(5px);
     border-radius: var(--spacer-rhythm);
     width: 100%;
     display: flex;
-}
+} */
 
-.gallery-buttons {
+/* .gallery-buttons {
     align-items: center;
     gap: var(--spacer-rhythm);
 }
@@ -426,7 +426,7 @@ figcaption .location {
     color: white;
     min-width: 36px;
     padding: var(--spacer-rhythm);
-}
+} */
 
 @media (max-width: 810px) {
     .container {
