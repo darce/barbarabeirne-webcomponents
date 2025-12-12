@@ -1,0 +1,166 @@
+/* dax-carousel - Light DOM styles */
+@use '../../styles/shared' as *;
+
+/* Component-specific variables */
+$carousel-control-size: $control-size-md;
+$carousel-gap: $spacing-md;
+$carousel-bg: $color-black;
+$carousel-fg: $color-white;
+$carousel-hover-bg: $color-gray;
+
+/* Component container */
+dax-carousel {
+  display: block;
+  position: relative;
+  --dax-control-size: #{$carousel-control-size};
+  --dax-gap: #{$carousel-gap};
+  --dax-bg: #{$carousel-bg};
+  --dax-fg: #{$carousel-fg};
+  --dax-hover-bg: #{$carousel-hover-bg};
+
+  /* Slide list */
+  > .dax-slides {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    position: relative;
+  }
+
+  /* Dots navigation - positioned absolutely, JS sets top based on image height */
+  .dax-carousel-dots {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    gap: $carousel-gap;
+    padding: calc(#{$carousel-control-size} / 2) 0;
+    pointer-events: none;
+    z-index: $z-index-overlay;
+  }
+
+  /* Slides */
+  .dax-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity $transition-fade, visibility $transition-fade;
+
+    &.dax-active {
+      position: relative;
+      opacity: 1;
+      visibility: visible;
+      text-align: center;
+    }
+
+    figure {
+      position: relative;
+      display: table;
+      margin: 0 auto;
+    }
+
+    img {
+      display: block;
+      max-height: 80vh;
+      width: auto;
+      max-width: 100%;
+    }
+
+    figcaption {
+      display: table-caption;
+      caption-side: bottom;
+      box-sizing: border-box;
+      padding: $carousel-control-size 0;
+      text-align: left;
+      overflow-wrap: anywhere;
+
+      .subject {
+        font-weight: bold;
+        padding: 0 10px 5px 0;
+      }
+
+      .location {
+        font-style: italic;
+      }
+    }
+  }
+
+  /* Image counter - fades with controls */
+  .dax-image-counter {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 60px;
+    padding: $spacing-xs 0;
+    text-align: center;
+    background-color: $color-translucent-white;
+    z-index: $z-index-base;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity $transition-fast;
+  }
+
+  /* Control buttons container - fixed at 50% of viewport height */
+  .dax-carousel-buttons {
+    @extend %fixed-viewport-center;
+    @extend %flex-between;
+    padding: 0 $carousel-gap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity $transition-fast;
+    z-index: $z-index-controls;
+
+    .dax-prev,
+    .dax-play-pause {
+      pointer-events: auto;
+    }
+  }
+
+  /* Control buttons */
+  .dax-prev,
+  .dax-play-pause {
+    @extend %circular-button;
+    border: 1px solid $carousel-bg;
+    background: $carousel-fg;
+    color: $carousel-bg;
+    font-size: 24px;
+    width: $carousel-control-size;
+    height: $carousel-control-size;
+
+    @include button-hover($carousel-hover-bg, $carousel-fg);
+  }
+
+  /* Dots */
+  .dax-dot {
+    @extend %circular-button;
+    pointer-events: auto;
+    width: 10px;
+    height: 10px;
+    min-width: 0;
+    min-height: 0;
+    padding: 0;
+    background: $carousel-bg;
+    border: 1px solid $carousel-bg;
+    box-sizing: content-box;
+
+    &:hover {
+      background: $carousel-hover-bg;
+    }
+
+    &.active {
+      background: $carousel-fg;
+    }
+  }
+
+  /* Show controls state - triggered by mouse move / keyboard */
+  &.show-controls {
+    .dax-carousel-buttons,
+    .dax-image-counter {
+      opacity: 1;
+    }
+  }
+}
