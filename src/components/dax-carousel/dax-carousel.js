@@ -5,26 +5,31 @@ const DEFAULT_INTERVAL = 5000;
 const CONTROLS_FADE_INTERVAL = 2500;
 
 const CONTROLS_TEMPLATE = `
-    <div class="dax-carousel-buttons">
+    <div class="dax-carousel-controls">
         <button class="dax-prev" type="button" aria-label="Previous slide">
             <span class="material-symbols-sharp">skip_previous</span>
         </button>
+
         <button class="dax-play-pause" type="button" aria-label="Stop slideshow">
             <span class="material-symbols-sharp">stop</span>
         </button>
+
+        <button class="dax-next" type="button" aria-label="Next slide">
+            <span class="material-symbols-sharp">skip_next</span>
+        </button>
     </div>
-    <div class="dax-image-counter" aria-live="polite"></div>
 `;
 
 const REF_SELECTORS = {
     prevButton: '.dax-prev',
+    nextButton: '.dax-next',
     playPauseButton: '.dax-play-pause',
+    buttonsContainer: '.dax-carousel-controls',
     dotsContainer: '.dax-carousel-dots',
-    imageCounter: '.dax-image-counter',
 };
 
 class DaxCarousel extends BaseComponent(HTMLElement) {
-    static observedAttributes = ['interval', 'autoplay'];
+    static observedAttributes = ['interval', 'autoplay', 'fullscreen', 'no-controls'];
 
     static styles = styles;
 
@@ -34,6 +39,8 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
     #state = {
         intervalMs: DEFAULT_INTERVAL,
         autoplay: true,
+        fullscreen: false,
+        noControls: false,
         currentIndex: 0,
         timer: null,
         controlsTimer: null,
@@ -48,10 +55,18 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
         super();
         this.#state.intervalMs = this.getNumberAttr('interval', DEFAULT_INTERVAL);
         this.#state.autoplay = this.getBooleanAttr('autoplay');
+        this.#state.fullscreen = this.hasAttribute('fullscreen');
+        this.#state.noControls = this.hasAttribute('no-controls');
     }
 
     connectedCallback() {
         this.initStyles();
+        if (this.#state.fullscreen) {
+            this.classList.add('fullscreen');
+        }
+        if (this.#state.noControls) {
+            this.classList.add('no-controls');
+        }
         this.#initControls();
         this.#refreshSlides();
         this.#attachEventListeners();
@@ -86,8 +101,8 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
             prevButton: this.querySelector(REF_SELECTORS.prevButton),
             nextButton: this.querySelector(REF_SELECTORS.nextButton),
             playPauseButton: this.querySelector(REF_SELECTORS.playPauseButton),
+            buttonsContainer: this.querySelector(REF_SELECTORS.buttonsContainer),
             dotsContainer,
-            imageCounter: this.querySelector(REF_SELECTORS.imageCounter),
         };
     }
 
@@ -143,7 +158,7 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
         if (nextSlide) {
             nextSlide.classList.add('dax-active');
             nextSlide.setAttribute('aria-hidden', 'false');
-            this.#positionDots(nextSlide);
+            this.#positionControls(nextSlide);
         }
 
         // Update dots
@@ -151,24 +166,31 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
         dots[currentIndex]?.classList.remove('active');
         dots[nextIndex]?.classList.add('active');
 
-        // Update image counter
-        if (this.#refs.imageCounter) {
-            this.#refs.imageCounter.textContent = `${nextIndex + 1} / ${slides.length}`;
-        }
-
         this.#state.currentIndex = nextIndex;
     }
 
-    #positionDots(slide) {
+    #positionControls(slide) {
         const img = slide.querySelector('img');
-        if (!img || !this.#refs.dotsContainer) return;
+        if (!img) return;
 
-        // Position dots at the bottom of the image
+        const { dotsContainer, buttonsContainer } = this.#refs;
+
+        // Position dots at bottom of image, buttons at 50% of image height
         const updatePosition = () => {
             const imgRect = img.getBoundingClientRect();
             const carouselRect = this.getBoundingClientRect();
-            const topOffset = imgRect.bottom - carouselRect.top;
-            this.#refs.dotsContainer.style.top = `${topOffset}px`;
+            const imgTop = imgRect.top - carouselRect.top;
+            const imgHeight = imgRect.height;
+
+            // Dots at bottom of image
+            if (dotsContainer) {
+                dotsContainer.style.top = `${imgTop + imgHeight}px`;
+            }
+
+            // Buttons at 50% of image height
+            if (buttonsContainer) {
+                buttonsContainer.style.top = `${imgTop + imgHeight / 2}px`;
+            }
         };
 
         // Update immediately and after image loads
@@ -180,10 +202,15 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
     }
 
     #attachEventListeners() {
-        const { prevButton, playPauseButton } = this.#refs;
+        const { prevButton, nextButton, playPauseButton } = this.#refs;
 
         this.addManagedListener(prevButton, 'click', () => {
             this.#prev();
+            if (this.#state.timer) this.#restartTimer();
+        });
+
+        this.addManagedListener(nextButton, 'click', () => {
+            this.#next();
             if (this.#state.timer) this.#restartTimer();
         });
 
@@ -197,11 +224,12 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
             }
         });
 
-        // Reposition dots on window resize
+        // Reposition controls on window resize
         this.addManagedListener(window, 'resize', () => {
             const activeSlide = this.#state.slides[this.#state.currentIndex];
             if (activeSlide) {
-                this.#positionDots(activeSlide);
+                this.#positionControls(activeSlide);
+                // this.#updateCaptionWidth(activeSlide);
             }
         });
 
@@ -209,10 +237,19 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
         this.addManagedListener(this, 'mousemove', () => this.#showControls());
         this.addManagedListener(this, 'mouseenter', () => this.#showControls());
 
+        // Listen for gallery intro toggle to hide/show controls
+        this.addManagedListener(document, 'gallery-intro-toggle', (event) => {
+            this.#handleIntroToggle(event.detail.isOpen);
+        });
+
         // Keyboard shortcuts
         this.addManagedListener(document, 'keydown', (event) => {
             if (event.key === 'ArrowLeft') {
                 this.#prev();
+                this.#showControls();
+            }
+            if (event.key === 'ArrowRight') {
+                this.#next();
                 this.#showControls();
             }
             if (event.key === ' ') {
@@ -243,6 +280,21 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
         this.#state.controlsTimer = this.setManagedTimeout(() => {
             this.classList.remove('show-controls');
         }, CONTROLS_FADE_INTERVAL);
+    }
+
+    #handleIntroToggle(isOpen) {
+        // Hide controls immediately (no transition) when intro opens
+        if (isOpen) {
+            this.classList.add('hide-controls');
+            this.classList.remove('show-controls');
+            if (this.#state.controlsTimer) {
+                this.clearManagedTimeout(this.#state.controlsTimer);
+                this.#state.controlsTimer = null;
+            }
+        } else {
+            this.classList.remove('hide-controls');
+            this.#showControls();
+        }
     }
 
     #next() {

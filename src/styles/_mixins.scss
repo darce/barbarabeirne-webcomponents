@@ -2,7 +2,91 @@
 @use 'variables' as *;
 
 // ─────────────────────────────────────────────────────────────
-// Placeholders (extend-only selectors)
+// Mixins (use these to avoid empty selector blocks from @extend)
+// ─────────────────────────────────────────────────────────────
+
+// Flexbox
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+// Positioning
+@mixin absolute-fill {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+@mixin absolute-full-width {
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+
+@mixin absolute-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@mixin fixed-viewport-center {
+  position: fixed;
+  top: 50vh;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+}
+
+// Buttons
+@mixin circular-button {
+  @include flex-center;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background $transition-fast, color $transition-fast;
+}
+
+@mixin reset-button {
+  appearance: none;
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+// Visibility
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// ─────────────────────────────────────────────────────────────
+// Placeholders (extend-only selectors - use within same file only)
 // ─────────────────────────────────────────────────────────────
 
 // Flexbox centering
