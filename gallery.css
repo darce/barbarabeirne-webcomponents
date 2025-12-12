@@ -207,7 +207,7 @@ figcaption .location {
 }
 
 .image-carousel li {
-    opacity: 0;
+    /* opacity: 0; */
     width: inherit;
     height: auto;
 }
