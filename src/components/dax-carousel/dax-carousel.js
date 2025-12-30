@@ -123,7 +123,59 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
 
         this.#state.slides = slides;
         this.#buildDots();
+
+        // Check URL for initial slide
+        const initialIndex = this.#checkUrl();
+        if (initialIndex !== -1) {
+            this.#state.currentIndex = initialIndex;
+        }
+
         this.#setActive(this.#state.currentIndex);
+    }
+
+    #checkUrl() {
+        const hash = window.location.hash;
+        if (!hash) return -1;
+
+        // Expectations: #images/filename (no extension)
+        const query = hash.replace(/^#/, '');
+        if (!query) return -1;
+
+        const index = this.#state.slides.findIndex((slide) => {
+            const img = slide.querySelector('img');
+            if (!img) return false;
+
+            const src = img.getAttribute('src');
+            if (!src) return false;
+
+            // Remove extension from src for comparison
+            // e.g. "images/pic.jpg" -> "images/pic"
+            const srcNoExt = src.replace(/\.[^/.]+$/, '');
+
+            return srcNoExt.endsWith(query);
+        });
+
+        return index;
+    }
+
+    #updateUrl(index) {
+        const slide = this.#state.slides[index];
+        if (!slide) return;
+        const img = slide.querySelector('img');
+        if (!img) return;
+
+        const src = img.getAttribute('src');
+        if (src) {
+            // Remove extension for the hash
+            const srcNoExt = src.replace(/\.[^/.]+$/, '');
+
+            // Update hash without scrolling
+            const hash = `#${srcNoExt}`;
+            if (window.location.hash !== hash) {
+                // usage of replaceState prevents cluttering history if we are just browsing
+                history.replaceState(null, '', hash);
+            }
+        }
     }
 
     #buildDots() {
@@ -159,6 +211,7 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
             nextSlide.classList.add('dax-active');
             nextSlide.setAttribute('aria-hidden', 'false');
             this.#positionControls(nextSlide);
+            this.#updateUrl(nextIndex);
         }
 
         // Update dots
@@ -240,6 +293,12 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
         // Listen for gallery intro toggle to hide/show controls
         this.addManagedListener(document, 'gallery-intro-toggle', (event) => {
             this.#handleIntroToggle(event.detail.isOpen);
+        });
+        this.addManagedListener(document, 'ui-overlay-toggle', (event) => {
+            const { source, isOpen } = event.detail || {};
+            if (source === 'gallery-intro' || source === 'menu') {
+                this.#handleIntroToggle(isOpen);
+            }
         });
 
         // Keyboard shortcuts
