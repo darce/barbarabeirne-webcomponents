@@ -9,6 +9,11 @@ const initMenuToggle = () => {
     button.addEventListener('click', () => {
         const isExpanded = menu.classList.toggle('active');
         button.setAttribute('aria-expanded', String(isExpanded));
+
+        document.dispatchEvent(new CustomEvent('ui-overlay-toggle', {
+            bubbles: true,
+            detail: { source: 'menu', isOpen: isExpanded },
+        }));
     });
 };
 

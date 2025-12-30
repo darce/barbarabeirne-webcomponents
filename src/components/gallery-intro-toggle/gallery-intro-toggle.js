@@ -62,6 +62,10 @@ class GalleryIntroToggle extends BaseComponent(HTMLElement) {
         this.textContent = this.#state.isOpen ? 'Close' : 'Intro';
 
         // Dispatch event for other components to react
+        this.dispatchEvent(new CustomEvent('ui-overlay-toggle', {
+            bubbles: true,
+            detail: { source: 'gallery-intro', isOpen: this.#state.isOpen },
+        }));
         this.dispatchEvent(new CustomEvent('gallery-intro-toggle', {
             bubbles: true,
             detail: { isOpen: this.#state.isOpen },
