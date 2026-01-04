@@ -13,7 +13,6 @@ $nav-mobile-breakpoint: 810px;
 // Component container
 dax-nav {
   display: block;
-  font-family: $font-family-sans;
   background: $nav-bg;
 
   // Mobile menu toggle button - hidden by default

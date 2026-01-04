@@ -103,12 +103,3 @@ $breakpoint-mobile: 480px;
 $breakpoint-tablet: 768px;
 $breakpoint-desktop: 1024px;
 $breakpoint-wide: 1280px;
-
-// ─────────────────────────────────────────────────────────────────────────────
-// COMPONENT-SPECIFIC TIMING
-// ─────────────────────────────────────────────────────────────────────────────
-// Centralized timing values for component behaviors.
-
-// Auto-close delay for menus/panels (in milliseconds for JS consumption)
-// Note: This is also defined in dax-nav.js as AUTO_CLOSE_DELAY_MS
-$auto-close-delay: 5000ms;
