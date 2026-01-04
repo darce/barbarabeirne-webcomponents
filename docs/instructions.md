@@ -9,3 +9,4 @@
 - Enforce "thissless" function bodies
 - Always terminate statements with ";"
 - Use four spaces for indentation
+- Always use arrow functions
