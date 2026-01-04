@@ -23,42 +23,36 @@
 
 <body>
     <div class="container">
-        <section class="sidebar">
+        <aside>
             <header>
                 <h1 class="masthead"><a href="/">Barbara Beirne</a></h1>
+                <div id="carousel-controls"></div>
             </header>
-            <nav>
-                <button class="mobile-menu-toggle js-menu-toggle" aria-label="Menu" aria-expanded="false">
-                    <span class="button-content material-symbols-sharp">
-                        menu
-                    </span>
-                </button>
-                <ul class="menu-list js-menu">
-                    <li><a href="../index.html" tabindex="0">Projects</a>
-                        <ul class="project-list js-links-container js-mobile-menu">
-                            <li class="current"><a href="../becoming/" tabindex="0">Becoming American</a></li>
-                            <li><a href="../appalachian/" tabindex="0">Women of Appalachia</a></li>
-                            <li><a href="../belfast/" tabindex="0">The Troubles - Belfast</a></li>
-                            <li><a href="../children/" tabindex="0">Children of the World</a></li>
-                            <li><a href="../praise/" tabindex="0">Praise The Lord</a></li>
-                            <li><a href="../dismal/" tabindex="0">Dismal Harmony</a></li>
+            <dax-nav>
+                <ul class="dax-nav-menu">
+                    <li><a href="../index.html">Projects</a>
+                        <ul class="dax-nav-projects">
+                            <li><a href="../becoming/">Becoming American</a></li>
+                            <li><a href="../appalachian/">Women of Appalachia</a></li>
+                            <li><a href="../belfast/">The Troubles - Belfast</a></li>
+                            <li><a href="../children/">Children of the World</a></li>
+                            <li><a href="../praise/">Praise The Lord</a></li>
+                            <li><a href="../dismal/">Dismal Harmony</a></li>
                         </ul>
                     </li>
-                    <li><a href="../exhibitions.html" tabindex="0">Exhibitions</a></li>
-                    <li><a href="../press.html" tabindex="0">Press</a></li>
-                    <li><a href="../bio.html" tabindex="0">Bio</a></li>
-                    <li><a href="../contact.html" tabindex="0">Contact</a></li>
+                    <li><a href="../exhibitions.html">Exhibitions</a></li>
+                    <li><a href="../press.html">Press</a></li>
+                    <li><a href="../bio.html">Bio</a></li>
+                    <li><a href="../contact.html">Contact</a></li>
                 </ul>
-            </nav>
-        </section>
-        <main class="gallery-container js-gallery-container">
+            </dax-nav>
+        </aside>
+        <main data-gallery-context>
             <gallery-intro-toggle aria-controls="gallery-intro"></gallery-intro-toggle>            
             <section class="gallery-intro" id="gallery-intro" aria-hidden="true">
                 <p>In many ways, ours is a nation of immigrants—hungry for freedom, peace, and the opportunity promised by the American Dream. The realities of that immigrant experience are most vividly read in the faces and words of young people who have made this journey.</p>
-
-<p>Faithful to their native cultural traditions, but motivated to create a better life for themselves and their families, teenage immigrants have a unique vantage point from which to remind us what it means, and what it has always meant, to be American.</p>
-
-<p><em>Becoming American: Teenagers and Immigration</em> features 59 riveting black-and-white images of young immigrants by accomplished documentary photographer Barbara Beirne. Each sensitive portrait is paired with excerpts from Beirne’s interviews with teens from Latin America, the Caribbean, Europe, Africa, the Middle East, and Asia. All of their stories are unique, and we read in every quote—and in every face—the individual struggles and hopes of “becoming American.”</p>
+                <p>Faithful to their native cultural traditions, but motivated to create a better life for themselves and their families, teenage immigrants have a unique vantage point from which to remind us what it means, and what it has always meant, to be American.</p>
+                <p><em>Becoming American: Teenagers and Immigration</em> features 59 riveting black-and-white images of young immigrants by accomplished documentary photographer Barbara Beirne. Each sensitive portrait is paired with excerpts from Beirne’s interviews with teens from Latin America, the Caribbean, Europe, Africa, the Middle East, and Asia. All of their stories are unique, and we read in every quote—and in every face—the individual struggles and hopes of “becoming American.”</p>
                 <h3>Becoming American: Teenagers and Immigration<br />Tour Itinerary 2007-2011</h3>
                 <ul>
                     <li>The Historical and Cultural Society of Clay County, Moorhead, MN</li>
@@ -80,7 +74,7 @@
                     <li>Ellis Island Immigration Museum, Ellis Island, NY</li>
                 </ul>
             </section>
-            <dax-carousel interval="4000" autoplay>
+            <dax-carousel interval="4000" autoplay controls-target="#carousel-controls">
             <ul class="image-carousel js-image-carousel">
                 <li>
                     <figure>

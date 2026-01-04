@@ -1,5 +1,10 @@
 // Main entry point for shared styles
 // Import this file to get all variables, mixins, and placeholders
 
+// Re-export all variables and mixins for use with `@use 'shared' as *`
+@use 'variables' as *;
+@use 'mixins' as *;
+
+// Also forward for downstream consumers
 @forward 'variables';
 @forward 'mixins';

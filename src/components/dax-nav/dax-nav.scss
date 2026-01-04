@@ -1,0 +1,170 @@
+// dax-nav - Light DOM styles
+@use '../../styles/shared' as *;
+
+// Component-specific variables
+$nav-font-size-header: 24pt;
+$nav-font-size-menu: 16pt;
+$nav-bg: $color-white;
+$nav-fg: $color-black;
+$nav-hover-bg: $color-gray;
+$nav-hover-fg: $color-white;
+$nav-mobile-breakpoint: 810px;
+
+// Component container
+dax-nav {
+  display: block;
+  font-family: $font-family-sans;
+  background: $nav-bg;
+
+  // Mobile menu toggle button - hidden by default
+  .dax-nav-toggle {
+    display: none;
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    padding: $spacing-lg;
+    background: $nav-bg;
+    border: 0;
+    z-index: $z-index-overlay;
+
+    .material-symbols-sharp {
+      font-size: 48px;
+      color: $nav-fg;
+    }
+
+    &:hover,
+    &:focus-visible {
+      background: $nav-hover-bg;
+
+      .material-symbols-sharp {
+        color: $nav-hover-fg;
+      }
+    }
+
+    &:focus-visible {
+      outline: 2px solid $nav-fg;
+      outline-offset: -2px;
+    }
+  }
+
+  // Main menu list
+  .dax-nav-menu {
+    line-height: 2.2rem;
+    font-size: $nav-font-size-menu;
+    text-align: right;
+    padding-bottom: $spacing-lg;
+    list-style: none;
+    margin: 0;
+    background: $nav-bg;
+
+    > li {
+      text-transform: uppercase;
+      font-weight: 500;
+
+      > a {
+        display: block;
+        width: 100%;
+        padding-right: $spacing-lg;
+        color: $nav-fg;
+        text-decoration: none;
+        cursor: pointer;
+
+        &:hover {
+          background: $nav-hover-bg;
+          color: $nav-hover-fg;
+        }
+
+        &:focus-visible {
+          outline: 2px solid $nav-fg;
+          outline-offset: -2px;
+          background: $nav-hover-bg;
+          color: $nav-hover-fg;
+        }
+      }
+    }
+  }
+
+  // Project list (nested menu)
+  .dax-nav-projects {
+    list-style: none;
+    padding: 0 0 50px;
+    margin: 0;
+
+    > li {
+      font-weight: 100;
+      text-transform: capitalize;
+
+      a {
+        display: block;
+        width: 100%;
+        padding-right: $spacing-lg;
+        color: $nav-fg;
+        text-decoration: none;
+        cursor: pointer;
+
+        &:hover {
+          background: $nav-hover-bg;
+          color: $nav-hover-fg;
+        }
+
+        &:focus-visible {
+          outline: 2px solid $nav-fg;
+          outline-offset: -2px;
+          background: $nav-hover-bg;
+          color: $nav-hover-fg;
+        }
+      }
+
+      &:hover {
+        background: $nav-hover-bg;
+
+        a {
+          color: $nav-hover-fg;
+        }
+      }
+    }
+
+    // Current page indicator
+    .dax-nav-current {
+      background: $nav-fg;
+
+      a {
+        color: $nav-hover-fg;
+        cursor: default;
+      }
+
+      &:hover {
+        background: $nav-fg;
+      }
+    }
+  }
+
+  // Current page in main menu (non-project pages)
+  .dax-nav-menu > .dax-nav-current > a {
+    background: $nav-fg;
+    color: $nav-hover-fg;
+  }
+
+  // Menu list - no longer handles slide animation (sidebar does)
+  .dax-nav-menu {
+    > li {
+      padding: 5px $spacing-lg;
+    }
+  }
+
+  .dax-nav-projects {
+    padding-bottom: $spacing-lg;
+  }
+}
+
+// Mobile-specific adjustments
+@media (max-width: $nav-mobile-breakpoint) {
+  dax-nav {
+    // Show toggle button on mobile
+    .dax-nav-toggle {
+      display: block;
+    }
+  }
+}

@@ -12,12 +12,13 @@ $carousel-hover-bg: $color-hover-gray;
 dax-carousel {
   display: block;
   position: relative;
-  padding: $spacing-xl 0;
-  --dax-control-size: #{$carousel-control-size};
-  --dax-gap: #{$carousel-gap};
-  --dax-bg: #{$carousel-bg};
-  --dax-fg: #{$carousel-fg};
-  --dax-hover-bg: #{$carousel-hover-bg};
+  width: 100%;
+  height: 100%;
+
+  // Icon font for control buttons
+  .material-symbols-sharp {
+    font-family: $font-family-icons;
+  }
 
   // Slide list
   >.dax-slides {
@@ -26,64 +27,53 @@ dax-carousel {
     margin: 0;
     padding: 0;
     list-style: none;
-    position: relative;
-  }
-
-  // Dots navigation - positioned absolutely, JS sets top based on image height
-  .dax-carousel-dots {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    justify-content: center;
-    gap: $carousel-gap;
-    padding: calc(#{$carousel-control-size} / 2) 0;
-    pointer-events: none;
-    z-index: $z-index-overlay;
-    opacity: 0;
-    transition: opacity $transition-fast;
   }
 
   // Slides
   .dax-slide {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: inherit;
+    // top: 0;
+    // left: 0;
+    width: 100%;
+    height: inherit;
     opacity: 0;
     visibility: hidden;
     transition: opacity $transition-fade, visibility $transition-fade;
-    text-align: center;
+    // text-align: center;
 
     &.dax-active {
-      position: relative;
+      //position: relative;
       opacity: 1;
       visibility: visible;
     }
 
     figure {
-      position: relative;
-      margin: 0 $carousel-gap;
-      display: inline-block;
+      // position: relative;
+      // margin: 0 $carousel-gap;
       // flex-direction: column;
-      // align-items: center;
       // width: max-content;
       // max-width: 100%;
       // text-align: left;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
     }
 
     img {
-      display: block;
-      width: auto; // preserve aspect ratio
-      max-width: 100%; // don't overflow narrow viewports
-      height: 80vh;
-      margin: 0 auto;
-      object-fit: cover;
+      //display: block;
+      width: auto;
+      max-width: 100%;
+      height: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border: 1px solid $carousel-bg;
     }
 
     figcaption {
       position: absolute;
-      display: block;
+      display: none;
       box-sizing: border-box;
       padding: $carousel-control-size 0;
       text-align: left;
@@ -103,25 +93,17 @@ dax-carousel {
     }
   }
 
-  // Image counter - fades with controls
+  // Image counter - inline within controls
   .dax-image-counter {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 60px;
-    padding: $spacing-xs 0;
-    text-align: center;
-    background-color: $color-translucent-white;
-    z-index: $z-index-base;
     font-size: 14px;
-    opacity: 0;
-    transition: opacity $transition-fast;
+    margin-right: $carousel-gap;
+    pointer-events: none;
   }
 
   // Controls container - JS positions at 50% of image height
   .dax-carousel-controls {
     display: flex;
-    justify-content: flex-start;
+    justify-content: flex-end;
     align-items: center;
     width: 100%;
     position: absolute;
@@ -134,7 +116,8 @@ dax-carousel {
 
     .dax-prev,
     .dax-next,
-    .dax-play-pause {
+    .dax-play-pause,
+    .dax-image-counter {
       pointer-events: auto;
     }
   }
@@ -157,38 +140,15 @@ dax-carousel {
     margin-left: $carousel-gap;
   }
 
+  .dax-prev,
   .dax-play-pause {
-    margin-left: auto;
-  }
-
-  // Dots
-  .dax-dot {
-    @include circular-button;
-    pointer-events: auto;
-    width: $control-size-xs;
-    height: $control-size-xs;
-    min-width: 0;
-    min-height: 0;
-    padding: 0;
-    background: $carousel-bg;
-    border: 1px solid $carousel-bg;
-    box-sizing: content-box;
-
-    &:hover {
-      background: $carousel-hover-bg;
-    }
-
-    &.active {
-      background: $carousel-fg;
-    }
+    margin-left: $carousel-gap;
   }
 
   // Show controls state - triggered by mouse move / keyboard
   &.show-controls {
 
-    .dax-carousel-controls,
-    .dax-image-counter,
-    .dax-carousel-dots {
+    .dax-carousel-controls {
       opacity: 1;
     }
   }
@@ -196,9 +156,7 @@ dax-carousel {
   // Hide controls instantly (no transition) - when intro is open
   &.hide-controls {
 
-    .dax-carousel-controls,
-    .dax-image-counter,
-    .dax-carousel-dots {
+    .dax-carousel-controls {
       opacity: 0;
       transition: none;
     }
@@ -250,5 +208,59 @@ dax-carousel {
     .dax-carousel-dots {
       display: none;
     }
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// EXTERNAL CONTROLS - When rendered outside carousel (e.g., in sidebar header)
+// ─────────────────────────────────────────────────────────────────────────────
+
+.dax-carousel-controls--external {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: $spacing-md $spacing-lg;
+  background: $color-white;
+  opacity: 1;
+
+  // Reset positioning - not absolute when external
+  position: static;
+  transform: none;
+
+  .material-symbols-sharp {
+    font-family: $font-family-icons;
+  }
+
+  .dax-image-counter {
+    font-family: $font-family-sans;
+    font-size: 14px;
+    margin-right: $spacing-md;
+  }
+
+  .dax-prev,
+  .dax-next,
+  .dax-play-pause {
+    @include circular-button;
+    border: 1px solid $carousel-bg;
+    background: $carousel-fg;
+    color: $carousel-bg;
+    font-size: $font-size-xl;
+    width: $carousel-control-size;
+    height: $carousel-control-size;
+
+    &:hover,
+    &:active {
+      background-color: $carousel-hover-bg;
+      color: $carousel-fg;
+    }
+  }
+
+  .dax-next {
+    margin-left: $spacing-md;
+  }
+
+  .dax-prev,
+  .dax-play-pause {
+    margin-left: $spacing-md;
   }
 }

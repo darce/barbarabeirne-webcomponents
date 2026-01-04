@@ -23,35 +23,31 @@
 
 <body>
     <div class="container">
-        <section class="sidebar">
+        <aside>
             <header>
                 <h1 class="masthead"><a href="/">Barbara Beirne</a></h1>
+                <div id="carousel-controls"></div>
             </header>
-            <nav>
-                <button class="mobile-menu-toggle js-menu-toggle" aria-label="Menu" aria-expanded="false">
-                    <span class="button-content material-symbols-sharp">            
-                        menu
-                    </span>                
-                </button>
-                <ul class="menu-list js-menu">
-                    <li><a href="../index.html" tabindex="0">Projects</a>
-                        <ul class="project-list js-links-container js-mobile-menu">
-                            <li><a href="../becoming/" tabindex="0">Becoming American</a></li>
-                            <li class="current"><a href="../appalachian/" tabindex="0">Women of Appalachia</a></li>
-                            <li><a href="../belfast/" tabindex="0">The Troubles - Belfast</a></li>
-                            <li><a href="../children/" tabindex="0">Children of the World</a></li>
-                            <li><a href="../praise/" tabindex="0">Praise The Lord</a></li>
-                            <li><a href="../dismal/" tabindex="0">Dismal Harmony</a></li>
+            <dax-nav>
+                <ul class="dax-nav-menu">
+                    <li><a href="../index.html">Projects</a>
+                        <ul class="dax-nav-projects">
+                            <li><a href="../becoming/">Becoming American</a></li>
+                            <li><a href="../appalachian/">Women of Appalachia</a></li>
+                            <li><a href="../belfast/">The Troubles - Belfast</a></li>
+                            <li><a href="../children/">Children of the World</a></li>
+                            <li><a href="../praise/">Praise The Lord</a></li>
+                            <li><a href="../dismal/">Dismal Harmony</a></li>
                         </ul>
                     </li>
-                    <li><a href="../exhibitions.html" tabindex="0">Exhibitions</a></li>
-                    <li><a href="../press.html" tabindex="0">Press</a></li>
-                    <li><a href="../bio.html" tabindex="0">Bio</a></li>
-                    <li><a href="../contact.html" tabindex="0">Contact</a></li>
+                    <li><a href="../exhibitions.html">Exhibitions</a></li>
+                    <li><a href="../press.html">Press</a></li>
+                    <li><a href="../bio.html">Bio</a></li>
+                    <li><a href="../contact.html">Contact</a></li>
                 </ul>
-            </nav>
-        </section>
-        <main class="gallery-container js-gallery-container">
+            </dax-nav>
+        </aside>
+        <main data-gallery-context>
             <gallery-intro-toggle aria-controls="gallery-intro"></gallery-intro-toggle>            
             <section class="gallery-intro" id="gallery-intro" aria-hidden="true">
                 <h2>Serving Home and Community:<br />Women of Southern Appalachia</h2>
@@ -82,7 +78,7 @@
                     <li>Wrather West Kentucky Museum, Murray, KY</li>
                 </ul>
             </section>
-            <dax-carousel interval="4000" autoplay>
+            <dax-carousel interval="4000" autoplay controls-target="#carousel-controls">
             <ul>
                 <li>
                     <figure>

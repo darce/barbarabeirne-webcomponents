@@ -2,6 +2,7 @@
 @use '../../styles/shared' as *;
 
 gallery-intro-toggle {
+    display: none;
     position: absolute;
     top: 0;
     left: 0;
@@ -13,7 +14,7 @@ gallery-intro-toggle {
     -webkit-clip-path: polygon(0 0, 100% 0, 0 100%, 0 0);
     font-size: var(--font-size-subheader, 16px);
     font-weight: bold;
-    display: flex;
+    // display: flex;
     justify-content: flex-start;
     padding: calc(var(--spacer-medium, 12px) * 1.2);
     cursor: pointer;

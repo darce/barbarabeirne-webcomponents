@@ -29,7 +29,8 @@ class GalleryIntroToggle extends BaseComponent(HTMLElement) {
 
     // Private methods
     #initButton() {
-        this.#state.galleryContainer = this.closest('.js-gallery-container');
+        // Look for gallery context using data attribute, then fall back to semantic <main>
+        this.#state.galleryContainer = this.closest('[data-gallery-context]') || this.closest('main');
         this.setAttribute('role', 'button');
         this.setAttribute('tabindex', '0');
         this.setAttribute('aria-expanded', 'false');

@@ -1,0 +1,248 @@
+@font-face {
+  font-family: "Jost";
+  src: url("fonts/jost.woff2") format("woff2");
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Material Symbols Sharp";
+  src: url("fonts/material-symbols-sharp.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
+
+.material-symbols-sharp {
+  font-family: "Material Symbols Sharp";
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+  display: inline-block;
+  line-height: 1;
+}
+
+:root {
+    font-size: 100%;
+    --font-size-header: 24pt;
+    --font-size-subheader: 16pt;
+    --font-size-main: 12pt;
+    --font-size-icon: 48px;
+    --spacer-medium: 16px;
+    --spacer-small: 10px;
+    --spacer-rythm: 5px;
+    --stack-order: 10;
+    --translucent-background-white: rgba(255, 255, 255, 0.7); 
+    --hover-background: #666;
+}
+
+body {
+    font-family: 'Jost', sans-serif;
+}
+
+h1 {
+    font-size: var(--font-size-header);
+    font-weight: 400;
+    text-transform: uppercase;
+    padding: var(--spacer-medium)
+}
+
+.mobile-menu-toggle {
+    display: none;
+}
+
+.container {
+    height: 100%;
+    /* overflow: sc; */
+}
+
+.container a {
+    text-decoration: none;
+}
+
+h1.masthead {
+    padding: 0;
+}
+
+.masthead a {
+    display: inline-block;
+    padding: var(--spacer-medium);
+    color: black;
+}
+
+.masthead a:visited,
+.menu-list a:visited {
+    color: black;
+}
+
+.main-container a,
+.main-container a:visited {
+    color: #119;
+}
+
+.main-container a:hover {
+    color: #66f;
+}   
+
+.exhibitions ul{
+    list-style-type: none;
+    margin-left: var(--spacer-medium);
+}
+
+.exhibitions li{
+    padding-bottom: var(--spacer-small);
+}
+
+.masthead:hover {
+    color: white;
+    background: var(--hover-background)
+}
+
+.masthead:hover a {
+    color: white;
+}  
+
+.sidebar {
+    position: absolute;
+    background-color: var(--translucent-background-white);
+    backdrop-filter: blur(5px);
+    z-index: calc(var(--stack-order) + 10);
+}
+
+.menu-list {
+    line-height: 2.2rem;
+    font-size: var(--font-size-subheader);
+    text-align: right;
+    padding-bottom: var(--spacer-medium)
+}
+
+.menu-list > li {
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.menu-list > li > a:hover {
+    background: var(--hover-background);
+    color: white;
+}
+
+.project-list li:hover,
+.project-list li:hover a {
+    background: var(--hover-background);
+    color: white;
+}
+
+.menu-list a {
+    display: block;
+    width: 100%;
+    color: black;
+    cursor: pointer;
+    padding-right: var(--spacer-medium);
+}
+
+.menu-list a:hover {
+    color: white;
+}
+
+.menu-list a:focus,
+.menu-list a:focus-visible {
+    outline: 2px solid black;
+    outline-offset: -2px;
+    background: var(--hover-background);
+    color: white;
+}
+
+.masthead a:focus,
+.masthead a:focus-visible {
+    outline: 2px solid black;
+    outline-offset: -2px;
+}
+
+.project-list {
+    padding-bottom: 50px;
+}
+
+.project-list > li {
+    font-weight: 100;
+    text-transform: capitalize;
+}
+
+.project-list .current,
+.project-list .current a {
+    background: black;
+    cursor: pointer;
+    color: white
+}
+
+@media (max-width: 810px) {    
+    .masthead {
+        text-align: right;
+        width: calc(100% - 64px);
+        margin-left: 64px;
+        word-wrap: normal;
+    }
+
+    .masthead a {
+        display: block;
+    }
+
+    .sidebar {
+        background: white;
+        position: relative;
+        width: 100%;
+    }
+
+    .mobile-menu-toggle {
+        display: block;
+        cursor: pointer;
+        position: absolute;
+        padding: var(--spacer-medium);
+        background-color: white;
+        border: 0;
+        top: 0;
+        height: 100%;
+    }
+
+    .mobile-menu-toggle .button-content {
+        font-size: var(--font-size-icon);
+        color: black;
+    }
+
+    .mobile-menu-toggle .button-content a {
+        color: black;
+    }
+
+    .mobile-menu-toggle:hover {
+        background: var(--hover-background);
+    }
+
+    .mobile-menu-toggle:hover .button-content {
+        color: white;
+    }
+
+    .menu-list {
+        position: absolute;
+        background-color: white;
+        left: -100%;
+        width: 75%;
+        transition: left 0.5s ease-in-out;
+    }
+
+    .project-list {
+        padding-bottom: var(--spacer-medium);
+    }
+
+    .menu-list li {
+        padding: var(--spacer-rythm) var(--spacer-medium)
+    }
+
+    .menu-list.active {
+        left: 0;
+        box-shadow: 10px 10px rgba(0, 0, 0, 0.3);
+        -webkit-box-shadow: 10px 10px rgba(0, 0, 0, 0.3);
+        -moz-box-shadow: 10px 10px rgba(0, 0, 0, 0.3);
+        border-right: 1px solid #999;
+        border-bottom: 1px solid #999;
+    }
+}

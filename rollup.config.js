@@ -54,4 +54,20 @@ module.exports = [
             }),
         ],
     },
+    {
+        input: path.resolve(__dirname, 'src/components/dax-nav/dax-nav.js'),
+        output: {
+            file: path.resolve(__dirname, 'lib/components/dax-nav/dax-nav.js'),
+            format: 'esm',
+            sourcemap: true,
+        },
+        plugins: [
+            nodeResolve({ browser: true }),
+            scss({ output: false }),
+            babel({
+                babelHelpers: 'bundled',
+                exclude: 'node_modules/**',
+            }),
+        ],
+    },
 ];

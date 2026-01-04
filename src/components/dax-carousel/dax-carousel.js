@@ -1,23 +1,22 @@
 import BaseComponent from '../base/base-component';
 import styles from './dax-carousel.scss';
 
-const DEFAULT_INTERVAL = 5000;
-const CONTROLS_FADE_INTERVAL = 2500;
+const DEFAULT_INTERVAL = 9995000;
+const CONTROLS_FADE_INTERVAL = 9992500;
 
 const CONTROLS_TEMPLATE = `
-    <div class="dax-carousel-controls">
+    <nav class="dax-carousel-controls" aria-label="Slideshow controls">
+        <span class="dax-image-counter" aria-live="polite"></span>
         <button class="dax-prev" type="button" aria-label="Previous slide">
             <span class="material-symbols-sharp">skip_previous</span>
         </button>
-
         <button class="dax-play-pause" type="button" aria-label="Stop slideshow">
             <span class="material-symbols-sharp">stop</span>
         </button>
-
         <button class="dax-next" type="button" aria-label="Next slide">
             <span class="material-symbols-sharp">skip_next</span>
         </button>
-    </div>
+    </nav>
 `;
 
 const REF_SELECTORS = {
@@ -25,11 +24,12 @@ const REF_SELECTORS = {
     nextButton: '.dax-next',
     playPauseButton: '.dax-play-pause',
     buttonsContainer: '.dax-carousel-controls',
-    dotsContainer: '.dax-carousel-dots',
+    imageCounter: '.dax-image-counter',
+    // dotsContainer: '.dax-carousel-dots',
 };
 
 class DaxCarousel extends BaseComponent(HTMLElement) {
-    static observedAttributes = ['interval', 'autoplay', 'fullscreen', 'no-controls'];
+    static observedAttributes = ['interval', 'autoplay', 'fullscreen', 'no-controls', 'controls-target'];
 
     static styles = styles;
 
@@ -41,9 +41,11 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
         autoplay: true,
         fullscreen: false,
         noControls: false,
+        controlsTarget: null,
         currentIndex: 0,
         timer: null,
         controlsTimer: null,
+        wheelLock: false,
         slides: [],
         listEl: null,
     };
@@ -60,6 +62,9 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
     }
 
     connectedCallback() {
+        // Read controls-target at connect time to ensure attribute is available
+        this.#state.controlsTarget = this.getAttribute('controls-target');
+
         this.initStyles();
         if (this.#state.fullscreen) {
             this.classList.add('fullscreen');
@@ -88,21 +93,43 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
     #initControls() {
         const template = document.createElement('template');
         template.innerHTML = CONTROLS_TEMPLATE;
-        this.appendChild(template.content.cloneNode(true));
+        const controlsFragment = template.content.cloneNode(true);
 
-        // Create and append dots container to carousel (not inside slides)
-        const dotsContainer = document.createElement('div');
-        dotsContainer.className = 'dax-carousel-dots';
-        dotsContainer.setAttribute('role', 'tablist');
-        dotsContainer.setAttribute('aria-label', 'Slide navigation');
-        this.appendChild(dotsContainer);
+        // Determine where to render controls
+        let controlsContainer = null;
+        const targetSelector = this.#state.controlsTarget;
 
+        if (targetSelector) {
+            controlsContainer = document.querySelector(targetSelector);
+            // Debug: log whether target was found
+            // eslint-disable-next-line no-console
+            console.log(`[dax-carousel] controls-target="${targetSelector}", found:`, !!controlsContainer);
+
+            if (controlsContainer) {
+                // Mark controls as external for styling
+                const nav = controlsFragment.querySelector('.dax-carousel-controls');
+                if (nav) {
+                    nav.classList.add('dax-carousel-controls--external');
+                }
+                controlsContainer.appendChild(controlsFragment);
+            } else {
+                // Fallback to internal if target not found
+                // eslint-disable-next-line no-console
+                console.warn(`[dax-carousel] Target "${targetSelector}" not found, rendering controls internally`);
+                this.appendChild(controlsFragment);
+            }
+        } else {
+            this.appendChild(controlsFragment);
+        }
+
+        // Query from the correct container
+        const queryRoot = controlsContainer || this;
         this.#refs = {
-            prevButton: this.querySelector(REF_SELECTORS.prevButton),
-            nextButton: this.querySelector(REF_SELECTORS.nextButton),
-            playPauseButton: this.querySelector(REF_SELECTORS.playPauseButton),
-            buttonsContainer: this.querySelector(REF_SELECTORS.buttonsContainer),
-            dotsContainer,
+            prevButton: queryRoot.querySelector(REF_SELECTORS.prevButton),
+            nextButton: queryRoot.querySelector(REF_SELECTORS.nextButton),
+            playPauseButton: queryRoot.querySelector(REF_SELECTORS.playPauseButton),
+            buttonsContainer: queryRoot.querySelector(REF_SELECTORS.buttonsContainer),
+            imageCounter: queryRoot.querySelector(REF_SELECTORS.imageCounter),
         };
     }
 
@@ -134,7 +161,7 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
     }
 
     #checkUrl() {
-        const hash = window.location.hash;
+        const { hash } = window.location;
         if (!hash) return -1;
 
         // Expectations: #images/filename (no extension)
@@ -212,12 +239,13 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
             nextSlide.setAttribute('aria-hidden', 'false');
             this.#positionControls(nextSlide);
             this.#updateUrl(nextIndex);
+            this.#updateImageCounter(nextIndex);
         }
 
         // Update dots
-        const dots = Array.from(this.#refs.dotsContainer.children);
-        dots[currentIndex]?.classList.remove('active');
-        dots[nextIndex]?.classList.add('active');
+        // const dots = Array.from(this.#refs.dotsContainer.children);
+        // dots[currentIndex]?.classList.remove('active');
+        // dots[nextIndex]?.classList.add('active');
 
         this.#state.currentIndex = nextIndex;
     }
@@ -226,7 +254,7 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
         const img = slide.querySelector('img');
         if (!img) return;
 
-        const { dotsContainer, buttonsContainer } = this.#refs;
+        const { buttonsContainer } = this.#refs;
 
         // Position dots at bottom of image, buttons at 50% of image height
         const updatePosition = () => {
@@ -236,9 +264,9 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
             const imgHeight = imgRect.height;
 
             // Dots at bottom of image
-            if (dotsContainer) {
-                dotsContainer.style.top = `${imgTop + imgHeight}px`;
-            }
+            // if (dotsContainer) {
+            //     dotsContainer.style.top = `${imgTop + imgHeight}px`;
+            // }
 
             // Buttons at 50% of image height
             if (buttonsContainer) {
@@ -323,6 +351,11 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
             }
         });
 
+        // Scroll/wheel to advance slides
+        this.addManagedListener(this, 'wheel', (event) => {
+            this.#handleWheel(event);
+        }, { passive: false });
+
         // Show controls initially
         this.#showControls();
     }
@@ -354,6 +387,41 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
             this.classList.remove('hide-controls');
             this.#showControls();
         }
+    }
+
+    #handleWheel(event) {
+        // Prevent page scroll
+        event.preventDefault();
+
+        // Debounce to avoid rapid-fire advances
+        if (this.#state.wheelLock) return;
+
+        const delta = event.deltaY;
+        const threshold = 30; // Minimum scroll delta to trigger
+
+        if (Math.abs(delta) < threshold) return;
+
+        this.#state.wheelLock = true;
+
+        if (delta > 0) {
+            // Scroll down = next
+            this.#next();
+        } else {
+            // Scroll up = previous
+            this.#prev();
+        }
+
+        this.#showControls();
+
+        // Stop autoplay on manual scroll
+        if (this.#state.timer) {
+            this.#stop();
+        }
+
+        // Release lock after delay
+        this.setManagedTimeout(() => {
+            this.#state.wheelLock = false;
+        }, 300);
     }
 
     #next() {
@@ -403,9 +471,17 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
         );
     }
 
+    #updateImageCounter(index) {
+        const { imageCounter } = this.#refs;
+        if (!imageCounter) return;
+        const total = this.#state.slides.length;
+        imageCounter.textContent = `${index + 1}/${total}`;
+    }
+
     #handleAttributeChange(name, newValue) {
         if (name === 'interval') {
-            const newInterval = Number(newValue) || DEFAULT_INTERVAL;
+            //const newInterval = Number(newValue) || DEFAULT_INTERVAL;
+            const newInterval = DEFAULT_INTERVAL;
             this.#state.intervalMs = newInterval;
             if (this.#state.timer) {
                 this.clearManagedInterval(this.#state.timer);
