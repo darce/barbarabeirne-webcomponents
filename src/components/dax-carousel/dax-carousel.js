@@ -200,7 +200,7 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
             const hash = `#${srcNoExt}`;
             if (window.location.hash !== hash) {
                 // usage of replaceState prevents cluttering history if we are just browsing
-                history.replaceState(null, '', hash);
+                window.history.replaceState(null, '', hash);
             }
         }
     }
@@ -480,8 +480,10 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
 
     #handleAttributeChange(name, newValue) {
         if (name === 'interval') {
-            //const newInterval = Number(newValue) || DEFAULT_INTERVAL;
-            const newInterval = DEFAULT_INTERVAL;
+            const parsedInterval = Number(newValue);
+            const newInterval = Number.isFinite(parsedInterval) && parsedInterval > 0
+                ? parsedInterval
+                : DEFAULT_INTERVAL;
             this.#state.intervalMs = newInterval;
             if (this.#state.timer) {
                 this.clearManagedInterval(this.#state.timer);
