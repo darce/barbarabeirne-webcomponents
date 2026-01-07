@@ -1,11 +1,18 @@
 // gallery-intro-toggle - Light DOM styles
+// Includes both the toggle button component and the gallery-intro section it controls
+// Standard pattern: toggle is inside <aside>, controls .gallery-intro in <main>
 @use '../../styles/shared' as *;
 
+// ============================================================================
+// TOGGLE BUTTON (gallery-intro-toggle element)
+// ============================================================================
+// Triangular button positioned at right edge of aside, slides with sidebar
+
 gallery-intro-toggle {
-    display: none;
+    display: block;
     position: absolute;
     top: 0;
-    left: 0;
+    left: 100%; // Position to the right of the aside
     width: var(--intro-triangle-size, 160px);
     height: var(--intro-triangle-size, 160px);
     background: $color-black;
@@ -14,43 +21,86 @@ gallery-intro-toggle {
     -webkit-clip-path: polygon(0 0, 100% 0, 0 100%, 0 0);
     font-size: var(--font-size-subheader, 16px);
     font-weight: bold;
-    // display: flex;
     justify-content: flex-start;
     padding: calc(var(--spacer-medium, 12px) * 1.2);
     cursor: pointer;
-    z-index: $z-index-controls;
+    z-index: 101; // Above aside (z-index: 100) to ensure clickability
     border: 0;
     opacity: 0;
     transition: opacity $transition-fast;
     text-transform: uppercase;
     outline: none;
 
-    &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: var(--intro-triangle-size, 160px);
-        height: var(--intro-triangle-size, 160px);
-        clip-path: polygon(0 0, 100% 0, 0 100%, 0 0);
-        -webkit-clip-path: polygon(0 0, 100% 0, 0 100%, 0 0);
-        opacity: 0;
-        pointer-events: none;
-    }
-
     &:focus-visible {
         opacity: 1;
-
-        &::before {
-            opacity: 1;
-        }
     }
 
-    &.show-controls {
+    &:hover {
         opacity: 1;
-    }
-
-    &:hover{
         background: $color-hover-gray;
     }
+}
+
+// Show toggle when nav menu is open (synced with dax-nav state)
+aside:has(dax-nav[data-open="true"]) gallery-intro-toggle,
+aside.is-open gallery-intro-toggle,
+aside:focus-within gallery-intro-toggle {
+    opacity: 1;
+}
+
+
+// ============================================================================
+// GALLERY INTRO SECTION (.gallery-intro)
+// ============================================================================
+// Overlay that expands via clip-path animation when toggle is clicked
+
+.gallery-intro {
+    position: absolute;
+    inset: 0;
+    padding: calc(var(--spacer-medium) * 5) calc(var(--spacer-medium) * 2) calc(var(--spacer-medium) * 2) calc(var(--spacer-medium) * 5);
+    background: $color-white;
+    overflow-y: auto;
+    // Start collapsed to triangle size
+    clip-path: polygon(0 0, 0 var(--intro-triangle-size), 0 0, 0 0);
+    -webkit-clip-path: polygon(0 0, 0 var(--intro-triangle-size), 0 0, 0 0);
+    pointer-events: none;
+    transition: clip-path 0.6s ease, -webkit-clip-path 0.6s ease;
+    z-index: var(--stack-order);
+    text-align: left;
+
+    h2 {
+        font-size: var(--font-size-header);
+        padding-bottom: var(--spacer-medium);
+        text-align: center;
+        line-height: 1.2;
+    }
+
+    h3 {
+        font-size: var(--font-size-subheader);
+        padding-top: var(--spacer-medium);
+        padding-bottom: var(--spacer-medium);
+    }
+
+    p {
+        padding-bottom: var(--spacer-medium);
+        line-height: 1.8;
+    }
+
+    ul {
+        list-style: disc;
+        margin-left: var(--spacer-medium);
+        padding-bottom: var(--spacer-medium);
+    }
+
+    li {
+        padding-bottom: var(--spacer-small);
+    }
+}
+
+// Open state - triggered when gallery container has .is-intro-open class
+[data-gallery-context].is-intro-open .gallery-intro {
+    clip-path: polygon(0 0, 0 100%, 100% 100%, 100% 0);
+    -webkit-clip-path: polygon(0 0, 0 100%, 100% 100%, 100% 0);
+    pointer-events: auto;
+    z-index: 50; // Above carousel but below aside (100) and toggle (101)
 }

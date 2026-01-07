@@ -1,8 +1,14 @@
 import BaseComponent from '../base/base-component';
 import styles from './gallery-intro-toggle.scss';
 
-const CONTROLS_FADE_INTERVAL = 2500;
-
+/**
+ * Gallery intro toggle button.
+ * Standard pattern: placed inside <aside> after </dax-nav>,
+ * controls .gallery-intro inside <main data-gallery-context>.
+ *
+ * Visibility is controlled by dax-nav events - this component
+ * shows/hides in sync with the nav menu's open/close state.
+ */
 class GalleryIntroToggle extends BaseComponent(HTMLElement) {
     static styles = styles;
 
@@ -11,7 +17,7 @@ class GalleryIntroToggle extends BaseComponent(HTMLElement) {
     // Private state
     #state = {
         isOpen: false,
-        controlsTimer: null,
+        isVisible: false,
         galleryContainer: null,
     };
 
@@ -20,7 +26,13 @@ class GalleryIntroToggle extends BaseComponent(HTMLElement) {
         this.initStyles();
         this.#initButton();
         this.#attachEventListeners();
-        this.#showControls();
+
+        // Sync initial visibility with dax-nav state (handles case where
+        // dax-nav opened before this component connected to DOM)
+        const daxNav = document.querySelector('dax-nav');
+        if (daxNav?.getAttribute('data-open') === 'true') {
+            this.#setVisible(true);
+        }
     }
 
     disconnectedCallback() {
@@ -29,8 +41,8 @@ class GalleryIntroToggle extends BaseComponent(HTMLElement) {
 
     // Private methods
     #initButton() {
-        // Look for gallery context using data attribute, then fall back to semantic <main>
-        this.#state.galleryContainer = this.closest('[data-gallery-context]') || this.closest('main');
+        // Standard pattern: toggle in <aside>, gallery in <main data-gallery-context>
+        this.#state.galleryContainer = document.querySelector('[data-gallery-context]');
         this.setAttribute('role', 'button');
         this.setAttribute('tabindex', '0');
         this.setAttribute('aria-expanded', 'false');
@@ -46,12 +58,15 @@ class GalleryIntroToggle extends BaseComponent(HTMLElement) {
             }
         });
 
-        // Show controls on mouse move within gallery container
-        const { galleryContainer } = this.#state;
-        if (galleryContainer) {
-            this.addManagedListener(galleryContainer, 'mousemove', () => this.#showControls());
-            this.addManagedListener(galleryContainer, 'mouseenter', () => this.#showControls());
-        }
+        // Sync visibility with dax-nav open/close state
+        this.addManagedListener(document, 'dax-nav-toggle', (event) => {
+            this.#setVisible(event.detail.isOpen);
+        });
+    }
+
+    #setVisible(visible) {
+        this.#state.isVisible = visible;
+        this.classList.toggle('is-visible', visible);
     }
 
     #toggle() {
@@ -71,34 +86,6 @@ class GalleryIntroToggle extends BaseComponent(HTMLElement) {
             bubbles: true,
             detail: { isOpen: this.#state.isOpen },
         }));
-
-        // Keep controls visible while intro is open
-        if (this.#state.isOpen) {
-            this.classList.add('show-controls');
-            if (this.#state.controlsTimer) {
-                this.clearManagedTimeout(this.#state.controlsTimer);
-                this.#state.controlsTimer = null;
-            }
-        } else {
-            this.#showControls();
-        }
-    }
-
-    #showControls() {
-        // Don't fade out if intro is open
-        if (this.#state.isOpen) return;
-
-        this.classList.add('show-controls');
-
-        // Clear existing timer
-        if (this.#state.controlsTimer) {
-            this.clearManagedTimeout(this.#state.controlsTimer);
-        }
-
-        // Set new timer to hide controls
-        this.#state.controlsTimer = this.setManagedTimeout(() => {
-            this.classList.remove('show-controls');
-        }, CONTROLS_FADE_INTERVAL);
     }
 }
 
