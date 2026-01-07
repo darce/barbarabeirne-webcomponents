@@ -22,7 +22,6 @@ dax-nav {
     position: absolute;
     top: 0;
     left: 0;
-    height: 100%;
     padding: $spacing-lg;
     background: $nav-bg;
     border: 0;
@@ -58,11 +57,11 @@ dax-nav {
     margin: 0;
     background: $nav-bg;
 
-    > li {
+    >li {
       text-transform: uppercase;
       font-weight: 500;
 
-      > a {
+      >a {
         display: block;
         width: 100%;
         padding-right: $spacing-lg;
@@ -91,7 +90,7 @@ dax-nav {
     padding: 0 0 50px;
     margin: 0;
 
-    > li {
+    >li {
       font-weight: 100;
       text-transform: capitalize;
 
@@ -141,14 +140,14 @@ dax-nav {
   }
 
   // Current page in main menu (non-project pages)
-  .dax-nav-menu > .dax-nav-current > a {
+  .dax-nav-menu>.dax-nav-current>a {
     background: $nav-fg;
     color: $nav-hover-fg;
   }
 
   // Menu list - no longer handles slide animation (sidebar does)
   .dax-nav-menu {
-    > li {
+    >li {
       padding: 5px $spacing-lg;
     }
   }
@@ -161,6 +160,7 @@ dax-nav {
 // Mobile-specific adjustments
 @media (max-width: $nav-mobile-breakpoint) {
   dax-nav {
+
     // Show toggle button on mobile
     .dax-nav-toggle {
       display: block;
