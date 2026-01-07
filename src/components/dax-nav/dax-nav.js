@@ -2,10 +2,14 @@ import BaseComponent from '../base/base-component';
 import styles from './dax-nav.scss';
 
 // Auto-close delay in milliseconds - single canonical source for this value
-const AUTO_CLOSE_DELAY_MS = 5000;
+const AUTO_CLOSE_DELAY_MS = 1600;
 
 // Hover zone width as fraction of viewport (1/5 = 20%)
 const HOVER_ZONE_FRACTION = 0.2;
+
+// Feature detection: check if browser supports CSS :has() selector
+// If not, we'll fall back to JS class toggling on <aside>
+const HAS_CSS_HAS_SUPPORT = CSS.supports('selector(:has(*))');
 
 const MENU_TEMPLATE = `
     <button class="dax-nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="dax-nav-menu">
@@ -30,11 +34,18 @@ class DaxNav extends BaseComponent(HTMLElement) {
 
     #autoCloseTimer = null;
 
+    // Prevents re-opening immediately after auto-close while mouse is still in hover zone
+    #wasAutoClosed = false;
+
     connectedCallback() {
         this.initStyles();
         this.#initDOM();
         this.#markCurrentPage();
         this.#attachEventListeners();
+
+        // Open menu initially and start auto-close timer
+        this.#openMenu();
+        this.#startAutoCloseTimer();
     }
 
     disconnectedCallback() {
@@ -151,10 +162,10 @@ class DaxNav extends BaseComponent(HTMLElement) {
             }
         });
 
-        // Close menu on click outside
+        // Start auto-close timer on click outside (let timer control close, not immediate)
         this.addManagedListener(document, 'click', (event) => {
             if (this.#isOpen && !this.contains(event.target)) {
-                this.#closeMenu();
+                this.#startAutoCloseTimer();
             }
         });
 
@@ -182,8 +193,15 @@ class DaxNav extends BaseComponent(HTMLElement) {
         // Auto-open when mouse enters left edge zone (1/5 of viewport width)
         this.addManagedListener(document, 'mousemove', (event) => {
             const hoverZoneWidth = window.innerWidth * HOVER_ZONE_FRACTION;
-            if (event.clientX <= hoverZoneWidth && !this.#isOpen) {
+            const inHoverZone = event.clientX <= hoverZoneWidth;
+
+            if (inHoverZone && !this.#isOpen && !this.#wasAutoClosed) {
                 this.#openMenu();
+            }
+
+            // Reset the auto-close flag when mouse leaves the hover zone
+            if (!inHoverZone && this.#wasAutoClosed) {
+                this.#wasAutoClosed = false;
             }
         });
 
@@ -219,6 +237,11 @@ class DaxNav extends BaseComponent(HTMLElement) {
         // Set open state via attribute (CSS :has() will handle parent styling)
         this.setAttribute('data-open', 'true');
 
+        // Fallback for browsers without :has() support
+        if (!HAS_CSS_HAS_SUPPORT) {
+            this.closest('aside')?.classList.add('is-open');
+        }
+
         if (toggle) {
             toggle.setAttribute('aria-expanded', 'true');
             toggle.setAttribute('aria-label', 'Close menu');
@@ -250,6 +273,11 @@ class DaxNav extends BaseComponent(HTMLElement) {
 
         // Set closed state via attribute
         this.setAttribute('data-open', 'false');
+
+        // Fallback for browsers without :has() support
+        if (!HAS_CSS_HAS_SUPPORT) {
+            this.closest('aside')?.classList.remove('is-open');
+        }
         this.#clearAutoCloseTimer();
 
         if (toggle) {
@@ -273,6 +301,7 @@ class DaxNav extends BaseComponent(HTMLElement) {
         this.#clearAutoCloseTimer();
         this.#autoCloseTimer = this.setManagedTimeout(() => {
             if (this.#isOpen) {
+                this.#wasAutoClosed = true;
                 this.#closeMenu();
             }
         }, AUTO_CLOSE_DELAY_MS);
