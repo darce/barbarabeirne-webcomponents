@@ -14,6 +14,8 @@ dax-carousel {
   position: relative;
   width: 100%;
   height: 100%;
+  z-index: 1; // Explicit z-index to ensure gallery-intro (z-index: 10+) can stack above
+  background-color: $carousel-bg;
 
   // Icon font for control buttons
   .material-symbols-sharp {
@@ -45,6 +47,7 @@ dax-carousel {
       //position: relative;
       opacity: 1;
       visibility: visible;
+      cursor: pointer; // Click to advance to next slide
     }
 
     figure {

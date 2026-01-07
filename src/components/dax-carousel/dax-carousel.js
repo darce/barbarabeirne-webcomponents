@@ -356,6 +356,20 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
             this.#handleWheel(event);
         }, { passive: false });
 
+        // Click on slide to advance to next
+        this.addManagedListener(this, 'click', (event) => {
+            // Only handle clicks on slides/images, not controls
+            const slide = event.target.closest('.dax-slide');
+            if (slide && !event.target.closest('.dax-carousel-controls')) {
+                this.#next();
+                this.#showControls();
+                // Stop autoplay on manual click
+                if (this.#state.timer) {
+                    this.#stop();
+                }
+            }
+        });
+
         // Show controls initially
         this.#showControls();
     }
