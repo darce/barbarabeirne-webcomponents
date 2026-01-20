@@ -8,7 +8,8 @@
     "lint": "eslint ./src",
     "build:babel": "babel src -d lib",
     "build:bundle": "rollup -c",
-    "build": "npm run build:babel && npm run build:bundle"
+    "build:css": "node scripts/build-css.js",
+    "build": "npm run build:css && npm run build:babel && npm run build:bundle"
   },
   "author": "",
   "license": "ISC",
@@ -22,7 +23,7 @@
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.32.0",
     "rollup": "^4.53.2",
-    "rollup-plugin-scss": "^4.0.1",
+    "rollup-plugin-string": "^3.0.0",
     "sass": "^1.96.0"
   },
   "babel": {

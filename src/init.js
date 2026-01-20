@@ -1,5 +1,3 @@
-import './main';
-
 const componentLoaders = [
     {
         tag: 'dax-carousel',
@@ -12,6 +10,10 @@ const componentLoaders = [
     {
         tag: 'dax-nav',
         loader: (baseUrl) => import(new URL('./components/dax-nav/dax-nav.js', baseUrl).href),
+    },
+    {
+        tag: 'dax-sidebar',
+        loader: (baseUrl) => import(new URL('./components/dax-sidebar/dax-sidebar.js', baseUrl).href),
     },
 ];
 
@@ -29,13 +31,9 @@ const getScriptBaseUrl = () => {
 
 const loadComponents = () => {
     const baseUrl = getScriptBaseUrl();
-    // eslint-disable-next-line no-console
-    console.log('[init.js] loadComponents called, baseUrl:', baseUrl.href);
 
     componentLoaders.forEach(({ tag, loader }) => {
         const needsComponent = document.querySelector(tag) && !customElements.get(tag);
-        // eslint-disable-next-line no-console
-        console.log(`[init.js] ${tag}: needsComponent=${needsComponent}`);
         if (!needsComponent) return;
 
         loader(baseUrl).catch((error) => {

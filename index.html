@@ -16,24 +16,19 @@
     books, portraits, landscapes, documentary">
     <link rel="preload" as="font" type="font/woff2" href="fonts/jost.woff2" crossorigin>
     <link rel="preload" as="font" type="font/woff2" href="fonts/material-symbols-sharp.woff2" crossorigin>
-    <link rel="stylesheet" type="text/css" media="screen" href="reset.css">
-    <link rel="stylesheet" type="text/css" media="screen" href="main.css">
-    
+    <link rel="stylesheet" href="lib/styles.css">
 </head>
 
 <body>
     <div class="container">
-        <aside>
-            <header>
-                <h1 class="masthead"><a href="/">Barbara Beirne</a></h1>
-            </header>
+        <dax-sidebar>
             <dax-nav>
                 <ul class="dax-nav-menu">
                     <li><a href="index.html">Projects</a>
                         <ul class="dax-nav-projects">
+                            <li><a href="belfast/">The Troubles - Belfast</a></li>
                             <li><a href="becoming/">Becoming American</a></li>
                             <li><a href="appalachian/">Women of Appalachia</a></li>
-                            <li><a href="belfast/">The Troubles - Belfast</a></li>
                             <li><a href="children/">Children of the World</a></li>
                             <li><a href="praise/">Praise The Lord</a></li>
                             <li><a href="dismal/">Dismal Harmony</a></li>
@@ -45,47 +40,57 @@
                     <li><a href="contact.html">Contact</a></li>
                 </ul>
             </dax-nav>
-        </aside>
+        </dax-sidebar>
         <main>
-            <dax-carousel fullscreen autoplay no-controls>
-            <ul>
-                <li>
-                    <img src="./becoming/images/1a.jpg"
-                        alt="Black-and-white photograph by Barbara Beirne. At an Olympic pool, Lili Shek, a young Chinese woman, is wearing a bathing suit and adjusting her swim cap. She's looking up and to the left of the frame."></img>
-                </li>
-                <li>
-                    <img src="./appalachian/images/11a.jpg"
-                        alt="Black-and-white photograph by Barbara Beirne. Mary Jack Hargins stands outside next to a wooden post and a metal wire fence. She's a middle-aged white woman with short hair, wearing a Western long-sleeve shirt and jeans. Her left hand rests on the wooden post, and her right thumb is hooked on her pocket."></img>
-                </li>
-                <li>
-                    <picture>
-                        <source media="(max-width: 810px)" srcset="./belfast/images/boy_with_rock-1500w.jpg" />
-                        <source media="(min-width: 811px)" srcset="./belfast/images/boy_with_rock-2189w.jpg" />
-                        <img src="./belfast/images/boy_with_rock-2189w.jpg"
-                            alt="Color photograph by Barbara Beirne. High-angle shot looking down onto a young boy holding a rock in his left hand, close to his ear. His right eye is closed, and his mouth curled up to the side. He wears a striped T-shirt."></img>
-                    </picture>
-                </li>
-                <li>
-                    <picture>
-                        <source media="(max-width: 810px)" srcset="./children/images/paterson_nj_halloween-1028w.jpg" />
-                        <source media="(min-width: 811px)" srcset="./children/images/paterson_nj_halloween-2275w.jpg" />
-                        <img src="./children/images/paterson_nj_halloween-2275w.jpg" alt="Color photograph by Barbara Beirne. Three young black girls in a playground wearing pink costumes and plastic masks of blonde white women.
+            <dax-carousel fullscreen autoplay interval="5000" no-controls>
+                <ul>                    <li>
+                    <img src="./belfast/images/23.jpg"
+                            alt=""></img>
+                    </li>
+                    <li>
+                        <img src="./becoming/images/1a.jpg"
+                            alt="Black-and-white photograph by Barbara Beirne. At an Olympic pool, Lili Shek, a young Chinese woman, is wearing a bathing suit and adjusting her swim cap. She's looking up and to the left of the frame."></img>
+                    </li>
+                    <li>
+                        <img src="./appalachian/images/31a.jpg"
+                            alt="Black-and-white photograph by Barbara Beirne. When I was little I lived right down thar in a two room house. We had five or six
+                                    beds to
+                                    a room, but it was the warmest house there ever was.
+                                    My Daddy worked on the farm, and Mommy made our coats and dresses. She made our
+                                    socks
+                                    from the wool after they sheared the sheep.
+                                    My Daddy had three or four guns. I was teached what to do. Sylvie Turner, Kite, Kentucky"></img>
+                    </li>
+                    <li>
+                        <picture>
+                            <source media="(max-width: 810px)"
+                                srcset="./children/images/paterson_nj_halloween-1028w.jpg" />
+                            <source media="(min-width: 811px)"
+                                srcset="./children/images/paterson_nj_halloween-2275w.jpg" />
+                            <img src="./children/images/paterson_nj_halloween-2275w.jpg" alt="Color photograph by Barbara Beirne. Three young black girls in a playground wearing pink costumes and plastic masks of blonde white women.
                         "></img>
-                    </picture>
-                </li>
-                <li>
-                    <img src="./praise/images/1a.jpg" alt="Black-and-white photograph by Barbara Beirne. A black child sits at the table before a cookie on a paper napkin, head down, holding her hands in prayer.
+                        </picture>
+                    </li>
+                    <li>
+                        <img src="./belfast/images/internment_fires_best.jpg" alt=""></img>
+                    </li>
+                    <li>
+                        <img src="./praise/images/1a.jpg" alt="Black-and-white photograph by Barbara Beirne. A black child sits at the table before a cookie on a paper napkin, head down, holding her hands in prayer.
                     "></img>
-                </li>
-                <li>
-                    <img src="./dismal/images/1.jpg" alt="Color photograph by Barbara Beirne. This is an image of a wooded area taken from higher ground. A small river runs through the bottom of the frame, and fall leaves and branches cover the ground below.
+                    </li>
+                    <li>
+                        <img src="./belfast/images/00104_yellow_dress.jpg" alt=""></img>
+                    </li>
+                    <li>
+                        <img src="./dismal/images/1.jpg" alt="Color photograph by Barbara Beirne. A wooded area taken seen from higher ground. A small river runs through the bottom of the frame. Fall leaves and branches cover the ground below.
                     "></img>
-                </li>
-            </ul>
+                    </li>
+                </ul>
             </dax-carousel>
         </main>
     </div>
     <script src="./lib/init.js"></script>
     <script type="module" src="./lib/components/dax-carousel/dax-carousel.js"></script>
 </body>
+
 </html>

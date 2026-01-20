@@ -16,25 +16,19 @@
     books, portraits, landscapes, documentary">
     <link rel="preload" as="font" type="font/woff2" href="../fonts/jost.woff2" crossorigin>
     <link rel="preload" as="font" type="font/woff2" href="../fonts/material-symbols-sharp.woff2" crossorigin>
-    <link rel="stylesheet" type="text/css" media="screen" href="../reset.css">
-    <link rel="stylesheet" type="text/css" media="screen" href="../main.css">
-    <link rel="stylesheet" type="text/css" media="screen" href="../gallery.css">
+    <link rel="stylesheet" href="../lib/styles.css">
 </head>
 
 <body>
     <div class="container">
-        <aside>
-            <header>
-                <h1 class="masthead"><a href="/">Barbara Beirne</a></h1>
-                <div id="carousel-controls"></div>
-            </header>
-            <dax-nav>
+        <dax-sidebar home-link="/">
+            <dax-nav data-open="false">
                 <ul class="dax-nav-menu">
                     <li><a href="../index.html">Projects</a>
                         <ul class="dax-nav-projects">
+                            <li><a href="../belfast/">The Troubles - Belfast</a></li>
                             <li><a href="../becoming/">Becoming American</a></li>
                             <li><a href="../appalachian/">Women of Appalachia</a></li>
-                            <li><a href="../belfast/">The Troubles - Belfast</a></li>
                             <li><a href="../children/">Children of the World</a></li>
                             <li><a href="../praise/">Praise The Lord</a></li>
                             <li><a href="../dismal/">Dismal Harmony</a></li>
@@ -46,70 +40,73 @@
                     <li><a href="../contact.html">Contact</a></li>
                 </ul>
             </dax-nav>
-        </aside>
+        </dax-sidebar>
         <main data-gallery-context>
-            <dax-carousel interval="4000" autoplay controls-target="#carousel-controls">
-            <ul>
-                <li>
-                    <figure>
-                        <img src="images/1.jpg">
-                    </figure>
-                </li>
-                <li>
-                    <figure>
-                        <img src="images/11.jpg">
-                    </figure>
-                </li>
-                <li>
-                    <figure>
-                        <img src="images/13.jpg">
-                    </figure>
-                </li>
-                <li>
-                    <figure>
-                        <img src="images/17.jpg">
-                    </figure>
-                </li>
-                <li>
-                    <figure>
-                        <img src="images/21.jpg">
-                    </figure>
-                </li>
-                <li>
-                    <figure>
-                        <img src="images/23.jpg">
-                    </figure>
-                </li>
-                <li>
-                    <figure>
-                        <img src="images/25.jpg">
-                    </figure>
-                </li>
-                <li>
-                    <figure>
-                        <img src="images/27.jpg">
-                    </figure>
-                </li>
-                <li>
-                    <figure>
-                        <img src="images/29.jpg">
-                    </figure>
-                </li>
-                <li>
-                    <figure>
-                        <img src="images/31.jpg">
-                    </figure>
-                </li>
-                <li>
-                    <figure>
-                        <img src="images/33.jpg">
-                    </figure>
-                </li>
-            </ul>
+            <header class="gallery-header">
+                <h1 class="gallery-title">Dismal Harmony</h1>
+            </header>
+            <dax-carousel interval="4000">
+                <ul>
+                    <li>
+                        <figure>
+                            <img src="images/1.jpg">
+                        </figure>
+                    </li>
+                    <li>
+                        <figure>
+                            <img src="images/11.jpg">
+                        </figure>
+                    </li>
+                    <li>
+                        <figure>
+                            <img src="images/13.jpg">
+                        </figure>
+                    </li>
+                    <li>
+                        <figure>
+                            <img src="images/17.jpg">
+                        </figure>
+                    </li>
+                    <li>
+                        <figure>
+                            <img src="images/21.jpg">
+                        </figure>
+                    </li>
+                    <li>
+                        <figure>
+                            <img src="images/23.jpg">
+                        </figure>
+                    </li>
+                    <li>
+                        <figure>
+                            <img src="images/25.jpg">
+                        </figure>
+                    </li>
+                    <li>
+                        <figure>
+                            <img src="images/27.jpg">
+                        </figure>
+                    </li>
+                    <li>
+                        <figure>
+                            <img src="images/29.jpg">
+                        </figure>
+                    </li>
+                    <li>
+                        <figure>
+                            <img src="images/31.jpg">
+                        </figure>
+                    </li>
+                    <li>
+                        <figure>
+                            <img src="images/33.jpg">
+                        </figure>
+                    </li>
+                </ul>
             </dax-carousel>
         </main>
     </div>
-<script src="../lib/init.js"></script>
+    <script src="../lib/init.js"></script>
 </body>
 
 </html>

@@ -1,13 +1,13 @@
 import BaseComponent from '../base/base-component';
-import styles from './gallery-intro-toggle.scss';
+// CSS is pre-compiled by build:css to lib/components/gallery-intro-toggle/gallery-intro-toggle.css
+import styles from '../../../lib/components/gallery-intro-toggle/gallery-intro-toggle.css';
 
 /**
  * Gallery intro toggle button.
- * Standard pattern: placed inside <aside> after </dax-nav>,
- * controls .gallery-intro inside <main data-gallery-context>.
+ * Standard pattern: placed inside a gallery header within <main data-gallery-context>,
+ * controls .gallery-intro inside the same gallery context.
  *
- * Visibility is controlled by dax-nav events - this component
- * shows/hides in sync with the nav menu's open/close state.
+ * Visibility is controlled by the gallery intro open state.
  */
 class GalleryIntroToggle extends BaseComponent(HTMLElement) {
     static styles = styles;
@@ -17,7 +17,6 @@ class GalleryIntroToggle extends BaseComponent(HTMLElement) {
     // Private state
     #state = {
         isOpen: false,
-        isVisible: false,
         galleryContainer: null,
     };
 
@@ -26,13 +25,6 @@ class GalleryIntroToggle extends BaseComponent(HTMLElement) {
         this.initStyles();
         this.#initButton();
         this.#attachEventListeners();
-
-        // Sync initial visibility with dax-nav state (handles case where
-        // dax-nav opened before this component connected to DOM)
-        const daxNav = document.querySelector('dax-nav');
-        if (daxNav?.getAttribute('data-open') === 'true') {
-            this.#setVisible(true);
-        }
     }
 
     disconnectedCallback() {
@@ -41,12 +33,22 @@ class GalleryIntroToggle extends BaseComponent(HTMLElement) {
 
     // Private methods
     #initButton() {
-        // Standard pattern: toggle in <aside>, gallery in <main data-gallery-context>
-        this.#state.galleryContainer = document.querySelector('[data-gallery-context]');
+        // Standard pattern: toggle in <main data-gallery-context>, gallery in the same context
+        const galleryContainer = document.querySelector('[data-gallery-context]');
+        const introSection = galleryContainer?.querySelector('.gallery-intro');
+        const isOpen = Boolean(galleryContainer?.classList.contains('is-intro-open'));
+
+        this.#state.galleryContainer = galleryContainer;
+        this.#state.isOpen = isOpen;
+
+        if (introSection) {
+            introSection.setAttribute('aria-hidden', String(!isOpen));
+        }
+
         this.setAttribute('role', 'button');
         this.setAttribute('tabindex', '0');
-        this.setAttribute('aria-expanded', 'false');
-        this.textContent = 'Intro';
+        this.setAttribute('aria-expanded', String(isOpen));
+        this.textContent = isOpen ? 'Close' : 'Intro';
     }
 
     #attachEventListeners() {
@@ -57,35 +59,30 @@ class GalleryIntroToggle extends BaseComponent(HTMLElement) {
                 this.#toggle();
             }
         });
-
-        // Sync visibility with dax-nav open/close state
-        this.addManagedListener(document, 'dax-nav-toggle', (event) => {
-            this.#setVisible(event.detail.isOpen);
-        });
     }
 
-    #setVisible(visible) {
-        this.#state.isVisible = visible;
-        this.classList.toggle('is-visible', visible);
+    #setOpen(isOpen) {
+        if (this.#state.isOpen === isOpen) return;
+
+        const { galleryContainer } = this.#state;
+        const introSection = galleryContainer?.querySelector('.gallery-intro');
+        this.#state.isOpen = isOpen;
+
+        if (isOpen && introSection) {
+            introSection.setAttribute('aria-hidden', 'false');
+        }
+
+        galleryContainer?.classList.toggle('is-intro-open', isOpen);
+        this.setAttribute('aria-expanded', String(isOpen));
+        this.textContent = isOpen ? 'Close' : 'Intro';
+
+        if (!isOpen && introSection) {
+            introSection.setAttribute('aria-hidden', 'true');
+        }
     }
 
     #toggle() {
-        const { galleryContainer } = this.#state;
-        this.#state.isOpen = !this.#state.isOpen;
-
-        galleryContainer?.classList.toggle('is-intro-open', this.#state.isOpen);
-        this.setAttribute('aria-expanded', String(this.#state.isOpen));
-        this.textContent = this.#state.isOpen ? 'Close' : 'Intro';
-
-        // Dispatch event for other components to react
-        this.dispatchEvent(new CustomEvent('ui-overlay-toggle', {
-            bubbles: true,
-            detail: { source: 'gallery-intro', isOpen: this.#state.isOpen },
-        }));
-        this.dispatchEvent(new CustomEvent('gallery-intro-toggle', {
-            bubbles: true,
-            detail: { isOpen: this.#state.isOpen },
-        }));
+        this.#setOpen(!this.#state.isOpen);
     }
 }
 

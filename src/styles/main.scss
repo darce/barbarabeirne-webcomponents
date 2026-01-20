@@ -1,0 +1,59 @@
+@use './variables' as *;
+
+@font-face {
+  font-family: "Jost";
+  src: url("../fonts/jost.woff2") format("woff2");
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Material Symbols Sharp";
+  src: url("../fonts/material-symbols-sharp.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
+
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  font-family: $font-family-sans;
+}
+
+.material-symbols-sharp {
+  font-family: $font-family-icons;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+  display: inline-block;
+  line-height: 1;
+}
+
+.main-container {
+  margin-left: 0;
+  padding-inline: $spacer-medium;
+}
+
+.main-container > :where(img, picture, figure, .bio-image),
+.main-container > article > :where(img, picture, figure) {
+  display: block;
+  width: calc(100% + (#{$spacer-medium} * 2));
+  margin-inline: calc(#{$spacer-medium} * -1);
+}
+
+.main-container > :where(img),
+.main-container > article > :where(img) {
+  max-width: none;
+}
+
+.main-container figure figcaption {
+  padding-inline: $spacer-medium;
+}
+
+@media (min-width: $breakpoint-gallery-intro) {
+  .main-container {
+    margin-left: $dax-sidebar-width;
+  }
+}

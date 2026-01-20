@@ -21,6 +21,7 @@ $color-hover-gray: $color-gray-dark;
 
 // Transparency variants
 $color-translucent-white: rgba($color-white, 0.7);
+$color-translucent-white-50: rgba($color-white, 0.5);
 $color-translucent-black: rgba($color-black, 0.65);
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -39,6 +40,21 @@ $font-size-lg: 18px;
 $font-size-xl: 24px;
 $font-size-2xl: 32px;
 
+// Semantic font sizes (mirrors reset.css)
+$font-size-header: $font-size-2xl;
+$font-size-subheader: $font-size-lg;
+$font-size-main: $font-size-base;
+
+// Font weights
+$font-weight-thin: 100;
+$font-weight-medium: 500;
+$font-weight-bold: 700;
+
+// Line heights
+$line-height-tight: 1.2;
+$line-height-relaxed: 1.8;
+$line-height-nav: 2.2rem;
+
 // ─────────────────────────────────────────────────────────────────────────────
 // SPACING
 // ─────────────────────────────────────────────────────────────────────────────
@@ -50,6 +66,11 @@ $spacing-lg: 16px;
 $spacing-xl: 24px;
 $spacing-2xl: 32px;
 
+// Content rhythm spacing (mirrors reset.css)
+$spacer-rhythm: 5px;
+$spacer-small: 10px;
+$spacer-medium: $spacing-lg;
+
 // ─────────────────────────────────────────────────────────────────────────────
 // SIZING
 // ─────────────────────────────────────────────────────────────────────────────
@@ -60,6 +81,23 @@ $control-size-sm: 32px;
 $control-size-md: 42px;
 $control-size-lg: 52px;
 
+// Icon sizes
+$icon-size-lg: 48px;
+
+// Shape sizing
+$intro-triangle-size: 160px;
+
+// Layout sizing
+$dax-sidebar-masthead-height: 64px;
+$dax-sidebar-width: clamp(240px, 20vw, 320px);
+
+// Borders
+$border-width-thin: 1px;
+
+// Focus ring
+$focus-ring-width: 2px;
+$focus-ring-offset: -2px;
+
 // ─────────────────────────────────────────────────────────────────────────────
 // MOTION
 // ─────────────────────────────────────────────────────────────────────────────
@@ -68,6 +106,7 @@ $control-size-lg: 52px;
 $duration-fast: 0.15s;
 $duration-normal: 0.3s;
 $duration-slow: 0.5s;
+$duration-clip: 0.6s;
 
 // Easing functions
 $ease-default: ease;
@@ -78,6 +117,8 @@ $ease-out: ease-out;
 $transition-fast: $duration-fast $ease-default;
 $transition-medium: 0.4s $ease-default;
 $transition-fade: 0.6s $ease-in-out;
+$transition-clip: $duration-clip $ease-default;
+$transition-opacity-fade: opacity $transition-fade;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Z-INDEX SCALE
@@ -95,6 +136,9 @@ $z-index-tooltip: 300;
 // Legacy aliases (deprecated - use semantic names above)
 $z-index-controls: $z-index-modal;
 
+// Legacy CSS custom properties (mirrors reset.css)
+$z-index-stack-order: $z-index-dropdown;
+
 // ─────────────────────────────────────────────────────────────────────────────
 // BREAKPOINTS
 // ─────────────────────────────────────────────────────────────────────────────
@@ -103,3 +147,5 @@ $breakpoint-mobile: 480px;
 $breakpoint-tablet: 768px;
 $breakpoint-desktop: 1024px;
 $breakpoint-wide: 1280px;
+$breakpoint-nav: 810px;
+$breakpoint-gallery-intro: 811px;

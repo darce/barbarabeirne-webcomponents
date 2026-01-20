@@ -2,18 +2,22 @@
 @use '../../styles/shared' as *;
 
 // Component-specific variables
-$nav-font-size-header: 24pt;
-$nav-font-size-menu: 16pt;
-$nav-bg: $color-white;
+$nav-font-size-menu: $font-size-subheader;
+$nav-bg: $color-translucent-white-50;
 $nav-fg: $color-black;
 $nav-hover-bg: $color-gray;
 $nav-hover-fg: $color-white;
-$nav-mobile-breakpoint: 810px;
+$nav-mobile-breakpoint: $breakpoint-nav;
+$nav-icon-size: $icon-size-lg;
+$nav-line-height: $line-height-nav;
+$nav-item-padding-y: $spacer-rhythm;
+$nav-hover-offset: $spacing-xs;
 
 // Component container
 dax-nav {
   display: block;
-  background: $nav-bg;
+  position: relative; // Context for toggles if needed, and for overflow
+  overflow: hidden; // Clip the menu as it slides up (-100%)
 
   // Mobile menu toggle button - hidden by default
   .dax-nav-toggle {
@@ -23,12 +27,12 @@ dax-nav {
     top: 0;
     left: 0;
     padding: $spacing-lg;
-    background: $nav-bg;
+    background: transparent; 
     border: 0;
     z-index: $z-index-overlay;
 
     .material-symbols-sharp {
-      font-size: 48px;
+      font-size: $nav-icon-size;
       color: $nav-fg;
     }
 
@@ -42,99 +46,74 @@ dax-nav {
     }
 
     &:focus-visible {
-      outline: 2px solid $nav-fg;
-      outline-offset: -2px;
+      outline: $focus-ring-width solid $nav-fg;
+      outline-offset: $focus-ring-offset;
     }
   }
 
   // Main menu list
   .dax-nav-menu {
-    line-height: 2.2rem;
+    line-height: $nav-line-height;
     font-size: $nav-font-size-menu;
     text-align: right;
     padding-bottom: $spacing-lg;
-    list-style: none;
-    margin: 0;
+
+    // Background moved here for sliding effect
     background: $nav-bg;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    // Transition properties
+    transition: opacity $duration-normal $ease-out,
+      visibility 0s linear $duration-normal,
+      transform $duration-normal $ease-out;
+    transform-origin: top;
 
     >li {
       text-transform: uppercase;
-      font-weight: 500;
+      font-weight: $font-weight-medium;
+    }
+  }
 
-      >a {
-        display: block;
-        width: 100%;
-        padding-right: $spacing-lg;
-        color: $nav-fg;
-        text-decoration: none;
-        cursor: pointer;
+  &[data-open="false"] {
+    pointer-events: none;
 
-        &:hover {
-          background: $nav-hover-bg;
-          color: $nav-hover-fg;
-        }
+    .dax-nav-menu {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-100%); // Slide fully out of view (upwards)
+      pointer-events: none;
+    }
+  }
 
-        &:focus-visible {
-          outline: 2px solid $nav-fg;
-          outline-offset: -2px;
-          background: $nav-hover-bg;
-          color: $nav-hover-fg;
-        }
-      }
+  &[data-open="true"] {
+    pointer-events: auto;
+
+    .dax-nav-menu {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      transition: opacity $duration-normal $ease-out,
+        visibility 0s linear 0s,
+        transform $duration-normal $ease-out;
     }
   }
 
   // Project list (nested menu)
   .dax-nav-projects {
-    list-style: none;
-    padding: 0 0 50px;
-    margin: 0;
+    padding-bottom: $spacing-lg;
 
     >li {
-      font-weight: 100;
+      font-weight: $font-weight-thin;
       text-transform: capitalize;
-
-      a {
-        display: block;
-        width: 100%;
-        padding-right: $spacing-lg;
-        color: $nav-fg;
-        text-decoration: none;
-        cursor: pointer;
-
-        &:hover {
-          background: $nav-hover-bg;
-          color: $nav-hover-fg;
-        }
-
-        &:focus-visible {
-          outline: 2px solid $nav-fg;
-          outline-offset: -2px;
-          background: $nav-hover-bg;
-          color: $nav-hover-fg;
-        }
-      }
-
-      &:hover {
-        background: $nav-hover-bg;
-
-        a {
-          color: $nav-hover-fg;
-        }
-      }
     }
 
     // Current page indicator
     .dax-nav-current {
-      background: $nav-fg;
-
       a {
+        background: $nav-fg;
         color: $nav-hover-fg;
         cursor: default;
-      }
-
-      &:hover {
-        background: $nav-fg;
       }
     }
   }
@@ -145,15 +124,36 @@ dax-nav {
     color: $nav-hover-fg;
   }
 
-  // Menu list - no longer handles slide animation (sidebar does)
-  .dax-nav-menu {
-    >li {
-      padding: 5px $spacing-lg;
-    }
+  .dax-nav-menu > li > a,
+  .dax-nav-projects > li a {
+    display: block;
+    width: 100%;
+    padding: $nav-item-padding-y $spacing-lg;
+    color: $nav-fg;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform $duration-fast $ease-out,
+      box-shadow $duration-fast $ease-out;
   }
 
-  .dax-nav-projects {
-    padding-bottom: $spacing-lg;
+  .dax-nav-menu > li > a:hover,
+  .dax-nav-menu > li > a:focus,
+  .dax-nav-menu > li > a:focus-visible,
+  .dax-nav-projects > li a:hover,
+  .dax-nav-projects > li a:focus,
+  .dax-nav-projects > li a:focus-visible {
+    background: $nav-fg;
+    color: $nav-hover-fg;
+    box-shadow: -$nav-hover-offset 0 0 0 $nav-fg;
+    transform: translate($nav-hover-offset, -$nav-hover-offset);
+  }
+
+  .dax-nav-menu > li > a:focus,
+  .dax-nav-menu > li > a:focus-visible,
+  .dax-nav-projects > li a:focus,
+  .dax-nav-projects > li a:focus-visible {
+    outline: $focus-ring-width solid $nav-fg;
+    outline-offset: $focus-ring-offset;
   }
 }
 
@@ -164,6 +164,21 @@ dax-nav {
     // Show toggle button on mobile
     .dax-nav-toggle {
       display: block;
+    }
+
+    .dax-nav-menu {
+      background: $color-white;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+  }
+}
+
+// Reduced motion
+@media (prefers-reduced-motion: reduce) {
+  dax-nav {
+    .dax-nav-menu {
+      transition: none;
     }
   }
 }

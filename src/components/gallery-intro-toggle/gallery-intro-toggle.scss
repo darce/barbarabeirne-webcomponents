@@ -1,53 +1,71 @@
 // gallery-intro-toggle - Light DOM styles
 // Includes both the toggle button component and the gallery-intro section it controls
-// Standard pattern: toggle is inside <aside>, controls .gallery-intro in <main>
+// Standard pattern: toggle lives in a header inside <main data-gallery-context>
 @use '../../styles/shared' as *;
+
+// Component-specific variables
+$gallery-toggle-padding-block: $spacing-xs;
+$gallery-toggle-padding-inline: $spacing-md;
+$gallery-toggle-font-size: $font-size-sm;
+$gallery-toggle-letter-spacing: 0.08em;
+$gallery-toggle-bg: $color-white;
+$gallery-toggle-border: $color-black;
+$gallery-intro-padding-block-multiplier: 5;
+$gallery-intro-padding-inline-multiplier: 2;
+$gallery-intro-padding-block: calc(#{$spacer-medium} * #{$gallery-intro-padding-block-multiplier});
+$gallery-intro-padding-inline: calc(#{$spacer-medium} * #{$gallery-intro-padding-inline-multiplier});
+$gallery-intro-base-z-index: $z-index-stack-order;
+$gallery-intro-open-z-index: $z-index-overlay;
+$gallery-intro-padding-left-wide: $dax-sidebar-width;
+$gallery-intro-breakpoint: $breakpoint-gallery-intro;
+
+dax-sidebar[data-nav-open="false"] + main[data-gallery-context] gallery-intro-toggle {
+  pointer-events: none;
+}
+
+@media (max-width: $breakpoint-nav) {
+  dax-sidebar[data-nav-open="false"] + main[data-gallery-context] gallery-intro-toggle {
+    pointer-events: auto;
+  }
+}
 
 // ============================================================================
 // TOGGLE BUTTON (gallery-intro-toggle element)
 // ============================================================================
-// Triangular button positioned at right edge of aside, slides with sidebar
 
 gallery-intro-toggle {
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 100%; // Position to the right of the aside
-    width: var(--intro-triangle-size, 160px);
-    height: var(--intro-triangle-size, 160px);
-    background: $color-black;
-    color: $color-white;
-    clip-path: polygon(0 0, 100% 0, 0 100%, 0 0);
-    -webkit-clip-path: polygon(0 0, 100% 0, 0 100%, 0 0);
-    font-size: var(--font-size-subheader, 16px);
-    font-weight: bold;
-    justify-content: flex-start;
-    padding: calc(var(--spacer-medium, 12px) * 1.2);
-    cursor: pointer;
-    z-index: 101; // Above aside (z-index: 100) to ensure clickability
-    border: 0;
-    opacity: 0;
-    transition: opacity $transition-fast;
-    text-transform: uppercase;
-    outline: none;
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: $gallery-toggle-padding-block $gallery-toggle-padding-inline;
+  background: $gallery-toggle-bg;
+  color: $color-black;
+  border: 1px solid $gallery-toggle-border;
+  border-radius: 0;
+  font-size: $gallery-toggle-font-size;
+  font-weight: $font-weight-medium;
+  letter-spacing: $gallery-toggle-letter-spacing;
+  text-transform: uppercase;
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+  transition: background $duration-fast $ease-out,
+    border-color $duration-fast $ease-out,
+    color $duration-fast $ease-out;
 
-    &:focus-visible {
-        opacity: 1;
-    }
+  &:hover {
+    background: $gallery-toggle-bg;
+    border-color: $gallery-toggle-border;
+    color: $color-black;
+  }
 
-    &:hover {
-        opacity: 1;
-        background: $color-hover-gray;
-    }
+  &:focus-visible {
+    outline: $focus-ring-width solid $color-black;
+    outline-offset: $focus-ring-offset;
+  }
 }
-
-// Show toggle when nav menu is open (synced with dax-nav state)
-aside:has(dax-nav[data-open="true"]) gallery-intro-toggle,
-aside.is-open gallery-intro-toggle,
-aside:focus-within gallery-intro-toggle {
-    opacity: 1;
-}
-
 
 // ============================================================================
 // GALLERY INTRO SECTION (.gallery-intro)
@@ -55,52 +73,58 @@ aside:focus-within gallery-intro-toggle {
 // Overlay that expands via clip-path animation when toggle is clicked
 
 .gallery-intro {
-    position: absolute;
-    inset: 0;
-    padding: calc(var(--spacer-medium) * 5) calc(var(--spacer-medium) * 2) calc(var(--spacer-medium) * 2) calc(var(--spacer-medium) * 5);
-    background: $color-white;
-    overflow-y: auto;
-    // Start collapsed to triangle size
-    clip-path: polygon(0 0, 0 var(--intro-triangle-size), 0 0, 0 0);
-    -webkit-clip-path: polygon(0 0, 0 var(--intro-triangle-size), 0 0, 0 0);
-    pointer-events: none;
-    transition: clip-path 0.6s ease, -webkit-clip-path 0.6s ease;
-    z-index: var(--stack-order);
-    text-align: left;
+  position: absolute;
+  inset: 0;
+  padding: $gallery-intro-padding-block $gallery-intro-padding-inline $gallery-intro-padding-inline $gallery-intro-padding-block;
+  background: $color-white;
+  overflow-y: auto;
+  // Start collapsed to triangle size
+  clip-path: polygon(0 0, 0 $intro-triangle-size, 0 0, 0 0);
+  -webkit-clip-path: polygon(0 0, 0 $intro-triangle-size, 0 0, 0 0);
+  pointer-events: none;
+  transition: clip-path $transition-clip, -webkit-clip-path $transition-clip;
+  z-index: $gallery-intro-base-z-index;
+  text-align: left;
 
-    h2 {
-        font-size: var(--font-size-header);
-        padding-bottom: var(--spacer-medium);
-        text-align: center;
-        line-height: 1.2;
-    }
+  h2 {
+    font-size: $font-size-header;
+    padding-bottom: $spacer-medium;
+    text-align: center;
+    line-height: $line-height-tight;
+  }
 
-    h3 {
-        font-size: var(--font-size-subheader);
-        padding-top: var(--spacer-medium);
-        padding-bottom: var(--spacer-medium);
-    }
+  h3 {
+    font-size: $font-size-subheader;
+    padding-top: $spacer-medium;
+    padding-bottom: $spacer-medium;
+  }
 
-    p {
-        padding-bottom: var(--spacer-medium);
-        line-height: 1.8;
-    }
+  p {
+    padding-bottom: $spacer-medium;
+    line-height: $line-height-relaxed;
+  }
 
-    ul {
-        list-style: disc;
-        margin-left: var(--spacer-medium);
-        padding-bottom: var(--spacer-medium);
-    }
+  ul {
+    list-style: disc;
+    margin-left: $spacer-medium;
+    padding-bottom: $spacer-medium;
+  }
 
-    li {
-        padding-bottom: var(--spacer-small);
-    }
+  li {
+    padding-bottom: $spacer-small;
+  }
 }
 
 // Open state - triggered when gallery container has .is-intro-open class
 [data-gallery-context].is-intro-open .gallery-intro {
-    clip-path: polygon(0 0, 0 100%, 100% 100%, 100% 0);
-    -webkit-clip-path: polygon(0 0, 0 100%, 100% 100%, 100% 0);
-    pointer-events: auto;
-    z-index: 50; // Above carousel but below aside (100) and toggle (101)
+  clip-path: polygon(0 0, 0 100%, 100% 100%, 100% 0);
+  -webkit-clip-path: polygon(0 0, 0 100%, 100% 100%, 100% 0);
+  pointer-events: auto;
+  z-index: $gallery-intro-open-z-index;
+}
+
+@media (min-width: $gallery-intro-breakpoint) {
+  .gallery-intro {
+    padding-left: $gallery-intro-padding-left-wide;
+  }
 }

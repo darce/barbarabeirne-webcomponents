@@ -1,0 +1,57 @@
+// ============================================================================
+// Critical FOUC Prevention Styles
+// ============================================================================
+// These minimal styles ensure components render correctly BEFORE JavaScript
+// runs. They target raw HTML structure that JS will later enhance.
+//
+// This file is compiled first and concatenated with component CSS.
+// ============================================================================
+
+@use 'variables' as *;
+
+// -----------------------------------------------------------------------------
+// dax-sidebar: Position the Shadow DOM host element
+// -----------------------------------------------------------------------------
+// The shadow DOM handles all internal styling including translucency.
+// We only need to position the host element in the document flow.
+dax-sidebar {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: $z-index-modal;
+    width: $dax-sidebar-width;
+}
+
+// -----------------------------------------------------------------------------
+// dax-carousel: Hide raw slide list until JS transforms it
+// -----------------------------------------------------------------------------
+// Before JS runs, the carousel contains a raw <ul><li> structure.
+// JS adds .dax-slides and .dax-slide classes. We style the raw structure
+// to match the final appearance and prevent a flash of stacked images.
+dax-carousel {
+    // Style raw list the same as .dax-slides
+    > ul:not(.dax-slides) {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+
+        // Style raw items the same as .dax-slide
+        > li {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            visibility: hidden;
+
+            // Show only the first slide initially
+            &:first-child {
+                opacity: 1;
+                visibility: visible;
+            }
+        }
+    }
+}

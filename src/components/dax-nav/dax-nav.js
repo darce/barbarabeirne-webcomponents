@@ -1,51 +1,16 @@
 import BaseComponent from '../base/base-component';
-import styles from './dax-nav.scss';
-
-// Auto-close delay in milliseconds - single canonical source for this value
-const AUTO_CLOSE_DELAY_MS = 1600;
-
-// Hover zone width as fraction of viewport (1/5 = 20%)
-const HOVER_ZONE_FRACTION = 0.2;
-
-// Feature detection: check if browser supports CSS :has() selector
-// If not, we'll fall back to JS class toggling on <aside>
-const HAS_CSS_HAS_SUPPORT = CSS.supports('selector(:has(*))');
-
-const MENU_TEMPLATE = `
-    <button class="dax-nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="dax-nav-menu">
-        <span class="material-symbols-sharp" aria-hidden="true">menu</span>
-    </button>
-`;
-
-const REF_SELECTORS = {
-    toggle: '.dax-nav-toggle',
-    menu: '.dax-nav-menu',
-    projectList: '.dax-nav-projects',
-};
+// CSS is pre-compiled by build:css to lib/components/dax-nav/dax-nav.css
+import styles from '../../../lib/components/dax-nav/dax-nav.css';
 
 class DaxNav extends BaseComponent(HTMLElement) {
     static styles = styles;
 
     static stylesId = 'dax-nav-styles';
 
-    #refs = {};
-
-    #isOpen = false;
-
-    #autoCloseTimer = null;
-
-    // Prevents re-opening immediately after auto-close while mouse is still in hover zone
-    #wasAutoClosed = false;
-
     connectedCallback() {
         this.initStyles();
         this.#initDOM();
         this.#markCurrentPage();
-        this.#attachEventListeners();
-
-        // Open menu initially and start auto-close timer
-        this.#openMenu();
-        this.#startAutoCloseTimer();
     }
 
     disconnectedCallback() {
@@ -58,47 +23,19 @@ class DaxNav extends BaseComponent(HTMLElement) {
         if (existingMenu) {
             existingMenu.classList.add('dax-nav-menu');
             existingMenu.id = 'dax-nav-menu';
-            existingMenu.setAttribute('role', 'menubar');
         }
 
         // Find and enhance project list
         const projectList = this.querySelector('.dax-nav-projects, .project-list');
         if (projectList) {
             projectList.classList.add('dax-nav-projects');
-            projectList.setAttribute('role', 'menu');
         }
 
-        // Add menu items role
-        this.querySelectorAll(':scope > ul > li').forEach((li) => {
-            li.setAttribute('role', 'none');
-            const link = li.querySelector(':scope > a');
-            if (link) {
-                link.setAttribute('role', 'menuitem');
+        this.querySelectorAll('.dax-nav-menu a[href], .dax-nav-projects a[href]').forEach((link) => {
+            if (!link.hasAttribute('tabindex')) {
+                link.setAttribute('tabindex', '0');
             }
         });
-
-        // Add project items role
-        this.querySelectorAll('.dax-nav-projects > li').forEach((li) => {
-            li.setAttribute('role', 'none');
-            const link = li.querySelector('a');
-            if (link) {
-                link.setAttribute('role', 'menuitem');
-            }
-        });
-
-        // Insert mobile toggle button
-        const template = document.createElement('template');
-        template.innerHTML = MENU_TEMPLATE;
-        this.insertBefore(template.content.cloneNode(true), this.firstChild);
-
-        this.#refs = {
-            toggle: this.querySelector(REF_SELECTORS.toggle),
-            menu: this.querySelector(REF_SELECTORS.menu),
-            projectList: this.querySelector(REF_SELECTORS.projectList),
-        };
-
-        // Set initial closed state via attribute
-        this.setAttribute('data-open', 'false');
     }
 
     #markCurrentPage() {
@@ -143,216 +80,6 @@ class DaxNav extends BaseComponent(HTMLElement) {
                 parentLi.classList.add('dax-nav-current');
             }
             matchedLink.setAttribute('aria-current', 'page');
-        }
-    }
-
-    #attachEventListeners() {
-        const { toggle, menu } = this.#refs;
-
-        // Toggle button click
-        if (toggle) {
-            this.addManagedListener(toggle, 'click', () => this.#toggleMenu());
-        }
-
-        // Close menu on escape
-        this.addManagedListener(document, 'keydown', (event) => {
-            if (event.key === 'Escape' && this.#isOpen) {
-                this.#closeMenu();
-                toggle?.focus();
-            }
-        });
-
-        // Start auto-close timer on click outside (let timer control close, not immediate)
-        this.addManagedListener(document, 'click', (event) => {
-            if (this.#isOpen && !this.contains(event.target)) {
-                this.#startAutoCloseTimer();
-            }
-        });
-
-        // Keyboard navigation within menu
-        if (menu) {
-            this.addManagedListener(menu, 'keydown', (event) => {
-                this.#handleMenuKeyboard(event);
-            });
-
-            // Cancel auto-close timer on any interaction within menu
-            this.addManagedListener(menu, 'mousemove', () => this.#clearAutoCloseTimer());
-            this.addManagedListener(menu, 'focusin', () => this.#clearAutoCloseTimer());
-        }
-
-        // Dispatch overlay event when menu state changes
-        this.addManagedListener(this, 'dax-nav-toggle', (event) => {
-            document.dispatchEvent(new CustomEvent('ui-overlay-toggle', {
-                detail: {
-                    source: 'menu',
-                    isOpen: event.detail.isOpen,
-                },
-            }));
-        });
-
-        // Auto-open when mouse enters left edge zone (1/5 of viewport width)
-        this.addManagedListener(document, 'mousemove', (event) => {
-            const hoverZoneWidth = window.innerWidth * HOVER_ZONE_FRACTION;
-            const inHoverZone = event.clientX <= hoverZoneWidth;
-
-            if (inHoverZone && !this.#isOpen && !this.#wasAutoClosed) {
-                this.#openMenu();
-            }
-
-            // Reset the auto-close flag when mouse leaves the hover zone
-            if (!inHoverZone && this.#wasAutoClosed) {
-                this.#wasAutoClosed = false;
-            }
-        });
-
-        // Keep menu open while mouse is over the nav or its parent sidebar
-        // Use closest aside as hover target if it exists, otherwise use self
-        const hoverTarget = this.closest('aside') || this;
-
-        // Cancel any auto-close timer when mouse enters nav area
-        this.addManagedListener(hoverTarget, 'mouseenter', () => {
-            this.#clearAutoCloseTimer();
-        });
-
-        // Start auto-close timer only when mouse leaves nav area
-        this.addManagedListener(hoverTarget, 'mouseleave', () => {
-            if (this.#isOpen) {
-                this.#startAutoCloseTimer();
-            }
-        });
-    }
-
-    #toggleMenu() {
-        if (this.#isOpen) {
-            this.#closeMenu();
-        } else {
-            this.#openMenu();
-        }
-    }
-
-    #openMenu() {
-        const { toggle, menu } = this.#refs;
-        this.#isOpen = true;
-
-        // Set open state via attribute (CSS :has() will handle parent styling)
-        this.setAttribute('data-open', 'true');
-
-        // Fallback for browsers without :has() support
-        if (!HAS_CSS_HAS_SUPPORT) {
-            this.closest('aside')?.classList.add('is-open');
-        }
-
-        if (toggle) {
-            toggle.setAttribute('aria-expanded', 'true');
-            toggle.setAttribute('aria-label', 'Close menu');
-            const icon = toggle.querySelector('.material-symbols-sharp');
-            if (icon) icon.textContent = 'close';
-        }
-
-        if (menu) {
-            menu.setAttribute('aria-hidden', 'false');
-            // Focus first menu item
-            const firstLink = menu.querySelector('a');
-            if (firstLink) {
-                this.setManagedTimeout(() => firstLink.focus(), 100);
-            }
-        }
-
-        this.dispatchEvent(new CustomEvent('dax-nav-toggle', {
-            detail: { isOpen: true },
-            bubbles: true,
-        }));
-
-        // Note: Auto-close timer is NOT started here.
-        // Timer only starts when cursor leaves the nav area (mouseleave).
-    }
-
-    #closeMenu() {
-        const { toggle, menu } = this.#refs;
-        this.#isOpen = false;
-
-        // Set closed state via attribute
-        this.setAttribute('data-open', 'false');
-
-        // Fallback for browsers without :has() support
-        if (!HAS_CSS_HAS_SUPPORT) {
-            this.closest('aside')?.classList.remove('is-open');
-        }
-        this.#clearAutoCloseTimer();
-
-        if (toggle) {
-            toggle.setAttribute('aria-expanded', 'false');
-            toggle.setAttribute('aria-label', 'Open menu');
-            const icon = toggle.querySelector('.material-symbols-sharp');
-            if (icon) icon.textContent = 'menu';
-        }
-
-        if (menu) {
-            menu.setAttribute('aria-hidden', 'true');
-        }
-
-        this.dispatchEvent(new CustomEvent('dax-nav-toggle', {
-            detail: { isOpen: false },
-            bubbles: true,
-        }));
-    }
-
-    #startAutoCloseTimer() {
-        this.#clearAutoCloseTimer();
-        this.#autoCloseTimer = this.setManagedTimeout(() => {
-            if (this.#isOpen) {
-                this.#wasAutoClosed = true;
-                this.#closeMenu();
-            }
-        }, AUTO_CLOSE_DELAY_MS);
-    }
-
-    #clearAutoCloseTimer() {
-        if (this.#autoCloseTimer) {
-            clearTimeout(this.#autoCloseTimer);
-            this.#autoCloseTimer = null;
-        }
-    }
-
-    #resetAutoCloseTimer() {
-        if (this.#isOpen) {
-            this.#startAutoCloseTimer();
-        }
-    }
-
-    #handleMenuKeyboard(event) {
-        const focusableItems = Array.from(this.querySelectorAll('a[href]'));
-        const currentIndex = focusableItems.indexOf(document.activeElement);
-
-        switch (event.key) {
-            case 'ArrowDown':
-            case 'ArrowRight':
-                event.preventDefault();
-                if (currentIndex < focusableItems.length - 1) {
-                    focusableItems[currentIndex + 1].focus();
-                } else {
-                    focusableItems[0].focus();
-                }
-                break;
-            case 'ArrowUp':
-            case 'ArrowLeft':
-                event.preventDefault();
-                if (currentIndex > 0) {
-                    focusableItems[currentIndex - 1].focus();
-                } else {
-                    focusableItems[focusableItems.length - 1].focus();
-                }
-                break;
-            case 'Home':
-                event.preventDefault();
-                focusableItems[0]?.focus();
-                break;
-            case 'End':
-                event.preventDefault();
-                focusableItems[focusableItems.length - 1]?.focus();
-                break;
-            default:
-                break;
         }
     }
 }

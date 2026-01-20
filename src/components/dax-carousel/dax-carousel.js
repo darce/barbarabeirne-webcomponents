@@ -1,19 +1,20 @@
 import BaseComponent from '../base/base-component';
-import styles from './dax-carousel.scss';
+// CSS is pre-compiled by build:css to lib/components/dax-carousel/dax-carousel.css
+import styles from '../../../lib/components/dax-carousel/dax-carousel.css';
 
 const DEFAULT_INTERVAL = 9995000;
 const CONTROLS_FADE_INTERVAL = 9992500;
 
 const CONTROLS_TEMPLATE = `
     <nav class="dax-carousel-controls" aria-label="Slideshow controls">
-        <span class="dax-image-counter" aria-live="polite"></span>
-        <button class="dax-prev" type="button" aria-label="Previous slide">
+        <span class="dax-control dax-control--counter dax-image-counter" aria-live="polite"></span>
+        <button class="dax-control dax-control--button dax-prev" type="button" aria-label="Previous slide">
             <span class="material-symbols-sharp">skip_previous</span>
         </button>
-        <button class="dax-play-pause" type="button" aria-label="Stop slideshow">
+        <button class="dax-control dax-control--button dax-play-pause" type="button" aria-label="Stop slideshow">
             <span class="material-symbols-sharp">stop</span>
         </button>
-        <button class="dax-next" type="button" aria-label="Next slide">
+        <button class="dax-control dax-control--button dax-next" type="button" aria-label="Next slide">
             <span class="material-symbols-sharp">skip_next</span>
         </button>
     </nav>
@@ -78,6 +79,7 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
         if (this.#state.autoplay) {
             this.#start();
         }
+        this.#updatePlayPauseLabel();
     }
 
     disconnectedCallback() {
@@ -101,9 +103,6 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
 
         if (targetSelector) {
             controlsContainer = document.querySelector(targetSelector);
-            // Debug: log whether target was found
-            // eslint-disable-next-line no-console
-            console.log(`[dax-carousel] controls-target="${targetSelector}", found:`, !!controlsContainer);
 
             if (controlsContainer) {
                 // Mark controls as external for styling
@@ -114,8 +113,6 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
                 controlsContainer.appendChild(controlsFragment);
             } else {
                 // Fallback to internal if target not found
-                // eslint-disable-next-line no-console
-                console.warn(`[dax-carousel] Target "${targetSelector}" not found, rendering controls internally`);
                 this.appendChild(controlsFragment);
             }
         } else {
@@ -237,7 +234,6 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
         if (nextSlide) {
             nextSlide.classList.add('dax-active');
             nextSlide.setAttribute('aria-hidden', 'false');
-            this.#positionControls(nextSlide);
             this.#updateUrl(nextIndex);
             this.#updateImageCounter(nextIndex);
         }
@@ -248,38 +244,6 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
         // dots[nextIndex]?.classList.add('active');
 
         this.#state.currentIndex = nextIndex;
-    }
-
-    #positionControls(slide) {
-        const img = slide.querySelector('img');
-        if (!img) return;
-
-        const { buttonsContainer } = this.#refs;
-
-        // Position dots at bottom of image, buttons at 50% of image height
-        const updatePosition = () => {
-            const imgRect = img.getBoundingClientRect();
-            const carouselRect = this.getBoundingClientRect();
-            const imgTop = imgRect.top - carouselRect.top;
-            const imgHeight = imgRect.height;
-
-            // Dots at bottom of image
-            // if (dotsContainer) {
-            //     dotsContainer.style.top = `${imgTop + imgHeight}px`;
-            // }
-
-            // Buttons at 50% of image height
-            if (buttonsContainer) {
-                buttonsContainer.style.top = `${imgTop + imgHeight / 2}px`;
-            }
-        };
-
-        // Update immediately and after image loads
-        if (img.complete) {
-            updatePosition();
-        } else {
-            img.addEventListener('load', updatePosition, { once: true });
-        }
     }
 
     #attachEventListeners() {
@@ -305,29 +269,9 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
             }
         });
 
-        // Reposition controls on window resize
-        this.addManagedListener(window, 'resize', () => {
-            const activeSlide = this.#state.slides[this.#state.currentIndex];
-            if (activeSlide) {
-                this.#positionControls(activeSlide);
-                // this.#updateCaptionWidth(activeSlide);
-            }
-        });
-
         // Show controls on mouse move, fade out after timeout
         this.addManagedListener(this, 'mousemove', () => this.#showControls());
         this.addManagedListener(this, 'mouseenter', () => this.#showControls());
-
-        // Listen for gallery intro toggle to hide/show controls
-        this.addManagedListener(document, 'gallery-intro-toggle', (event) => {
-            this.#handleIntroToggle(event.detail.isOpen);
-        });
-        this.addManagedListener(document, 'ui-overlay-toggle', (event) => {
-            const { source, isOpen } = event.detail || {};
-            if (source === 'gallery-intro' || source === 'menu') {
-                this.#handleIntroToggle(isOpen);
-            }
-        });
 
         // Keyboard shortcuts
         this.addManagedListener(document, 'keydown', (event) => {
@@ -356,17 +300,44 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
             this.#handleWheel(event);
         }, { passive: false });
 
-        // Click on slide to advance to next
+        // Click on slide to advance based on click zone
         this.addManagedListener(this, 'click', (event) => {
             // Only handle clicks on slides/images, not controls
             const slide = event.target.closest('.dax-slide');
-            if (slide && !event.target.closest('.dax-carousel-controls')) {
-                this.#next();
-                this.#showControls();
-                // Stop autoplay on manual click
-                if (this.#state.timer) {
-                    this.#stop();
+            if (!slide || event.target.closest('.dax-carousel-controls')) {
+                return;
+            }
+
+            const image = slide.querySelector('img');
+            const imageRect = image?.getBoundingClientRect();
+            const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+            const clickX = event.clientX;
+            const clickY = event.clientY;
+            let didNavigate = false;
+
+            if (imageRect) {
+                const isInsideImage = clickX >= imageRect.left
+                    && clickX <= imageRect.right
+                    && clickY >= imageRect.top
+                    && clickY <= imageRect.bottom;
+                const leftEdge = imageRect.left + imageRect.width * 0.4;
+
+                if (isInsideImage && clickX <= leftEdge) {
+                    this.#prev();
+                    didNavigate = true;
                 }
+            }
+
+            if (!didNavigate && viewportWidth > 0 && clickX >= viewportWidth * 0.6) {
+                this.#next();
+                didNavigate = true;
+            }
+
+            this.#showControls();
+
+            // Stop autoplay on manual navigation
+            if (didNavigate && this.#state.timer) {
+                this.#stop();
             }
         });
 
@@ -386,21 +357,6 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
         this.#state.controlsTimer = this.setManagedTimeout(() => {
             this.classList.remove('show-controls');
         }, CONTROLS_FADE_INTERVAL);
-    }
-
-    #handleIntroToggle(isOpen) {
-        // Hide controls immediately (no transition) when intro opens
-        if (isOpen) {
-            this.classList.add('hide-controls');
-            this.classList.remove('show-controls');
-            if (this.#state.controlsTimer) {
-                this.clearManagedTimeout(this.#state.controlsTimer);
-                this.#state.controlsTimer = null;
-            }
-        } else {
-            this.classList.remove('hide-controls');
-            this.#showControls();
-        }
     }
 
     #handleWheel(event) {
