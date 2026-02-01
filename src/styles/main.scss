@@ -37,6 +37,29 @@ body {
   padding-inline: $spacer-medium;
 }
 
+// Mobile: increase padding for text content
+@media (max-width: $breakpoint-nav) {
+  .main-container {
+    padding-inline: $spacing-xl;
+  }
+
+  .main-container> :where(img, picture, figure),
+  .main-container>article> :where(img, picture, figure) {
+    width: calc(100% + (#{$spacing-xl} * 2));
+    margin-inline: calc(#{$spacing-xl} * -1);
+  }
+
+  .main-container figure figcaption {
+    padding-inline: $spacing-xl;
+  }
+
+  // Full-bleed gallery-header on mobile
+  .main-container .gallery-header {
+    margin-inline: calc(#{$spacing-xl} * -1);
+    padding-inline: $spacing-xl;
+  }
+}
+
 .main-container> :where(img, picture, figure),
 .main-container>article> :where(img, picture, figure) {
   display: block;
@@ -92,6 +115,12 @@ body {
     outline: $focus-ring-width solid $color-black;
     outline-offset: $focus-ring-offset;
   }
+}
+
+// Standard spacing below gallery-header for static content pages
+// Excludes bio-container where image should be flush against header
+.main-container:not(.bio-container) .gallery-header + * {
+  margin-top: $spacing-xl;
 }
 
 // Press page list styles
@@ -216,13 +245,16 @@ body {
 
     .gallery-header {
       order: 1;
+      // Full-bleed: counter parent's mobile padding
+      margin-inline: calc(#{$spacing-xl} * -1);
+      padding-inline: $spacing-xl;
     }
 
     .bio-image {
       order: 2;
       height: auto;
-      margin-inline: calc(#{$spacer-medium} * -1);
-      width: calc(100% + (#{$spacer-medium} * 2));
+      margin-inline: calc(#{$spacing-xl} * -1);
+      width: calc(100% + (#{$spacing-xl} * 2));
 
       img {
         width: 100%;
@@ -237,7 +269,8 @@ body {
     .bio-content {
       order: 3;
       width: 100%;
-      padding-top: $spacer-medium;
+      margin-top: $spacing-xl; // Reset desktop margin, standard spacing below image
+      padding: 0; // Reset desktop padding
       background-color: $color-white;
     }
   }

@@ -55,7 +55,6 @@ class DaxSidebar extends BaseComponent(HTMLElement) {
         this.#initTouchGestures();
         this.#attachEventListeners();
         this.addManagedListener(window, 'resize', () => this.#applyModalState());
-        this.#initAutoCloseTimer();
         this.#initCarouselListener();
     }
 
@@ -413,16 +412,28 @@ class DaxSidebar extends BaseComponent(HTMLElement) {
     }
 
     #initCarouselListener() {
-        // Close nav when carousel auto-advances (only on gallery pages)
+        // Close nav after inactivity when carousel auto-play starts (only on gallery pages)
         if (!this.#isGalleryPage()) {
             return;
         }
 
-        this.addManagedListener(document, 'dax-carousel-advance', () => {
-            if (this.#isMenuOpen) {
-                this.#closeNavOnly();
+        const startInactivityTimer = () => {
+            // Only start timer if sidebar is open and no timer is already running
+            if (this.#isMenuOpen && this.#autoCloseTimerId === null) {
+                this.#autoCloseTimerId = setTimeout(() => {
+                    if (this.#isMenuOpen) {
+                        this.#closeNavOnly();
+                    }
+                    this.#autoCloseTimerId = null;
+                }, NAV_AUTO_CLOSE_DELAY_MS);
             }
-        });
+        };
+
+        // Start timer when autoplay is activated by user
+        this.addManagedListener(document, 'dax-carousel-autoplay-start', startInactivityTimer);
+
+        // Also start timer on slide advance (for when autoplay was already running)
+        this.addManagedListener(document, 'dax-carousel-advance', startInactivityTimer);
     }
 }
 

@@ -99,7 +99,7 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
         this.#refreshSlides();
         this.#attachEventListeners();
         if (this.#state.autoplay) {
-            this.#start();
+            this.#start(true); // isInitial = true, don't dispatch event
         }
         this.#updatePlayPauseLabel();
     }
@@ -557,7 +557,7 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
         this.#setActive(this.#state.currentIndex - 1);
     }
 
-    #start() {
+    #start(isInitial = false) {
         if (this.#state.timer) return;
         this.#state.timer = this.setManagedInterval(
             () => {
@@ -571,6 +571,13 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
         );
         this.#state.autoplay = true;
         this.#updatePlayPauseLabel();
+        // Only dispatch autoplay-start event for user-initiated starts (not initial page load)
+        if (!isInitial) {
+            this.dispatchEvent(new CustomEvent('dax-carousel-autoplay-start', {
+                bubbles: true,
+                composed: true,
+            }));
+        }
     }
 
     #stop() {

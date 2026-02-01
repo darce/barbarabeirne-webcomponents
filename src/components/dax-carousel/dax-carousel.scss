@@ -83,7 +83,7 @@ dax-carousel {
       height: 100%;
       max-height: 100%;
       object-fit: contain;
-      border: $carousel-border-width solid $carousel-bg;
+      // border: $carousel-border-width solid $carousel-bg;
     }
 
     figcaption {
@@ -170,7 +170,7 @@ dax-carousel {
         position: absolute;
         bottom: calc(#{$carousel-control-size} + #{$spacing-xl} * 2); // Space for controls + matching gap
         left: auto;
-        right: 0;
+        right: $spacing-xl;
         max-height: $carousel-caption-height-desktop; // Limit max height, but allow content to determine actual height
         width: $carousel-caption-width-desktop;
         height: auto; // Flow with content instead of fixed 50%
