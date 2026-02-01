@@ -19,7 +19,7 @@ const TEMP_DIR = path.join(LIB_DIR, '.css-temp');
 
 // Static CSS files to include first (order matters)
 const STATIC_CSS_FILES = [
-  'reset.css',
+  // reset.css is now imported in main.scss
 ];
 
 // Site SCSS files to compile (order matters)

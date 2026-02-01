@@ -1,3 +1,4 @@
+@use './reset';
 @use './variables' as *;
 
 @font-face {
@@ -17,7 +18,7 @@
 }
 
 body {
-  line-height: 1.5;
+  // line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   font-family: $font-family-sans;
 }
@@ -28,7 +29,7 @@ body {
   font-style: normal;
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
   display: inline-block;
-  line-height: 1;
+  // line-height: 1;
 }
 
 .main-container {
@@ -36,15 +37,15 @@ body {
   padding-inline: $spacer-medium;
 }
 
-.main-container > :where(img, picture, figure, .bio-image),
-.main-container > article > :where(img, picture, figure) {
+.main-container> :where(img, picture, figure),
+.main-container>article> :where(img, picture, figure) {
   display: block;
   width: calc(100% + (#{$spacer-medium} * 2));
   margin-inline: calc(#{$spacer-medium} * -1);
 }
 
-.main-container > :where(img),
-.main-container > article > :where(img) {
+.main-container> :where(img),
+.main-container>article> :where(img) {
   max-width: none;
 }
 
@@ -55,5 +56,189 @@ body {
 @media (min-width: $breakpoint-gallery-intro) {
   .main-container {
     margin-left: $dax-sidebar-width;
+  }
+}
+
+// Back to index button (matches gallery-intro-toggle style)
+.button-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-xs $spacing-md;
+  background: $color-white;
+  color: $color-black;
+  border: 1px solid $color-black;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 0;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  // line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+  transition: background $duration-fast $ease-out,
+    border-color $duration-fast $ease-out,
+    color $duration-fast $ease-out;
+
+  &:hover {
+    background: $color-black;
+    border-color: $color-black;
+    color: $color-white;
+  }
+
+  &:focus-visible {
+    outline: $focus-ring-width solid $color-black;
+    outline-offset: $focus-ring-offset;
+  }
+}
+
+// Press page list styles
+.press-list {
+  list-style: none;
+  padding: 0;
+  padding-bottom: $spacing-xl;
+  margin: 0;
+
+  li {
+    position: relative;
+    padding: $spacer-small 0;
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease;
+    cursor: pointer;
+
+    &:hover {
+      border-top-color: $color-black;
+      border-bottom-color: $color-black;
+    }
+  }
+
+  .publication-name {
+    font-weight: 700;
+  }
+
+  // Stretch anchor to cover entire LI for clickability
+  .publication-title a {
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+    }
+  }
+}
+
+// Exhibitions page styles
+.exhibitions {
+  ul {
+    list-style: disc;
+    margin-left: $spacer-medium;
+    padding-bottom: $spacing-xl;
+  }
+
+  li {
+    padding: $spacing-sm 0;
+  }
+
+  h2 {
+    padding-top: $spacing-lg;
+    padding-bottom: $spacing-md;
+  }
+}
+
+// Bio/Contact page overlay layout
+.bio-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
+
+  .gallery-header {
+    grid-column: 1;
+    grid-row: 1;
+    // Counter parent's padding-inline
+    margin-inline: calc(#{$spacer-medium} * -1);
+    padding-inline: $spacer-medium;
+    z-index: 1;
+  }
+
+  .bio-image,
+  .bio-content {
+    grid-column: 1;
+    grid-row: 1 / -1;
+  }
+
+  .bio-image {
+    position: relative;
+    width: 100%;
+    height: 100vh; // Fixed viewport height
+    max-height: 100vh;
+    overflow: hidden; // Clip image rather than resize
+    // Counter parent's padding-inline for full-width
+    margin-inline: calc(#{$spacer-medium} * -1);
+    width: calc(100% + (#{$spacer-medium} * 2));
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: left top; // Left-align and top-align content
+      // Fade to transparent at bottom using mask
+      mask-image: linear-gradient(to bottom, black calc(100% - 100px), transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 100px), transparent 100%);
+    }
+  }
+
+  .bio-content {
+    position: relative;
+    z-index: 1;
+    justify-self: end;
+    align-self: start;
+    width: 60%;
+    padding: $spacer-medium;
+    margin-top: calc(#{$dax-sidebar-masthead-height} + #{$spacer-medium});
+    background-color: rgba(255, 255, 255, 0.75);
+    box-sizing: border-box;
+
+    p {
+      margin-bottom: $spacing-lg;
+      line-height: $line-height-relaxed;
+    }
+  }
+}
+
+// Mobile: bio container stacked layout (image above text)
+@media (max-width: $breakpoint-nav) {
+  .bio-container {
+    display: flex;
+    flex-direction: column;
+    grid-template-rows: none;
+
+    .gallery-header {
+      order: 1;
+    }
+
+    .bio-image {
+      order: 2;
+      height: auto;
+      margin-inline: calc(#{$spacer-medium} * -1);
+      width: calc(100% + (#{$spacer-medium} * 2));
+
+      img {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+        // Remove fade on mobile
+        mask-image: none;
+        -webkit-mask-image: none;
+      }
+    }
+
+    .bio-content {
+      order: 3;
+      width: 100%;
+      padding-top: $spacer-medium;
+      background-color: $color-white;
+    }
   }
 }

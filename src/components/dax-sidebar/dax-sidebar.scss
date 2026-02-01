@@ -1,8 +1,15 @@
 @use '../../styles/shared' as *;
 
+// ============================================================================
+// DAX-SIDEBAR COMPONENT STYLES
+// ============================================================================
+// Desktop-first approach: Base styles are desktop, mobile overrides at bottom.
+// Using consolidated mobile breakpoint: $breakpoint-nav (810px)
+// ============================================================================
+
 // Component-specific variables
 $sidebar-bg: $color-translucent-white-50;
-$sidebar-mobile-width: min(80vw, 320px);
+$sidebar-mobile-width: 80%;
 $sidebar-z-index: $z-index-modal;
 $sidebar-z-index-desktop: 9999;
 $sidebar-masthead-font-size: $font-size-subheader;
@@ -12,39 +19,25 @@ $sidebar-masthead-link-padding-horizontal: 20px;
 $sidebar-toggle-padding: $spacing-sm;
 $sidebar-toggle-icon-size: $font-size-xl;
 $sidebar-toggle-icon-weight: 400;
-$sidebar-focus-ring-offset-outset: 2px;
 
-// Host styles
+// ─────────────────────────────────────────────────────────────────────────────
+// HOST
+// ─────────────────────────────────────────────────────────────────────────────
+
 :host {
   display: block;
   --dax-sidebar-breakpoint-nav: #{$breakpoint-nav};
 }
 
-// Backdrop for mobile
-.dax-sidebar-backdrop {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: $color-translucent-black;
-  z-index: $sidebar-z-index - 1;
-  opacity: 0;
-  transition: opacity $duration-normal $ease-out;
-}
+// ─────────────────────────────────────────────────────────────────────────────
+// SIDEBAR CONTAINER (DESKTOP)
+// ─────────────────────────────────────────────────────────────────────────────
 
-// Only show backdrop on mobile when menu is open
-@media (max-width: $breakpoint-nav) {
-  :host([data-nav-open="true"]) .dax-sidebar-backdrop {
-    display: block;
-    opacity: 1;
-  }
-}
-
-// Sidebar container (the <aside>)
 .dax-sidebar {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: $sidebar-z-index;
+  z-index: $sidebar-z-index-desktop;
   width: $dax-sidebar-width;
 }
 
@@ -56,40 +49,55 @@ $sidebar-focus-ring-offset-outset: 2px;
   pointer-events: auto;
 }
 
-// Masthead container (stays visible when nav is collapsed)
+// ─────────────────────────────────────────────────────────────────────────────
+// BACKDROP (hidden on desktop, visible on mobile when open)
+// ─────────────────────────────────────────────────────────────────────────────
+
+.dax-sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: $color-translucent-black;
+  z-index: $sidebar-z-index - 1;
+  opacity: 0;
+  transition: opacity $duration-normal $ease-out;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// HEADER & MASTHEAD
+// ─────────────────────────────────────────────────────────────────────────────
+
 .dax-sidebar-header {
   background: $color-white;
   display: flex;
-  flex-direction: column;
+  align-items: center;
   position: relative;
   z-index: 10;
-  height: $dax-sidebar-masthead-height;
+  min-height: $dax-sidebar-masthead-height;
+  padding: 0 $spacing-sm;
 }
 
-.dax-sidebar-masthead {
-  display: flex;
-  align-items: center;
-  gap: $spacing-sm;
-  padding-left: $spacing-sm;
-  width: 100%;
-  height: 100%;
-}
+// .dax-sidebar-masthead {
+//   display: inline-block;
+//   padding-left: $spacing-sm;
+//   width: 100%;
+//   height: 100%;
+// }
 
-// Masthead styling
 .masthead {
+  flex: 1;
   text-transform: uppercase;
-  text-align: center;
+  text-align: right;
   font-weight: $sidebar-masthead-font-weight;
   font-size: $sidebar-masthead-font-size;
-  padding: 0;
+  padding: 0 $spacing-xl 0 0;
   margin: 0;
-  flex: 1;
+  white-space: nowrap;
 
   a {
-    display: block;
-    padding: $sidebar-masthead-link-padding-vertical $sidebar-masthead-link-padding-horizontal $sidebar-masthead-link-padding-vertical 0;
     color: $color-black;
     text-decoration: none;
+    padding: $spacing-xs $spacing-sm;
 
     &:hover {
       background: $color-gray;
@@ -104,19 +112,22 @@ $sidebar-focus-ring-offset-outset: 2px;
   }
 }
 
-// Toggle button styling
+// ─────────────────────────────────────────────────────────────────────────────
+// TOGGLE BUTTON
+// ─────────────────────────────────────────────────────────────────────────────
+
 .dax-sidebar-toggle {
-  background: $sidebar-bg;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: white;
+  // backdrop-filter: blur(8px);
+  // -webkit-backdrop-filter: blur(8px);
   border: none;
   cursor: pointer;
-  padding: $sidebar-toggle-padding;
+  // padding: $sidebar-toggle-padding;
   color: $color-black;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+  // display: flex;
+  // align-items: center;
+  // justify-content: center;
+  // flex-shrink: 0;
 
   &:hover {
     background: $color-gray;
@@ -126,7 +137,7 @@ $sidebar-focus-ring-offset-outset: 2px;
   &:focus,
   &:focus-visible {
     outline: $focus-ring-width solid $color-black;
-    outline-offset: $sidebar-focus-ring-offset-outset;
+    outline-offset: $focus-ring-offset;
   }
 
   .material-symbols-sharp {
@@ -136,7 +147,7 @@ $sidebar-focus-ring-offset-outset: 2px;
     font-style: normal;
     font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
     display: inline-block;
-    line-height: 1;
+    // line-height: 1;
     transition: transform $duration-fast $ease-out;
   }
 }
@@ -146,44 +157,57 @@ $sidebar-focus-ring-offset-outset: 2px;
   transform: rotate(90deg);
 }
 
-// Mobile specific adjustments
+// ─────────────────────────────────────────────────────────────────────────────
+// REDUCED MOTION
+// ─────────────────────────────────────────────────────────────────────────────
+
+@media (prefers-reduced-motion: reduce) {
+
+  .dax-sidebar-toggle .material-symbols-sharp,
+  .dax-sidebar-backdrop {
+    transition: none;
+  }
+}
+
+// =============================================================================
+// MOBILE BREAKPOINT (max-width: $breakpoint-nav)
+// =============================================================================
+// All mobile-specific overrides below this line.
+// Mobile breakpoint: 810px (defined as $breakpoint-nav in _variables.scss)
+// =============================================================================
+
 @media (max-width: $breakpoint-nav) {
+
+  // Sidebar container: narrower width, offset for fixed header
   .dax-sidebar {
     width: $sidebar-mobile-width;
-    padding-top: $dax-sidebar-masthead-height;
+    // padding-top: $dax-sidebar-masthead-height;
+    z-index: $sidebar-z-index;
   }
 
+  // Header: full-width fixed bar at top
   .dax-sidebar-header {
-    position: fixed;
+    position: relative;
     top: 0;
     left: 0;
     width: 100vw;
     z-index: $sidebar-z-index;
   }
 
-  .dax-sidebar-masthead {
-    width: 100%;
-    padding-right: $spacing-sm;
-  }
+  // Masthead: spans full width with padding
+  // .dax-sidebar-masthead {
+  //   width: 100%;
+  //   padding-right: $spacing-sm;
+  // }
 
+  // Text aligned right on mobile
   .masthead {
     text-align: right;
   }
-}
 
-// Desktop specific adjustments
-@media (min-width: $breakpoint-gallery-intro) {
-  .dax-sidebar {
-    // Increase z-index to ensure it sits above everything
-    z-index: $sidebar-z-index-desktop;
-  }
-}
-
-// Reduced motion
-@media (prefers-reduced-motion: reduce) {
-
-  .dax-sidebar-toggle .material-symbols-sharp,
-  .dax-sidebar-backdrop {
-    transition: none;
+  // Backdrop visible when nav is open
+  :host([data-nav-open="true"]) .dax-sidebar-backdrop {
+    display: block;
+    opacity: 1;
   }
 }

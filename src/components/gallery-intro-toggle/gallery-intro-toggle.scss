@@ -19,12 +19,12 @@ $gallery-intro-open-z-index: $z-index-overlay;
 $gallery-intro-padding-left-wide: $dax-sidebar-width;
 $gallery-intro-breakpoint: $breakpoint-gallery-intro;
 
-dax-sidebar[data-nav-open="false"] + main[data-gallery-context] gallery-intro-toggle {
+dax-sidebar[data-nav-open="false"]+main[data-gallery-context] gallery-intro-toggle {
   pointer-events: none;
 }
 
 @media (max-width: $breakpoint-nav) {
-  dax-sidebar[data-nav-open="false"] + main[data-gallery-context] gallery-intro-toggle {
+  dax-sidebar[data-nav-open="false"]+main[data-gallery-context] gallery-intro-toggle {
     pointer-events: auto;
   }
 }
@@ -42,12 +42,13 @@ gallery-intro-toggle {
   background: $gallery-toggle-bg;
   color: $color-black;
   border: 1px solid $gallery-toggle-border;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2); // Make it pop out more
   border-radius: 0;
   font-size: $gallery-toggle-font-size;
   font-weight: $font-weight-medium;
   letter-spacing: $gallery-toggle-letter-spacing;
   text-transform: uppercase;
-  line-height: 1;
+  // line-height: 1;
   cursor: pointer;
   user-select: none;
   outline: none;
@@ -56,9 +57,9 @@ gallery-intro-toggle {
     color $duration-fast $ease-out;
 
   &:hover {
-    background: $gallery-toggle-bg;
-    border-color: $gallery-toggle-border;
-    color: $color-black;
+    background: $color-black;
+    border-color: $color-black;
+    color: $color-white;
   }
 
   &:focus-visible {
@@ -126,5 +127,13 @@ gallery-intro-toggle {
 @media (min-width: $gallery-intro-breakpoint) {
   .gallery-intro {
     padding-left: $gallery-intro-padding-left-wide;
+  }
+}
+
+@media (max-width: $breakpoint-nav) {
+  .gallery-intro {
+    // Account for stacked masthead + gallery-header on mobile
+    // Uses em units for font-size scaling robustness
+    padding-top: calc(#{$dax-sidebar-masthead-height} + #{$gallery-header-min-height});
   }
 }

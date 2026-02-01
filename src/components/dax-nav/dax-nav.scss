@@ -27,7 +27,7 @@ dax-nav {
     top: 0;
     left: 0;
     padding: $spacing-lg;
-    background: transparent; 
+    background: transparent;
     border: 0;
     z-index: $z-index-overlay;
 
@@ -72,6 +72,7 @@ dax-nav {
     >li {
       text-transform: uppercase;
       font-weight: $font-weight-medium;
+      padding-right: $spacing-xl;
     }
   }
 
@@ -106,29 +107,31 @@ dax-nav {
     >li {
       font-weight: $font-weight-thin;
       text-transform: capitalize;
+      padding-right: $spacing-xl;
     }
 
     // Current page indicator
-    .dax-nav-current {
-      a {
-        background: $nav-fg;
-        color: $nav-hover-fg;
-        cursor: default;
-      }
+    .dax-nav-current a {
+      background: $nav-fg;
+      color: $nav-hover-fg;
+      box-shadow: ($spacing-xl * 2) 0 0 0 $nav-fg;
+      cursor: default;
     }
   }
 
-  // Current page in main menu (non-project pages)
+  // Current page in main menu (non-project pages like Exhibitions, Press, Bio, Contact)
   .dax-nav-menu>.dax-nav-current>a {
     background: $nav-fg;
     color: $nav-hover-fg;
+    box-shadow: $spacing-xl 0 0 0 $nav-fg; // Extend to sidebar edge
+    cursor: default;
   }
 
-  .dax-nav-menu > li > a,
-  .dax-nav-projects > li a {
+  .dax-nav-menu>li>a,
+  .dax-nav-projects>li a {
     display: block;
     width: 100%;
-    padding: $nav-item-padding-y $spacing-lg;
+    // padding: $nav-item-padding-y $spacing-lg;
     color: $nav-fg;
     text-decoration: none;
     cursor: pointer;
@@ -136,22 +139,26 @@ dax-nav {
       box-shadow $duration-fast $ease-out;
   }
 
-  .dax-nav-menu > li > a:hover,
-  .dax-nav-menu > li > a:focus,
-  .dax-nav-menu > li > a:focus-visible,
-  .dax-nav-projects > li a:hover,
-  .dax-nav-projects > li a:focus,
-  .dax-nav-projects > li a:focus-visible {
+  .dax-nav-menu>li>a:hover,
+  .dax-nav-menu>li>a:focus,
+  .dax-nav-menu>li>a:focus-visible {
     background: $nav-fg;
     color: $nav-hover-fg;
-    box-shadow: -$nav-hover-offset 0 0 0 $nav-fg;
-    transform: translate($nav-hover-offset, -$nav-hover-offset);
+    box-shadow: $spacing-xl 0 0 0 $nav-fg;
   }
 
-  .dax-nav-menu > li > a:focus,
-  .dax-nav-menu > li > a:focus-visible,
-  .dax-nav-projects > li a:focus,
-  .dax-nav-projects > li a:focus-visible {
+  .dax-nav-projects>li a:hover,
+  .dax-nav-projects>li a:focus,
+  .dax-nav-projects>li a:focus-visible {
+    background: $nav-fg;
+    color: $nav-hover-fg;
+    box-shadow: ($spacing-xl * 2) 0 0 0 $nav-fg;
+  }
+
+  .dax-nav-menu>li>a:focus,
+  .dax-nav-menu>li>a:focus-visible,
+  .dax-nav-projects>li a:focus,
+  .dax-nav-projects>li a:focus-visible {
     outline: $focus-ring-width solid $nav-fg;
     outline-offset: $focus-ring-offset;
   }

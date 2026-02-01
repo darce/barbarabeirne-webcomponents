@@ -52,7 +52,7 @@ $font-weight-bold: 700;
 
 // Line heights
 $line-height-tight: 1.2;
-$line-height-relaxed: 1.8;
+$line-height-relaxed: 1.6;
 $line-height-nav: 2.2rem;
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -88,15 +88,16 @@ $icon-size-lg: 48px;
 $intro-triangle-size: 160px;
 
 // Layout sizing
-$dax-sidebar-masthead-height: 64px;
+$dax-sidebar-masthead-height: 3.5em; // Scales with user font size for accessibility
+$gallery-header-min-height: 3.5em; // Gallery page header height, matches masthead
 $dax-sidebar-width: clamp(240px, 20vw, 320px);
 
 // Borders
 $border-width-thin: 1px;
 
 // Focus ring
-$focus-ring-width: 2px;
-$focus-ring-offset: -2px;
+$focus-ring-width: 1px;
+$focus-ring-offset: -1px;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // MOTION

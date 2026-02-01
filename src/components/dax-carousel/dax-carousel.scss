@@ -93,6 +93,7 @@ dax-carousel {
       max-height: 33.33vh;
       overflow-y: auto;
       padding: $spacing-lg;
+      padding-right: calc(#{$spacing-lg} + #{$font-size-xl} + #{$spacing-sm}); // Extra space for close button
       text-align: left;
       overflow-wrap: anywhere;
       margin: 0;
@@ -106,6 +107,43 @@ dax-carousel {
 
       .location {
         font-style: italic;
+      }
+
+      // Caption close button - matches dax-sidebar-toggle style
+      .dax-caption-close {
+        position: absolute;
+        top: $spacing-sm;
+        right: $spacing-sm;
+        display: flex; // Prevents extra height from inline-block span
+        align-items: center;
+        justify-content: center;
+        background: $color-white;
+        border: none;
+        cursor: pointer;
+        padding: 0 6px; // Match dax-sidebar-toggle horizontal padding
+        color: $color-black;
+
+
+        &:hover {
+          background: $color-gray;
+          color: $color-white;
+        }
+
+        &:focus,
+        &:focus-visible {
+          outline: $focus-ring-width solid $color-black;
+          outline-offset: $focus-ring-offset;
+        }
+
+        .material-symbols-sharp {
+          font-size: $font-size-xl;
+          font-family: $font-family-icons;
+          font-weight: 400;
+          font-style: normal;
+          font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+          display: inline-block;
+
+        }
       }
     }
 
@@ -130,12 +168,12 @@ dax-carousel {
 
       figcaption {
         position: absolute;
-        bottom: 0;
+        bottom: calc(#{$carousel-control-size} + #{$spacing-xl} * 2); // Space for controls + matching gap
         left: auto;
         right: 0;
-        max-height: none;
+        max-height: $carousel-caption-height-desktop; // Limit max height, but allow content to determine actual height
         width: $carousel-caption-width-desktop;
-        height: $carousel-caption-height-desktop;
+        height: auto; // Flow with content instead of fixed 50%
         background: $carousel-caption-bg;
         backdrop-filter: blur($carousel-caption-blur);
         -webkit-backdrop-filter: blur($carousel-caption-blur);
@@ -250,23 +288,93 @@ dax-sidebar[data-nav-open="false"] + main[data-gallery-context] dax-carousel .da
 }
 
 @media (max-width: $breakpoint-nav) {
-  dax-carousel .dax-carousel-controls {
-    opacity: 1;
-    transform: translateY(0);
+  // On mobile, carousel fills remaining space in flex container
+  // No padding-top needed - headers are in normal flow above
+  [data-gallery-context] dax-carousel {
+    flex: 1;
+    min-height: 0; // Allow flex item to shrink below content size
+    padding-top: 0;
   }
 
-  dax-sidebar[data-nav-open="false"] + main[data-gallery-context] dax-carousel .dax-carousel-controls {
-    opacity: 1;
-    transform: translateY(0);
+  // Hide controls, caption close button, and caption toggle on mobile
+  dax-carousel .dax-carousel-controls,
+  dax-carousel .dax-slide figcaption .dax-caption-close,
+  .dax-caption-toggle {
+    display: none;
+  }
+
+  // Mobile slide layout: flex column with scrollable caption
+  dax-carousel .dax-slide {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  dax-carousel .dax-slide figure {
+    flex: 1;
+    min-height: 0; // Critical: allows flex item to shrink
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  dax-carousel .dax-slide img {
+    flex-shrink: 1;
+    min-height: 0;
+    height: auto;
+    max-height: 60%; // Image takes up to 60% of available space
+    object-fit: contain;
+  }
+
+  dax-carousel .dax-slide figcaption {
+    flex: 1;
+    min-height: 0; // Critical: allows flex item to shrink
+    max-height: none;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; // Smooth scrolling on iOS
   }
 }
 
-// Only hide figcaption on desktop when nav is closed
-@media (min-width: $breakpoint-gallery-intro) {
-  dax-sidebar[data-nav-open="false"] + main[data-gallery-context] dax-carousel figcaption {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
+// Caption visibility is now controlled only by data-caption-open attribute
+// Removed: auto-hide figcaption when sidebar closes (these are independent)
+
+// Caption toggle visibility - controlled by data-caption-open attribute
+dax-carousel[data-caption-open="false"] figcaption {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity $duration-fast $ease-out, visibility $duration-fast $ease-out;
+}
+
+dax-carousel[data-caption-open="true"] figcaption {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity $duration-fast $ease-out, visibility $duration-fast $ease-out;
+}
+
+// When caption is closed, hide carousel controls too
+dax-carousel[data-caption-open="false"] .dax-carousel-controls {
+  opacity: 0 !important;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+// Caption toggle button (info icon) - shows when caption is closed
+.dax-caption-toggle {
+  position: absolute;
+  bottom: $spacing-xl;
+  right: $carousel-controls-padding-inline;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity $duration-fast $ease-out, visibility $duration-fast $ease-out;
+  z-index: $z-index-controls;
+
+  &.visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
   }
 }
 

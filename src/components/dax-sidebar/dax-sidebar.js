@@ -2,15 +2,15 @@ import BaseComponent from '../base/base-component';
 // CSS is pre-compiled by build:css to lib/components/dax-sidebar/dax-sidebar.css
 import styles from '../../../lib/components/dax-sidebar/dax-sidebar.css';
 
+const NAV_AUTO_CLOSE_DELAY_MS = 5000;
+
 const TEMPLATE = `
 <aside class="dax-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
     <header class="dax-sidebar-header">
-        <div class="dax-sidebar-masthead">
-            <button class="dax-sidebar-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="dax-nav-menu">
-                <span class="material-symbols-sharp" aria-hidden="true">menu</span>
-            </button>
-            <h1 class="masthead"><a href="/" id="home-link">Barbara Beirne</a></h1>
-        </div>
+        <button class="dax-sidebar-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="dax-nav-menu">
+            <span class="material-symbols-sharp" aria-hidden="true">menu</span>
+        </button>
+        <h1 class="masthead"><a href="/" id="home-link">Barbara Beirne</a></h1>
     </header>
     <slot></slot>
 </aside>
@@ -36,6 +36,8 @@ class DaxSidebar extends BaseComponent(HTMLElement) {
 
     #isScrollLocked = false;
 
+    #autoCloseTimerId = null;
+
     static get observedAttributes() {
         return ['home-link'];
     }
@@ -53,9 +55,12 @@ class DaxSidebar extends BaseComponent(HTMLElement) {
         this.#initTouchGestures();
         this.#attachEventListeners();
         this.addManagedListener(window, 'resize', () => this.#applyModalState());
+        this.#initAutoCloseTimer();
+        this.#initCarouselListener();
     }
 
     disconnectedCallback() {
+        this.#clearAutoCloseTimer();
         this.cleanup();
     }
 
@@ -373,6 +378,51 @@ class DaxSidebar extends BaseComponent(HTMLElement) {
 
     #closeMenu() {
         this.#setMenuOpen(false);
+    }
+
+    #closeNavOnly() {
+        // Close nav quietly using standard state management but suppressing events
+        // This ensures toggle button and host attributes remain in sync
+        this.#setMenuOpen(false, false);
+    }
+
+    #isGalleryPage() {
+        // Gallery pages have a <main data-gallery-context> element
+        return document.querySelector('main[data-gallery-context]') !== null;
+    }
+
+    #initAutoCloseTimer() {
+        // Only auto-close dax-nav on gallery pages
+        if (!this.#isGalleryPage()) {
+            return;
+        }
+
+        this.#clearAutoCloseTimer();
+        this.#autoCloseTimerId = setTimeout(() => {
+            if (this.#isMenuOpen) {
+                this.#closeNavOnly();
+            }
+        }, NAV_AUTO_CLOSE_DELAY_MS);
+    }
+
+    #clearAutoCloseTimer() {
+        if (this.#autoCloseTimerId !== null) {
+            clearTimeout(this.#autoCloseTimerId);
+            this.#autoCloseTimerId = null;
+        }
+    }
+
+    #initCarouselListener() {
+        // Close nav when carousel auto-advances (only on gallery pages)
+        if (!this.#isGalleryPage()) {
+            return;
+        }
+
+        this.addManagedListener(document, 'dax-carousel-advance', () => {
+            if (this.#isMenuOpen) {
+                this.#closeNavOnly();
+            }
+        });
     }
 }
 
