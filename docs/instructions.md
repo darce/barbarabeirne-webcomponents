@@ -24,25 +24,27 @@ Read it before making changes.
 
 - Do not edit `lib/` directly. It is generated output from `npm run build`.
 - Only change source files in `src/` (and related inputs), then regenerate `lib/` via the build.
-- `main.css` and `gallery.css` are legacy global styles referenced by pages.
 
 ## Build and Lint
 
 - `npm run lint` (eslint over `src/`)
 - `npm run build` (CSS + babel + rollup)
-- `npm run build:css` compiles `src/styles/components.scss` to `lib/components.css`
+- `npm run build:css` compiles SCSS files to `lib/styles.css` and component CSS
 
 ## Key Files and Entry Points
 
 - `src/init.js` registers Web Components.
 - `src/components/*` holds each component (`*.js` + `*.scss`).
-- `src/styles/_variables.scss` and `src/styles/_shared.scss` are shared tokens.
-- `src/styles/components.scss` aggregates light-DOM component styles for CSS extraction.
+- `src/styles/_variables.scss` design tokens (colors, spacing, breakpoints, etc.).
+- `src/styles/_shared.scss` imports variables and mixins for component use.
+- `src/styles/critical.scss` FOUC prevention styles for raw markup before JS runs.
+- `src/styles/main.scss` global page styles.
+- `src/styles/gallery.scss` gallery page styles.
 - `rollup.config.js` defines bundles for `lib/`.
 
 ## Context Tips for Agents
 
 - If you change shared markup (nav, layout), update all gallery pages.
 - If you add a new component, add it to `src/init.js` and `rollup.config.js`.
-- Light-DOM component styles go in `src/styles/components.scss` for FOUC prevention.
-- All HTML pages must link `lib/components.css` in `<head>`.
+- Critical/FOUC styles for raw markup go in `src/styles/critical.scss`.
+- All HTML pages must link `lib/styles.css` in `<head>`.
