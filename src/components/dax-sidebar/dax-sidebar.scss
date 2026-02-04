@@ -89,28 +89,28 @@ $sidebar-toggle-icon-weight: 400;
   flex: 1;
   text-transform: uppercase;
   text-align: right;
+  font-family: inherit;
   font-weight: $sidebar-masthead-font-weight;
   font-size: $sidebar-masthead-font-size;
-  padding: 0 $spacing-xl 0 0;
+  padding: $spacing-xs $spacing-xl $spacing-xs $spacing-sm;
   margin: 0;
   margin-right: 6px; // Align with dax-nav, accounting for box-shadow space
   white-space: nowrap;
+  // Button reset
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: $color-black;
 
-  a {
-    color: $color-black;
-    text-decoration: none;
-    padding: $spacing-xs $spacing-sm;
+  &:hover {
+    background: $color-gray;
+    color: $color-white;
+  }
 
-    &:hover {
-      background: $color-gray;
-      color: $color-white;
-    }
-
-    &:focus,
-    &:focus-visible {
-      outline: $focus-ring-width solid $color-black;
-      outline-offset: $focus-ring-offset;
-    }
+  &:focus,
+  &:focus-visible {
+    outline: $focus-ring-width solid $color-black;
+    outline-offset: $focus-ring-offset;
   }
 }
 

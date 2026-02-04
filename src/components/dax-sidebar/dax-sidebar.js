@@ -10,7 +10,7 @@ const TEMPLATE = `
         <button class="dax-sidebar-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="dax-nav-menu">
             <span class="material-symbols-sharp" aria-hidden="true">menu</span>
         </button>
-        <h1 class="masthead"><a href="/" id="home-link">Barbara Beirne</a></h1>
+        <button class="masthead" type="button" aria-label="Toggle menu" aria-expanded="false" aria-controls="dax-nav-menu">Barbara Beirne</button>
     </header>
     <slot></slot>
 </aside>
@@ -38,19 +38,8 @@ class DaxSidebar extends BaseComponent(HTMLElement) {
 
     #autoCloseTimerId = null;
 
-    static get observedAttributes() {
-        return ['home-link'];
-    }
-
-    attributeChangedCallback(name, oldValue, newValue) {
-        if (name === 'home-link' && oldValue !== newValue) {
-            this.#updateHomeLink();
-        }
-    }
-
     connectedCallback() {
         this.#render();
-        this.#updateHomeLink();
         this.#initMenuState();
         this.#initTouchGestures();
         this.#attachEventListeners();
@@ -87,17 +76,10 @@ class DaxSidebar extends BaseComponent(HTMLElement) {
         this.#refs = {
             container: this.shadowRoot.querySelector('.dax-sidebar'),
             toggle: this.shadowRoot.querySelector('.dax-sidebar-toggle'),
+            masthead: this.shadowRoot.querySelector('.masthead'),
             nav: this.querySelector('dax-nav'),
             backdrop: this.shadowRoot.querySelector('.dax-sidebar-backdrop'),
         };
-    }
-
-    #updateHomeLink() {
-        const link = this.getAttribute('home-link') || '/';
-        const anchor = this.shadowRoot?.querySelector('#home-link');
-        if (anchor) {
-            anchor.setAttribute('href', link);
-        }
     }
 
     #getNavBreakpoint() {
@@ -133,7 +115,7 @@ class DaxSidebar extends BaseComponent(HTMLElement) {
     }
 
     #applyMenuState() {
-        const { toggle } = this.#refs;
+        const { toggle, masthead } = this.#refs;
         const nav = this.#getNavElement();
         const isOpen = this.#isMenuOpen;
 
@@ -153,6 +135,11 @@ class DaxSidebar extends BaseComponent(HTMLElement) {
             toggle.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
             const icon = toggle.querySelector('.material-symbols-sharp');
             if (icon) icon.textContent = isOpen ? 'close' : 'menu';
+        }
+
+        if (masthead) {
+            masthead.setAttribute('aria-expanded', String(isOpen));
+            masthead.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
         }
 
         this.#applyModalState();
@@ -190,10 +177,14 @@ class DaxSidebar extends BaseComponent(HTMLElement) {
     }
 
     #attachEventListeners() {
-        const { toggle, backdrop } = this.#refs;
+        const { toggle, masthead, backdrop } = this.#refs;
 
         if (toggle) {
             this.addManagedListener(toggle, 'click', () => this.#toggleMenu());
+        }
+
+        if (masthead) {
+            this.addManagedListener(masthead, 'click', () => this.#toggleMenu());
         }
 
         if (backdrop) {
