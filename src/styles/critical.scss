@@ -24,11 +24,27 @@ dax-sidebar {
 }
 
 // -----------------------------------------------------------------------------
-// dax-carousel: Hide raw slide list until JS transforms it
+// dax-carousel: Style raw markup to match final component appearance
 // -----------------------------------------------------------------------------
 // Before JS runs, the carousel contains a raw <ul><li> structure.
 // JS adds .dax-slides and .dax-slide classes. We style the raw structure
-// to match the final appearance and prevent a flash of stacked images.
+// to match the final appearance and prevent a flash of unstyled content.
+
+// Container baseline (matches dax-carousel.scss)
+dax-carousel {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: $color-black;
+}
+
+// Hide undefined custom element completely until JS registers it
+// This is the nuclear option - prevents any FOUC at cost of showing nothing
+// dax-carousel:not(:defined) {
+//     visibility: hidden;
+// }
+
 dax-carousel {
     // Style raw list the same as .dax-slides
     > ul:not(.dax-slides) {
@@ -52,6 +68,55 @@ dax-carousel {
                 opacity: 1;
                 visibility: visible;
             }
+
+            // Match figure sizing from dax-carousel.scss
+            figure {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                height: 100%;
+            }
+
+            // Match img sizing from dax-carousel.scss (desktop base)
+            img {
+                width: auto;
+                max-width: 100%;
+                height: 100%;
+                max-height: 100%;
+                object-fit: contain;
+            }
+
+            // Hide figcaption until JS can properly position and style it
+            figcaption {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+    }
+}
+
+// Mobile overrides for raw markup (matches dax-carousel.scss mobile block)
+@media (max-width: $breakpoint-nav) {
+    dax-carousel > ul:not(.dax-slides) > li {
+        display: flex;
+        flex-direction: column;
+
+        figure {
+            flex: 1;
+            flex-direction: column;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        img {
+            flex-shrink: 1;
+            min-height: 0;
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            max-height: 60%;
         }
     }
 }

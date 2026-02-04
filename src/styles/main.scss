@@ -34,7 +34,7 @@ body {
 }
 
 .main-container {
-  margin-left: 0;
+  margin-left: $dax-sidebar-width;
   padding-inline: $spacer-medium;
   background-color: $color-offwhite;
   min-height: 100vh;
@@ -62,12 +62,6 @@ body {
   margin-right: calc(#{$spacer-medium} * -1);
   padding-inline: $spacer-medium;
   padding-left: calc(#{$spacer-medium} + 6px); // Match the extra left margin
-}
-
-@media (min-width: $breakpoint-gallery-intro) {
-  .main-container {
-    margin-left: $dax-sidebar-width;
-  }
 }
 
 // Back to index button (matches gallery-intro-toggle style)
@@ -232,8 +226,9 @@ body {
 // All mobile overrides consolidated below
 // =============================================================================
 @media (max-width: $breakpoint-nav) {
-  // Main container: increase padding for text content
+  // Main container: reset margin, increase padding for text content
   .main-container {
+    margin-left: 0;
     padding-inline: $spacing-xl;
   }
 

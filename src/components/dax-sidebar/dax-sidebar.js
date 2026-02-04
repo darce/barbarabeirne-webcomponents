@@ -103,7 +103,7 @@ class DaxSidebar extends BaseComponent(HTMLElement) {
 
         this.#isMenuOpen = hasExplicitState ? navState === 'true' : isDesktop;
         this.#applyMenuState();
-        this.#emitMenuToggle(false, 'init');
+        this.#emitMenuToggle('init');
     }
 
     #getNavElement() {
@@ -145,7 +145,7 @@ class DaxSidebar extends BaseComponent(HTMLElement) {
         this.#applyModalState();
     }
 
-    #emitMenuToggle(emitOverlay = true, source = 'menu') {
+    #emitMenuToggle(source = 'menu') {
         const isOpen = this.#isMenuOpen;
 
         this.dispatchEvent(new CustomEvent('dax-nav-toggle', {
@@ -153,14 +153,6 @@ class DaxSidebar extends BaseComponent(HTMLElement) {
             bubbles: true,
             composed: true,
         }));
-
-        if (emitOverlay) {
-            this.dispatchEvent(new CustomEvent('ui-overlay-toggle', {
-                detail: { source: 'menu', isOpen },
-                bubbles: true,
-                composed: true,
-            }));
-        }
     }
 
     #setMenuOpen(isOpen, emitEvent = true, source = 'menu') {
@@ -172,7 +164,7 @@ class DaxSidebar extends BaseComponent(HTMLElement) {
         this.#applyMenuState();
 
         if (emitEvent) {
-            this.#emitMenuToggle(true, source);
+            this.#emitMenuToggle(source);
         }
     }
 

@@ -1,19 +1,10 @@
 /**
- * Module-level state store using WeakMaps for automatic garbage collection.
- * Private to this module - components access state via class methods.
- */
-const stateMap = new WeakMap();
-const refsMap = new WeakMap();
-
-/**
  * BaseComponent mixin - provides common functionality for web components.
  *
  * Public API (for subclasses):
- *   State:      initComponent, getComponentState, setComponentState,
- *                getComponentRefs, setComponentRefs
  *   Styles:     initStyles (reads static styles/stylesId)
- *   DOM:        initShadow, initLightDOM, queryRefs, queryLightRefs
- *   Attributes: getNumberAttr, getBooleanAttr, getStringAttr
+ *   DOM:        initShadow
+ *   Attributes: getNumberAttr, getBooleanAttr
  *   Events:     addManagedListener
  *   Timers:     setManagedInterval, clearManagedInterval, setManagedTimeout, clearManagedTimeout
  *   Cleanup:    cleanup (call in disconnectedCallback)
@@ -23,38 +14,6 @@ const BaseComponent = (Base = HTMLElement) => class extends Base {
     #listeners = [];
 
     #timers = { intervals: [], timeouts: [] };
-
-    // ─────────────────────────────────────────────────────────────
-    // State Management (Public API)
-    // ─────────────────────────────────────────────────────────────
-
-    initComponent(state = {}, refs = {}) {
-        stateMap.set(this, state);
-        refsMap.set(this, refs);
-    }
-
-    getComponentState() {
-        return stateMap.get(this);
-    }
-
-    setComponentState(updates = {}) {
-        const state = stateMap.get(this);
-        if (!state) return;
-        Object.assign(state, updates);
-    }
-
-    getComponentRefs() {
-        return refsMap.get(this);
-    }
-
-    setComponentRefs(refs = {}) {
-        refsMap.set(this, refs);
-    }
-
-    #destroyComponent() {
-        stateMap.delete(this);
-        refsMap.delete(this);
-    }
 
     // ─────────────────────────────────────────────────────────────
     // Styles (Public API)
@@ -85,29 +44,6 @@ const BaseComponent = (Base = HTMLElement) => class extends Base {
         return shadow;
     }
 
-    initLightDOM(template) {
-        this.appendChild(template.content.cloneNode(true));
-    }
-
-    queryRefs(selectors = {}) {
-        const shadow = this.shadowRoot;
-        if (!shadow) return {};
-
-        const refs = {};
-        Object.entries(selectors).forEach(([key, selector]) => {
-            refs[key] = shadow.querySelector(selector);
-        });
-        return refs;
-    }
-
-    queryLightRefs(selectors = {}) {
-        const refs = {};
-        Object.entries(selectors).forEach(([key, selector]) => {
-            refs[key] = this.querySelector(selector);
-        });
-        return refs;
-    }
-
     // ─────────────────────────────────────────────────────────────
     // Attribute Helpers (Public API)
     // ─────────────────────────────────────────────────────────────
@@ -119,10 +55,6 @@ const BaseComponent = (Base = HTMLElement) => class extends Base {
 
     getBooleanAttr(name) {
         return this.hasAttribute(name);
-    }
-
-    getStringAttr(name, defaultValue = '') {
-        return this.getAttribute(name) ?? defaultValue;
     }
 
     // ─────────────────────────────────────────────────────────────
@@ -190,7 +122,6 @@ const BaseComponent = (Base = HTMLElement) => class extends Base {
     cleanup() {
         this.#removeAllListeners();
         this.#clearAllTimers();
-        this.#destroyComponent();
     }
 };
 

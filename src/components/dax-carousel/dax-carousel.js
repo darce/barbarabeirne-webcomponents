@@ -42,14 +42,13 @@ const REF_SELECTORS = {
     prevButton: '.dax-prev',
     nextButton: '.dax-next',
     playPauseButton: '.dax-play-pause',
-    buttonsContainer: '.dax-carousel-controls',
     imageCounter: '.dax-image-counter',
     captionCloseButton: '.dax-caption-close',
     captionToggleButton: '.dax-caption-toggle',
 };
 
 class DaxCarousel extends BaseComponent(HTMLElement) {
-    static observedAttributes = ['interval', 'autoplay', 'fullscreen', 'no-controls'];
+    static observedAttributes = ['interval'];
 
     static styles = styles;
 
@@ -66,7 +65,6 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
         controlsTimer: null,
         wheelLock: false,
         slides: [],
-        listEl: null,
         isCaptionOpen: true,
         captionToggleTimer: null,
         // Swipe tracking
@@ -123,7 +121,6 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
             prevButton: this.querySelector(REF_SELECTORS.prevButton),
             nextButton: this.querySelector(REF_SELECTORS.nextButton),
             playPauseButton: this.querySelector(REF_SELECTORS.playPauseButton),
-            buttonsContainer: this.querySelector(REF_SELECTORS.buttonsContainer),
             imageCounter: this.querySelector(REF_SELECTORS.imageCounter),
         };
     }
@@ -218,7 +215,6 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
         if (!listEl) return;
 
         listEl.classList.add('dax-slides');
-        this.#state.listEl = listEl;
 
         const slides = Array.from(listEl.children)
             .filter((el) => el.nodeType === Node.ELEMENT_NODE);
@@ -229,7 +225,6 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
         });
 
         this.#state.slides = slides;
-        this.#buildDots();
 
         // Check URL for initial slide
         const initialIndex = this.#checkUrl();
@@ -287,22 +282,6 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
                 window.history.replaceState(null, '', hash);
             }
         }
-    }
-
-    #buildDots() {
-        const { dotsContainer } = this.#refs;
-        if (!dotsContainer) return;
-
-        dotsContainer.innerHTML = '';
-        this.#state.slides.forEach((_, idx) => {
-            const dot = document.createElement('button');
-            dot.type = 'button';
-            dot.className = 'dax-dot';
-            dot.setAttribute('aria-label', `Go to slide ${idx + 1}`);
-            dot.setAttribute('role', 'tab');
-            this.addManagedListener(dot, 'click', () => this.#setActive(idx));
-            dotsContainer.appendChild(dot);
-        });
     }
 
     #setActive(index) {

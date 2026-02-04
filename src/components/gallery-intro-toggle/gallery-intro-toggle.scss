@@ -17,7 +17,6 @@ $gallery-intro-padding-inline: calc(#{$spacer-medium} * #{$gallery-intro-padding
 $gallery-intro-base-z-index: $z-index-stack-order;
 $gallery-intro-open-z-index: $z-index-overlay;
 $gallery-intro-padding-left-wide: $dax-sidebar-width;
-$gallery-intro-breakpoint: $breakpoint-gallery-intro;
 
 dax-sidebar[data-nav-open="false"]+main[data-gallery-context] gallery-intro-toggle {
   pointer-events: none;
@@ -71,6 +70,7 @@ gallery-intro-toggle {
   position: absolute;
   inset: 0;
   padding: $gallery-intro-padding-block $spacer-medium;
+  padding-left: calc(#{$dax-sidebar-width} + #{$spacer-medium});
   background: $color-offwhite;
   overflow-y: auto;
   // Start collapsed to triangle size
@@ -116,12 +116,6 @@ gallery-intro-toggle {
   -webkit-clip-path: polygon(0 0, 0 100%, 100% 100%, 100% 0);
   pointer-events: auto;
   z-index: $gallery-intro-open-z-index;
-}
-
-@media (min-width: $gallery-intro-breakpoint) {
-  .gallery-intro {
-    padding-left: calc(#{$dax-sidebar-width} + #{$spacer-medium});
-  }
 }
 
 // =============================================================================

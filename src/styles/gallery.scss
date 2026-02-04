@@ -22,7 +22,7 @@ $gallery-header-z-index: $z-index-overlay + 1;
   justify-content: flex-end;
   gap: $gallery-header-gap;
   min-height: $dax-sidebar-masthead-height;
-  padding: 0 $spacing-md 0 $gallery-header-padding-inline;
+  padding: 0 $spacing-md 0 calc(#{$dax-sidebar-width} + #{$gallery-header-padding-inline});
   background: $color-white;
   color: $color-black;
 }
@@ -53,12 +53,6 @@ $gallery-header-z-index: $z-index-overlay + 1;
   text-align: right;
 }
 
-@media (min-width: $breakpoint-gallery-intro) {
-  .gallery-header {
-    padding-left: calc(#{$dax-sidebar-width} + #{$gallery-header-padding-inline});
-  }
-}
-
 dax-sidebar[data-nav-open="false"]+main[data-gallery-context] .gallery-header {
   transform: translateY(-100%);
   opacity: 0;
@@ -72,6 +66,11 @@ dax-sidebar[data-nav-open="false"]+main[data-gallery-context] .gallery-header {
   // Position gallery-header below masthead on all pages
   .gallery-header {
     margin-top: $dax-sidebar-masthead-height;
+    padding-left: $gallery-header-padding-inline;
+  }
+
+  h1.gallery-title {
+    text-align: left;
   }
 
   // Use flexbox layout so carousel adapts to actual header heights

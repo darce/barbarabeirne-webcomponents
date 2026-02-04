@@ -46,8 +46,6 @@ dax-carousel {
   // Slides
   .dax-slide {
     position: absolute;
-    // top: 0;
-    // left: 0;
     width: 100%;
     height: inherit;
     z-index: 0;
@@ -55,7 +53,6 @@ dax-carousel {
     visibility: hidden;
     pointer-events: none; // Prevent clicks on inactive slides
     transition: opacity $transition-fade, visibility $transition-fade;
-    // text-align: center;
 
     // Ensure all interactive elements in inactive slides are non-clickable
     figcaption,
@@ -82,12 +79,6 @@ dax-carousel {
     }
 
     figure {
-      // position: relative;
-      // margin: 0 $carousel-gap;
-      // flex-direction: column;
-      // width: max-content;
-      // max-width: 100%;
-      // text-align: left;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -96,13 +87,11 @@ dax-carousel {
     }
 
     img {
-      //display: block;
       width: auto;
       max-width: 100%;
       height: 100%;
       max-height: 100%;
       object-fit: contain;
-      // border: $carousel-border-width solid $carousel-bg;
     }
 
     figcaption {
@@ -170,36 +159,25 @@ dax-carousel {
     }
 
     figure {
-      flex-direction: column;
+      flex-direction: row;
     }
 
     img {
-      height: auto;
-      max-height: calc(100% - 33.33vh);
+      height: 100%;
+      max-height: 100%;
     }
 
-    @media (min-width: $breakpoint-gallery-intro) {
-      figure {
-        flex-direction: row;
-      }
-
-      img {
-        height: 100%;
-        max-height: 100%;
-      }
-
-      figcaption {
-        position: absolute;
-        bottom: calc(#{$carousel-control-size} + #{$spacing-xl} * 2); // Space for controls + matching gap
-        left: auto;
-        right: $spacing-xl;
-        max-height: $carousel-caption-height-desktop; // Limit max height, but allow content to determine actual height
-        width: $carousel-caption-width-desktop;
-        height: auto; // Flow with content instead of fixed 50%
-        background: $carousel-caption-bg;
-        backdrop-filter: blur($carousel-caption-blur);
-        -webkit-backdrop-filter: blur($carousel-caption-blur);
-      }
+    figcaption {
+      position: absolute;
+      bottom: calc(#{$carousel-control-size} + #{$spacing-xl} * 2); // Space for controls + matching gap
+      left: auto;
+      right: $spacing-xl;
+      max-height: $carousel-caption-height-desktop; // Limit max height, but allow content to determine actual height
+      width: $carousel-caption-width-desktop;
+      height: auto; // Flow with content instead of fixed 50%
+      background: $carousel-caption-bg;
+      backdrop-filter: blur($carousel-caption-blur);
+      -webkit-backdrop-filter: blur($carousel-caption-blur);
     }
   }
 
@@ -285,19 +263,11 @@ dax-carousel {
         width: 100vw;
       }
     }
-
-    // Hide dots in fullscreen
-    .dax-carousel-dots {
-      display: none;
-    }
-
   }
 
   // No controls mode - hides all control UI
   &.no-controls {
-
-    .dax-carousel-controls,
-    .dax-carousel-dots {
+    .dax-carousel-controls {
       display: none;
     }
   }
@@ -343,12 +313,25 @@ dax-sidebar[data-nav-open="false"] + main[data-gallery-context] dax-carousel .da
   dax-carousel .dax-slide img {
     flex-shrink: 1;
     min-height: 0;
+    width: 100%;
+    max-width: 100%;
     height: auto;
-    max-height: 60%; // Image takes up to 60% of available space
     object-fit: contain;
   }
 
   dax-carousel .dax-slide figcaption {
+    // Reset desktop absolute positioning to normal flow
+    position: relative;
+    bottom: auto;
+    right: auto;
+    width: 100%;
+    max-width: 100%;
+    // Reset desktop background/effects
+    background: $color-white;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow: none;
+    // Mobile layout
     flex: 1 1 auto;
     min-height: 0; // Critical: allows flex item to shrink
     max-height: 40vh; // Limit height to allow scrolling
@@ -398,31 +381,5 @@ dax-carousel[data-caption-open="false"] .dax-carousel-controls {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-  }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// EXTERNAL CONTROLS - When rendered outside carousel (e.g., in sidebar header)
-// ─────────────────────────────────────────────────────────────────────────────
-
-.dax-carousel-controls--external {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: $spacing-md;
-  padding: $spacing-md $spacing-lg;
-  background: $color-white;
-  opacity: 1;
-
-  // Reset positioning - not absolute when external
-  position: static;
-  transform: none;
-
-  .material-symbols-sharp {
-    font-family: $font-family-icons;
-  }
-
-  .dax-control {
-    margin: 0;
   }
 }

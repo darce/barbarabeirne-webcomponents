@@ -21,38 +21,6 @@ dax-nav {
   padding-right: 6px; // Space for box-shadow
   padding-bottom: 6px; // Space for box-shadow
 
-  // Mobile menu toggle button - hidden by default
-  .dax-nav-toggle {
-    display: none;
-    cursor: pointer;
-    position: absolute;
-    top: 0;
-    left: 0;
-    padding: $spacing-lg;
-    background: transparent;
-    border: 0;
-    z-index: $z-index-overlay;
-
-    .material-symbols-sharp {
-      font-size: $nav-icon-size;
-      color: $nav-fg;
-    }
-
-    &:hover,
-    &:focus-visible {
-      background: $nav-hover-bg;
-
-      .material-symbols-sharp {
-        color: $nav-hover-fg;
-      }
-    }
-
-    &:focus-visible {
-      outline: $focus-ring-width solid $nav-fg;
-      outline-offset: $focus-ring-offset;
-    }
-  }
-
   // Main menu list
   .dax-nav-menu {
     line-height: $nav-line-height;
@@ -169,11 +137,6 @@ dax-nav {
 // =============================================================================
 @media (max-width: $nav-mobile-breakpoint) {
   dax-nav {
-    // Show toggle button on mobile
-    .dax-nav-toggle {
-      display: block;
-    }
-
     .dax-nav-menu {
       background: $color-white;
       backdrop-filter: none;
@@ -181,8 +144,3 @@ dax-nav {
     }
   }
 }
-
-// =============================================================================
-// NOTE: Reduced motion is handled globally via CSS custom properties
-// in _variables.scss. No component-specific @media query needed.
-// =============================================================================
