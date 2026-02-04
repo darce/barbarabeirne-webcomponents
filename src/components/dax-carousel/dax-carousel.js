@@ -398,9 +398,9 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
 
         // Click on slide to advance based on click zone
         this.addManagedListener(this, 'click', (event) => {
-            // Only handle clicks on slides/images, not controls
+            // Only handle clicks on slides/images, not controls or caption close button
             const slide = event.target.closest('.dax-slide');
-            if (!slide || event.target.closest('.dax-carousel-controls')) {
+            if (!slide || event.target.closest('.dax-carousel-controls') || event.target.closest('.dax-caption-close')) {
                 return;
             }
 

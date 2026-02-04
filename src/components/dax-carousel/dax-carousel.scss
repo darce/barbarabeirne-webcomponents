@@ -50,16 +50,35 @@ dax-carousel {
     // left: 0;
     width: 100%;
     height: inherit;
+    z-index: 0;
     opacity: 0;
     visibility: hidden;
+    pointer-events: none; // Prevent clicks on inactive slides
     transition: opacity $transition-fade, visibility $transition-fade;
     // text-align: center;
 
+    // Ensure all interactive elements in inactive slides are non-clickable
+    figcaption,
+    .dax-caption-close {
+      pointer-events: none;
+    }
+
     &.dax-active {
       //position: relative;
+      z-index: 1;
       opacity: 1;
       visibility: visible;
+      pointer-events: auto; // Enable clicks on active slide
       cursor: pointer; // Click to advance to next slide
+
+      // Re-enable pointer events for active slide's interactive elements
+      figcaption {
+        pointer-events: auto;
+      }
+
+      .dax-caption-close {
+        pointer-events: auto;
+      }
     }
 
     figure {
@@ -92,8 +111,8 @@ dax-carousel {
       box-sizing: border-box;
       max-height: 33.33vh;
       overflow-y: auto;
+      overflow-x: hidden;
       padding: $spacing-lg;
-      padding-right: calc(#{$spacing-lg} + #{$font-size-xl} + #{$spacing-sm}); // Extra space for close button
       text-align: left;
       overflow-wrap: anywhere;
       margin: 0;
@@ -106,24 +125,28 @@ dax-carousel {
         padding: 0 $carousel-caption-padding-right $carousel-caption-padding-bottom 0;
       }
 
+      p {
+        padding-right: calc(#{$carousel-control-size} + #{$spacing-sm});
+      }
+
       .location {
         font-style: italic;
       }
 
-      // Caption close button - matches dax-sidebar-toggle style
+      // Caption close button - absolute positioned, stays fixed while content scrolls
       .dax-caption-close {
         position: absolute;
-        top: $spacing-sm;
-        right: $spacing-sm;
-        display: flex; // Prevents extra height from inline-block span
+        top: 0;
+        right: 0;
+        z-index: 1;
+        display: flex;
         align-items: center;
         justify-content: center;
         background: $color-white;
         border: none;
         cursor: pointer;
-        padding: 0 6px; // Match dax-sidebar-toggle horizontal padding
+        padding: $spacing-sm 6px;
         color: $color-black;
-
 
         &:hover {
           background: $color-gray;
@@ -143,7 +166,6 @@ dax-carousel {
           font-style: normal;
           font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
           display: inline-block;
-
         }
       }
     }
@@ -299,7 +321,7 @@ dax-sidebar[data-nav-open="false"] + main[data-gallery-context] dax-carousel .da
 
   // Hide controls, caption close button, and caption toggle on mobile
   dax-carousel .dax-carousel-controls,
-  dax-carousel .dax-slide figcaption .dax-caption-close,
+  dax-carousel figcaption .dax-caption-close,
   .dax-caption-toggle {
     display: none;
   }
@@ -328,11 +350,12 @@ dax-sidebar[data-nav-open="false"] + main[data-gallery-context] dax-carousel .da
   }
 
   dax-carousel .dax-slide figcaption {
-    flex: 1;
+    flex: 1 1 auto;
     min-height: 0; // Critical: allows flex item to shrink
-    max-height: none;
+    max-height: 40vh; // Limit height to allow scrolling
     overflow-y: auto;
     -webkit-overflow-scrolling: touch; // Smooth scrolling on iOS
+    padding-right: $spacing-lg; // Reset padding-right (no close button on mobile)
   }
 }
 
