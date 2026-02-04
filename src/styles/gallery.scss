@@ -25,14 +25,6 @@ $gallery-header-z-index: $z-index-overlay + 1;
   padding: 0 $spacing-md 0 $gallery-header-padding-inline;
   background: $color-white;
   color: $color-black;
-  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.2);
-}
-
-// Mobile: position gallery-header below masthead on all pages
-@media (max-width: $breakpoint-nav) {
-  .gallery-header {
-    margin-top: $dax-sidebar-masthead-height;
-  }
 }
 
 // Gallery-context specific positioning
@@ -72,8 +64,17 @@ dax-sidebar[data-nav-open="false"]+main[data-gallery-context] .gallery-header {
   opacity: 0;
 }
 
+// =============================================================================
+// MOBILE STYLES
+// All mobile overrides consolidated below
+// =============================================================================
 @media (max-width: $breakpoint-nav) {
-  // On mobile, use flexbox layout so carousel adapts to actual header heights
+  // Position gallery-header below masthead on all pages
+  .gallery-header {
+    margin-top: $dax-sidebar-masthead-height;
+  }
+
+  // Use flexbox layout so carousel adapts to actual header heights
   [data-gallery-context] {
     display: flex;
     flex-direction: column;

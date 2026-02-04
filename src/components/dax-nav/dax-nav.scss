@@ -18,6 +18,8 @@ dax-nav {
   display: block;
   position: relative; // Context for toggles if needed, and for overflow
   overflow: hidden; // Clip the menu as it slides up (-100%)
+  padding-right: 6px; // Space for box-shadow
+  padding-bottom: 6px; // Space for box-shadow
 
   // Mobile menu toggle button - hidden by default
   .dax-nav-toggle {
@@ -62,6 +64,7 @@ dax-nav {
     background: $nav-bg;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
 
     // Transition properties
     transition: opacity $duration-normal $ease-out,
@@ -164,10 +167,12 @@ dax-nav {
   }
 }
 
-// Mobile-specific adjustments
+// =============================================================================
+// MOBILE STYLES
+// All mobile overrides consolidated below
+// =============================================================================
 @media (max-width: $nav-mobile-breakpoint) {
   dax-nav {
-
     // Show toggle button on mobile
     .dax-nav-toggle {
       display: block;
@@ -181,11 +186,7 @@ dax-nav {
   }
 }
 
-// Reduced motion
-@media (prefers-reduced-motion: reduce) {
-  dax-nav {
-    .dax-nav-menu {
-      transition: none;
-    }
-  }
-}
+// =============================================================================
+// NOTE: Reduced motion is handled globally via CSS custom properties
+// in _variables.scss. No component-specific @media query needed.
+// =============================================================================

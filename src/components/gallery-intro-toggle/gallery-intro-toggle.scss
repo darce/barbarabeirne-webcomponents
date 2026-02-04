@@ -23,12 +23,6 @@ dax-sidebar[data-nav-open="false"]+main[data-gallery-context] gallery-intro-togg
   pointer-events: none;
 }
 
-@media (max-width: $breakpoint-nav) {
-  dax-sidebar[data-nav-open="false"]+main[data-gallery-context] gallery-intro-toggle {
-    pointer-events: auto;
-  }
-}
-
 // ============================================================================
 // TOGGLE BUTTON (gallery-intro-toggle element)
 // ============================================================================
@@ -76,8 +70,8 @@ gallery-intro-toggle {
 .gallery-intro {
   position: absolute;
   inset: 0;
-  padding: $gallery-intro-padding-block $gallery-intro-padding-inline $gallery-intro-padding-inline $gallery-intro-padding-block;
-  background: $color-white;
+  padding: $gallery-intro-padding-block $spacer-medium;
+  background: $color-offwhite;
   overflow-y: auto;
   // Start collapsed to triangle size
   clip-path: polygon(0 0, 0 $intro-triangle-size, 0 0, 0 0);
@@ -126,17 +120,26 @@ gallery-intro-toggle {
 
 @media (min-width: $gallery-intro-breakpoint) {
   .gallery-intro {
-    padding-left: $gallery-intro-padding-left-wide;
+    padding-left: calc(#{$dax-sidebar-width} + #{$spacer-medium});
   }
 }
 
+// =============================================================================
+// MOBILE STYLES
+// All mobile overrides consolidated below
+// =============================================================================
 @media (max-width: $breakpoint-nav) {
+  // Re-enable pointer events when nav is closed on mobile
+  dax-sidebar[data-nav-open="false"]+main[data-gallery-context] gallery-intro-toggle {
+    pointer-events: auto;
+  }
+
   .gallery-intro {
     // Account for stacked masthead + gallery-header on mobile
     // Uses em units for font-size scaling robustness
     padding-top: calc(#{$dax-sidebar-masthead-height} + #{$gallery-header-min-height});
-    // Match figcaption padding-left and padding-right
-    padding-left: $spacing-lg;
-    padding-right: $spacing-lg;
+    // Match main-container mobile padding
+    padding-left: $spacing-xl;
+    padding-right: $spacing-xl;
   }
 }

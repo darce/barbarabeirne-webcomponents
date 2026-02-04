@@ -75,6 +75,7 @@ $sidebar-toggle-icon-weight: 400;
   z-index: 10;
   min-height: $dax-sidebar-masthead-height;
   padding: 0 $spacing-sm;
+  margin-right: 6px;
 }
 
 // .dax-sidebar-masthead {
@@ -92,6 +93,7 @@ $sidebar-toggle-icon-weight: 400;
   font-size: $sidebar-masthead-font-size;
   padding: 0 $spacing-xl 0 0;
   margin: 0;
+  margin-right: 6px; // Align with dax-nav, accounting for box-shadow space
   white-space: nowrap;
 
   a {
@@ -157,17 +159,10 @@ $sidebar-toggle-icon-weight: 400;
   transform: rotate(90deg);
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// REDUCED MOTION
-// ─────────────────────────────────────────────────────────────────────────────
-
-@media (prefers-reduced-motion: reduce) {
-
-  .dax-sidebar-toggle .material-symbols-sharp,
-  .dax-sidebar-backdrop {
-    transition: none;
-  }
-}
+// =============================================================================
+// NOTE: Reduced motion is handled globally via CSS custom properties
+// in _variables.scss. No component-specific @media query needed.
+// =============================================================================
 
 // =============================================================================
 // MOBILE BREAKPOINT (max-width: $breakpoint-nav)

@@ -12,6 +12,7 @@
 // Base palette
 $color-black: #000;
 $color-white: #fff;
+$color-offwhite: #f8f8f6;
 $color-gray: #666;
 $color-gray-dark: #333;
 $color-gray-light: #999;
@@ -103,21 +104,46 @@ $focus-ring-offset: -1px;
 // MOTION
 // ─────────────────────────────────────────────────────────────────────────────
 
-// Transition durations
-$duration-fast: 0.15s;
-$duration-normal: 0.3s;
-$duration-slow: 0.5s;
-$duration-clip: 0.6s;
+// CSS Custom Properties for transitions (enables reduced-motion override)
+// These are set on :root and can be overridden globally
+:root {
+  --duration-fast: 0.15s;
+  --duration-normal: 0.3s;
+  --duration-slow: 0.5s;
+  --duration-clip: 0.6s;
+  --duration-fade: 0.6s;
+  --ease-default: ease;
+  --ease-in-out: ease-in-out;
+  --ease-out: ease-out;
+}
 
-// Easing functions
-$ease-default: ease;
-$ease-in-out: ease-in-out;
-$ease-out: ease-out;
+// Reduced motion: disable all transitions site-wide
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0s;
+    --duration-normal: 0s;
+    --duration-slow: 0s;
+    --duration-clip: 0s;
+    --duration-fade: 0s;
+  }
+}
+
+// SCSS variables pointing to CSS custom properties (for use in SCSS files)
+$duration-fast: var(--duration-fast);
+$duration-normal: var(--duration-normal);
+$duration-slow: var(--duration-slow);
+$duration-clip: var(--duration-clip);
+$duration-fade: var(--duration-fade);
+
+// Easing functions (SCSS variables - these don't need reduced-motion handling)
+$ease-default: var(--ease-default);
+$ease-in-out: var(--ease-in-out);
+$ease-out: var(--ease-out);
 
 // Composite transitions (for backward compatibility)
 $transition-fast: $duration-fast $ease-default;
 $transition-medium: 0.4s $ease-default;
-$transition-fade: 0.6s $ease-in-out;
+$transition-fade: $duration-fade $ease-in-out;
 $transition-clip: $duration-clip $ease-default;
 $transition-opacity-fade: opacity $transition-fade;
 
