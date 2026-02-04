@@ -153,7 +153,6 @@ dax-carousel {
           color: $color-white;
         }
 
-        &:focus,
         &:focus-visible {
           outline: $focus-ring-width solid $color-black;
           outline-offset: $focus-ring-offset;

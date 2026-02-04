@@ -143,7 +143,6 @@ dax-nav {
   }
 
   .dax-nav-menu>li>a:hover,
-  .dax-nav-menu>li>a:focus,
   .dax-nav-menu>li>a:focus-visible {
     background: $nav-fg;
     color: $nav-hover-fg;
@@ -151,16 +150,13 @@ dax-nav {
   }
 
   .dax-nav-projects>li a:hover,
-  .dax-nav-projects>li a:focus,
   .dax-nav-projects>li a:focus-visible {
     background: $nav-fg;
     color: $nav-hover-fg;
     box-shadow: ($spacing-xl * 2) 0 0 0 $nav-fg;
   }
 
-  .dax-nav-menu>li>a:focus,
   .dax-nav-menu>li>a:focus-visible,
-  .dax-nav-projects>li a:focus,
   .dax-nav-projects>li a:focus-visible {
     outline: $focus-ring-width solid $nav-fg;
     outline-offset: $focus-ring-offset;
