@@ -121,7 +121,7 @@ class DaxSidebar extends BaseComponent(HTMLElement) {
 
         this.#isMenuOpen = hasExplicitState ? navState === 'true' : isDesktop;
         this.#applyMenuState();
-        this.#emitMenuToggle(false);
+        this.#emitMenuToggle(false, 'init');
     }
 
     #getNavElement() {
