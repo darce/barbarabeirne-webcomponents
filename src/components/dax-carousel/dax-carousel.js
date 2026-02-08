@@ -235,6 +235,8 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
         this.#setActive(this.#state.currentIndex);
     }
 
+
+
     #checkUrl() {
         const { hash } = window.location;
         if (!hash) return -1;
@@ -419,12 +421,6 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
         // Show controls initially
         this.#showControls();
 
-        // Stop autoplay when sidebar opens
-        this.addManagedListener(document, 'dax-nav-toggle', (event) => {
-            if (event.detail?.isOpen && event.detail?.source !== 'init' && this.#state.timer) {
-                this.#stop();
-            }
-        });
     }
 
     #showControls() {

@@ -10,7 +10,7 @@ const TEMPLATE = `
         <button class="dax-sidebar-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="dax-nav-menu">
             <span class="material-symbols-sharp" aria-hidden="true">menu</span>
         </button>
-        <button class="masthead" type="button" aria-label="Toggle menu" aria-expanded="false" aria-controls="dax-nav-menu">Barbara Beirne</button>
+        <a class="masthead" href="/">Barbara Beirne</a>
     </header>
     <slot></slot>
 </aside>
@@ -175,9 +175,6 @@ class DaxSidebar extends BaseComponent(HTMLElement) {
             this.addManagedListener(toggle, 'click', () => this.#toggleMenu());
         }
 
-        if (masthead) {
-            this.addManagedListener(masthead, 'click', () => this.#toggleMenu());
-        }
 
         if (backdrop) {
             this.addManagedListener(backdrop, 'click', () => this.#closeMenu());

@@ -43,6 +43,50 @@ dax-carousel {
     list-style: none;
   }
 
+  // Pre-upgrade styles (CRITICAL for avoiding FOUC/Flash)
+  // Styles the raw HTML before the component upgrades it
+  >ul:not(.dax-slides) {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    position: absolute; // Ensure it stacks correctly
+
+    >li {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      visibility: hidden;
+
+      &:first-child {
+        opacity: 1;
+        visibility: visible;
+        z-index: 1;
+      }
+
+      picture {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      img {
+        display: block; // Ensure no inline spacing
+        width: auto;
+        max-width: 100%;
+        height: 100%;
+        max-height: 100%;
+        object-fit: contain;
+      }
+    }
+  }
+
   // Slides
   .dax-slide {
     position: absolute;
@@ -84,6 +128,14 @@ dax-carousel {
       justify-content: center;
       width: 100%;
       height: 100%;
+    }
+
+    picture {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     img {
@@ -273,13 +325,14 @@ dax-carousel {
   }
 }
 
-dax-sidebar[data-nav-open="false"] + main[data-gallery-context] dax-carousel .dax-carousel-controls {
+dax-sidebar[data-nav-open="false"]+main[data-gallery-context] dax-carousel:not(.show-controls) .dax-carousel-controls {
   transform: translateY(100%);
   opacity: 0;
   pointer-events: none;
 }
 
 @media (max-width: $breakpoint-nav) {
+
   // On mobile, carousel fills remaining space in flex container
   // No padding-top needed - headers are in normal flow above
   [data-gallery-context] dax-carousel {
@@ -305,6 +358,16 @@ dax-sidebar[data-nav-open="false"] + main[data-gallery-context] dax-carousel .da
   dax-carousel .dax-slide figure {
     flex: 1;
     min-height: 0; // Critical: allows flex item to shrink
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  dax-carousel .dax-slide picture {
+    flex-shrink: 1;
+    min-height: 0;
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     overflow: hidden;
