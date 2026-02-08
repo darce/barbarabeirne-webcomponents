@@ -79,6 +79,11 @@ dax-carousel {
                 height: 100%;
             }
 
+            // <picture> must be transparent so img height resolves from figure
+            picture {
+                display: contents;
+            }
+
             // Match img sizing from dax-carousel.scss (desktop base)
             img {
                 width: auto;

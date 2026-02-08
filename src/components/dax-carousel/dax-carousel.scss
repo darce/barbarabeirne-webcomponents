@@ -86,6 +86,12 @@ dax-carousel {
       height: 100%;
     }
 
+    // <picture> wraps <img> but must be transparent to the flex height chain
+    // so that img's height: 100% resolves against the figure, not the unsized <picture>
+    picture {
+      display: contents;
+    }
+
     img {
       width: auto;
       max-width: 100%;
