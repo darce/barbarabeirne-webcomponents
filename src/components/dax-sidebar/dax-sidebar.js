@@ -1,8 +1,11 @@
 import BaseComponent from '../base/base-component';
-// CSS is pre-compiled by build:css to lib/components/dax-sidebar/dax-sidebar.css
-import styles from '../../../lib/components/dax-sidebar/dax-sidebar.css';
+// CSS is pre-compiled by build:css to .build/css/dax-sidebar/dax-sidebar.css
+import styles from '../../../.build/css/dax-sidebar/dax-sidebar.css';
 
 const NAV_AUTO_CLOSE_DELAY_MS = 5000;
+
+// Gallery pages have a <main data-gallery-context> element
+const isGalleryPage = () => document.querySelector('main[data-gallery-context]') !== null;
 
 const TEMPLATE = `
 <aside class="dax-sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
@@ -48,29 +51,14 @@ class DaxSidebar extends BaseComponent(HTMLElement) {
     }
 
     disconnectedCallback() {
-        this.#clearAutoCloseTimer();
         this.cleanup();
     }
 
     #render() {
         if (!this.shadowRoot) {
-            if (this.initShadow) {
-                const template = document.createElement('template');
-                // Inject styles directly into Shadow DOM
-                template.innerHTML = `<style>${DaxSidebar.styles}</style>${TEMPLATE}`;
-                this.initShadow(template);
-            } else {
-                // Fallback if initShadow is not available (e.g. if BaseComponent mixin issue)
-                this.attachShadow({ mode: 'open' });
-                const template = document.createElement('template');
-                template.innerHTML = `<style>${DaxSidebar.styles}</style>${TEMPLATE}`;
-                this.shadowRoot.appendChild(template.content.cloneNode(true));
-            }
-        } else if (!this.shadowRoot.querySelector('aside')) {
-            // Shadow root exists but content might be missing
             const template = document.createElement('template');
             template.innerHTML = `<style>${DaxSidebar.styles}</style>${TEMPLATE}`;
-            this.shadowRoot.appendChild(template.content.cloneNode(true));
+            this.initShadow(template);
         }
 
         this.#refs = {
@@ -169,12 +157,11 @@ class DaxSidebar extends BaseComponent(HTMLElement) {
     }
 
     #attachEventListeners() {
-        const { toggle, masthead, backdrop } = this.#refs;
+        const { toggle, backdrop } = this.#refs;
 
         if (toggle) {
             this.addManagedListener(toggle, 'click', () => this.#toggleMenu());
         }
-
 
         if (backdrop) {
             this.addManagedListener(backdrop, 'click', () => this.#closeMenu());
@@ -365,42 +352,16 @@ class DaxSidebar extends BaseComponent(HTMLElement) {
         this.#setMenuOpen(false, false);
     }
 
-    #isGalleryPage() {
-        // Gallery pages have a <main data-gallery-context> element
-        return document.querySelector('main[data-gallery-context]') !== null;
-    }
-
-    #initAutoCloseTimer() {
-        // Only auto-close dax-nav on gallery pages
-        if (!this.#isGalleryPage()) {
-            return;
-        }
-
-        this.#clearAutoCloseTimer();
-        this.#autoCloseTimerId = setTimeout(() => {
-            if (this.#isMenuOpen) {
-                this.#closeNavOnly();
-            }
-        }, NAV_AUTO_CLOSE_DELAY_MS);
-    }
-
-    #clearAutoCloseTimer() {
-        if (this.#autoCloseTimerId !== null) {
-            clearTimeout(this.#autoCloseTimerId);
-            this.#autoCloseTimerId = null;
-        }
-    }
-
     #initCarouselListener() {
         // Close nav after inactivity when carousel auto-play starts (only on gallery pages)
-        if (!this.#isGalleryPage()) {
+        if (!isGalleryPage()) {
             return;
         }
 
         const startInactivityTimer = () => {
             // Only start timer if sidebar is open and no timer is already running
             if (this.#isMenuOpen && this.#autoCloseTimerId === null) {
-                this.#autoCloseTimerId = setTimeout(() => {
+                this.#autoCloseTimerId = this.setManagedTimeout(() => {
                     if (this.#isMenuOpen) {
                         this.#closeNavOnly();
                     }

@@ -1,6 +1,6 @@
 import BaseComponent from '../base/base-component';
-// CSS is pre-compiled by build:css to lib/components/dax-nav/dax-nav.css
-import styles from '../../../lib/components/dax-nav/dax-nav.css';
+// CSS is pre-compiled by build:css to .build/css/dax-nav/dax-nav.css
+import styles from '../../../.build/css/dax-nav/dax-nav.css';
 
 class DaxNav extends BaseComponent(HTMLElement) {
     static styles = styles;

@@ -1,6 +1,6 @@
 import BaseComponent from '../base/base-component';
-// CSS is pre-compiled by build:css to lib/components/gallery-intro-toggle/gallery-intro-toggle.css
-import styles from '../../../lib/components/gallery-intro-toggle/gallery-intro-toggle.css';
+// CSS is pre-compiled by build:css to .build/css/gallery-intro-toggle/gallery-intro-toggle.css
+import styles from '../../../.build/css/gallery-intro-toggle/gallery-intro-toggle.css';
 
 /**
  * Gallery intro toggle button.
@@ -18,6 +18,7 @@ class GalleryIntroToggle extends BaseComponent(HTMLElement) {
     #state = {
         isOpen: false,
         galleryContainer: null,
+        introSection: null,
     };
 
     // Lifecycle methods
@@ -39,6 +40,7 @@ class GalleryIntroToggle extends BaseComponent(HTMLElement) {
         const isOpen = Boolean(galleryContainer?.classList.contains('is-intro-open'));
 
         this.#state.galleryContainer = galleryContainer;
+        this.#state.introSection = introSection;
         this.#state.isOpen = isOpen;
 
         if (introSection) {
@@ -64,20 +66,15 @@ class GalleryIntroToggle extends BaseComponent(HTMLElement) {
     #setOpen(isOpen) {
         if (this.#state.isOpen === isOpen) return;
 
-        const { galleryContainer } = this.#state;
-        const introSection = galleryContainer?.querySelector('.gallery-intro');
+        const { galleryContainer, introSection } = this.#state;
         this.#state.isOpen = isOpen;
-
-        if (isOpen && introSection) {
-            introSection.setAttribute('aria-hidden', 'false');
-        }
 
         galleryContainer?.classList.toggle('is-intro-open', isOpen);
         this.setAttribute('aria-expanded', String(isOpen));
         this.textContent = isOpen ? 'Close' : 'Intro';
 
-        if (!isOpen && introSection) {
-            introSection.setAttribute('aria-hidden', 'true');
+        if (introSection) {
+            introSection.setAttribute('aria-hidden', String(!isOpen));
         }
     }
 

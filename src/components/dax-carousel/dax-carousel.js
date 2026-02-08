@@ -1,9 +1,9 @@
 import BaseComponent from '../base/base-component';
-// CSS is pre-compiled by build:css to lib/components/dax-carousel/dax-carousel.css
-import styles from '../../../lib/components/dax-carousel/dax-carousel.css';
+// CSS is pre-compiled by build:css to .build/css/dax-carousel/dax-carousel.css
+import styles from '../../../.build/css/dax-carousel/dax-carousel.css';
 
-const DEFAULT_INTERVAL = 9995000;
-const CONTROLS_FADE_INTERVAL = 9992500;
+const DEFAULT_INTERVAL = 4000;
+const CONTROLS_FADE_INTERVAL = 2500;
 const CAPTION_AUTO_HIDE_DELAY_MS = 5000;
 
 // Swipe detection thresholds
@@ -43,7 +43,6 @@ const REF_SELECTORS = {
     nextButton: '.dax-next',
     playPauseButton: '.dax-play-pause',
     imageCounter: '.dax-image-counter',
-    captionCloseButton: '.dax-caption-close',
     captionToggleButton: '.dax-caption-toggle',
 };
 
@@ -63,6 +62,7 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
         currentIndex: 0,
         timer: null,
         controlsTimer: null,
+        controlsVisible: false,
         wheelLock: false,
         slides: [],
         isCaptionOpen: true,
@@ -75,16 +75,13 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
 
     #refs = {};
 
-    // Lifecycle methods
-    constructor() {
-        super();
+    connectedCallback() {
+        // Read attributes here (not constructor) per custom-elements spec
         this.#state.intervalMs = this.getNumberAttr('interval', DEFAULT_INTERVAL);
         this.#state.autoplay = this.getBooleanAttr('autoplay');
         this.#state.fullscreen = this.hasAttribute('fullscreen');
         this.#state.noControls = this.hasAttribute('no-controls');
-    }
 
-    connectedCallback() {
         this.initStyles();
         if (this.#state.fullscreen) {
             this.classList.add('fullscreen');
@@ -126,12 +123,17 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
     }
 
     #initCaptionToggle() {
-        // Inject close button into each figcaption
+        // Inject close button into each figcaption and bind listener immediately
         const figcaptions = this.querySelectorAll('figcaption');
         figcaptions.forEach((figcaption) => {
             const closeTemplate = document.createElement('template');
             closeTemplate.innerHTML = CAPTION_CLOSE_TEMPLATE;
-            figcaption.insertBefore(closeTemplate.content.cloneNode(true), figcaption.firstChild);
+            const closeBtn = closeTemplate.content.firstElementChild;
+            this.addManagedListener(closeBtn, 'click', (e) => {
+                e.stopPropagation();
+                this.#setCaptionOpen(false);
+            });
+            figcaption.insertBefore(closeBtn, figcaption.firstChild);
         });
 
         // Add info toggle button to carousel (positioned same as controls)
@@ -139,17 +141,7 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
         toggleTemplate.innerHTML = CAPTION_TOGGLE_TEMPLATE;
         this.appendChild(toggleTemplate.content.cloneNode(true));
 
-        // Store refs
-        this.#refs.captionCloseButtons = this.querySelectorAll(REF_SELECTORS.captionCloseButton);
         this.#refs.captionToggleButton = this.querySelector(REF_SELECTORS.captionToggleButton);
-
-        // Attach event listeners for caption toggle
-        this.#refs.captionCloseButtons.forEach((btn) => {
-            this.addManagedListener(btn, 'click', (e) => {
-                e.stopPropagation();
-                this.#setCaptionOpen(false);
-            });
-        });
 
         if (this.#refs.captionToggleButton) {
             this.addManagedListener(this.#refs.captionToggleButton, 'click', (e) => {
@@ -235,8 +227,6 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
         this.#setActive(this.#state.currentIndex);
     }
 
-
-
     #checkUrl() {
         const { hash } = window.location;
         if (!hash) return -1;
@@ -302,14 +292,8 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
         if (nextSlide) {
             nextSlide.classList.add('dax-active');
             nextSlide.setAttribute('aria-hidden', 'false');
-            this.#updateUrl(nextIndex);
             this.#updateImageCounter(nextIndex);
         }
-
-        // Update dots
-        // const dots = Array.from(this.#refs.dotsContainer.children);
-        // dots[currentIndex]?.classList.remove('active');
-        // dots[nextIndex]?.classList.add('active');
 
         this.#state.currentIndex = nextIndex;
     }
@@ -319,16 +303,19 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
 
         this.addManagedListener(prevButton, 'click', () => {
             this.#prev();
-            if (this.#state.timer) this.#restartTimer();
+            this.#updateUrl(this.#state.currentIndex);
+            this.#maintainAutoplayAfterManualNavigation();
         });
 
         this.addManagedListener(nextButton, 'click', () => {
             this.#next();
-            if (this.#state.timer) this.#restartTimer();
+            this.#updateUrl(this.#state.currentIndex);
+            this.#maintainAutoplayAfterManualNavigation();
         });
 
         this.addManagedListener(playPauseButton, 'click', () => {
             if (this.#state.timer) {
+                this.#state.autoplay = false;
                 this.#stop();
             } else {
                 // Advance to next slide then start autoplay
@@ -338,22 +325,31 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
         });
 
         // Show controls on mouse move, fade out after timeout
-        this.addManagedListener(this, 'mousemove', () => this.#showControls());
+        // mousemove fires at ~60fps; use a dirty flag so we only schedule
+        // the fade-out timeout once per visibility cycle.
+        this.addManagedListener(this, 'mousemove', () => {
+            if (!this.#state.controlsVisible) this.#showControls();
+        });
         this.addManagedListener(this, 'mouseenter', () => this.#showControls());
 
         // Keyboard shortcuts
         this.addManagedListener(document, 'keydown', (event) => {
             if (event.key === 'ArrowLeft') {
                 this.#prev();
+                this.#updateUrl(this.#state.currentIndex);
+                this.#maintainAutoplayAfterManualNavigation();
                 this.#showControls();
             }
             if (event.key === 'ArrowRight') {
                 this.#next();
+                this.#updateUrl(this.#state.currentIndex);
+                this.#maintainAutoplayAfterManualNavigation();
                 this.#showControls();
             }
             if (event.key === ' ') {
                 event.preventDefault();
                 if (this.#state.timer) {
+                    this.#state.autoplay = false;
                     this.#stop();
                 } else {
                     this.#next();
@@ -412,19 +408,20 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
 
             this.#showControls();
 
-            // Stop autoplay on manual navigation
-            if (didNavigate && this.#state.timer) {
-                this.#stop();
+            // Update URL and restart autoplay on manual navigation
+            if (didNavigate) {
+                this.#updateUrl(this.#state.currentIndex);
+                this.#maintainAutoplayAfterManualNavigation();
             }
         });
 
         // Show controls initially
         this.#showControls();
-
     }
 
     #showControls() {
         this.classList.add('show-controls');
+        this.#state.controlsVisible = true;
 
         // If caption is closed, show the info toggle button
         if (!this.#state.isCaptionOpen) {
@@ -439,6 +436,7 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
         // Set new timer to hide controls
         this.#state.controlsTimer = this.setManagedTimeout(() => {
             this.classList.remove('show-controls');
+            this.#state.controlsVisible = false;
         }, CONTROLS_FADE_INTERVAL);
     }
 
@@ -465,11 +463,10 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
         }
 
         this.#showControls();
+        this.#updateUrl(this.#state.currentIndex);
 
-        // Stop autoplay on manual scroll
-        if (this.#state.timer) {
-            this.#stop();
-        }
+        // Restart autoplay on manual scroll if active
+        this.#maintainAutoplayAfterManualNavigation();
 
         // Release lock after delay
         this.setManagedTimeout(() => {
@@ -518,10 +515,10 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
             this.#prev();
         }
 
-        // Stop autoplay on manual swipe
-        if (this.#state.timer) {
-            this.#stop();
-        }
+        this.#updateUrl(this.#state.currentIndex);
+
+        // Restart autoplay on manual swipe if active
+        this.#maintainAutoplayAfterManualNavigation();
     }
 
     #next() {
@@ -532,16 +529,18 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
         this.#setActive(this.#state.currentIndex - 1);
     }
 
+    #advance() {
+        this.#next();
+        this.dispatchEvent(new CustomEvent('dax-carousel-advance', {
+            bubbles: true,
+            composed: true,
+        }));
+    }
+
     #start(isInitial = false) {
         if (this.#state.timer) return;
         this.#state.timer = this.setManagedInterval(
-            () => {
-                this.#next();
-                this.dispatchEvent(new CustomEvent('dax-carousel-advance', {
-                    bubbles: true,
-                    composed: true,
-                }));
-            },
+            () => this.#advance(),
             this.#state.intervalMs,
         );
         this.#state.autoplay = true;
@@ -559,14 +558,25 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
         if (!this.#state.timer) return;
         this.clearManagedInterval(this.#state.timer);
         this.#state.timer = null;
-        this.#state.autoplay = false;
         this.#updatePlayPauseLabel();
     }
 
-    #restartTimer() {
-        if (!this.#state.timer) return;
-        this.#stop();
-        this.#start();
+    #maintainAutoplayAfterManualNavigation() {
+        if (!this.#state.autoplay) return;
+
+        // Unconditionally clear any existing timer and start fresh.
+        // Avoids guard-clause gaps where the interval could expire
+        // between the autoplay check and the restart attempt.
+        if (this.#state.timer) {
+            this.clearManagedInterval(this.#state.timer);
+            this.#state.timer = null;
+        }
+
+        this.#state.timer = this.setManagedInterval(
+            () => this.#advance(),
+            this.#state.intervalMs,
+        );
+        this.#updatePlayPauseLabel();
     }
 
     #updatePlayPauseLabel() {
@@ -599,11 +609,7 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
                 : DEFAULT_INTERVAL;
             this.#state.intervalMs = newInterval;
             if (this.#state.timer) {
-                this.clearManagedInterval(this.#state.timer);
-                this.#state.timer = this.setManagedInterval(
-                    () => this.#next(),
-                    newInterval,
-                );
+                this.#maintainAutoplayAfterManualNavigation();
             }
         }
     }
