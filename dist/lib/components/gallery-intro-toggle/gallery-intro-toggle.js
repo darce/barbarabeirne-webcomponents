@@ -292,7 +292,8 @@ var GalleryIntroToggle = /*#__PURE__*/function (_BaseComponent) {
     // Private state
     _classPrivateFieldInitSpec(_this, _state, {
       isOpen: false,
-      galleryContainer: null
+      galleryContainer: null,
+      introSection: null
     });
     return _this;
   }
@@ -319,6 +320,7 @@ function _initButton() {
   var introSection = galleryContainer === null || galleryContainer === void 0 ? void 0 : galleryContainer.querySelector('.gallery-intro');
   var isOpen = Boolean(galleryContainer === null || galleryContainer === void 0 ? void 0 : galleryContainer.classList.contains('is-intro-open'));
   _classPrivateFieldGet2(_state, this).galleryContainer = galleryContainer;
+  _classPrivateFieldGet2(_state, this).introSection = introSection;
   _classPrivateFieldGet2(_state, this).isOpen = isOpen;
   if (introSection) {
     introSection.setAttribute('aria-hidden', String(!isOpen));
@@ -343,17 +345,14 @@ function _attachEventListeners() {
 function _setOpen(isOpen) {
   if (_classPrivateFieldGet2(_state, this).isOpen === isOpen) return;
   var _classPrivateFieldGet2$1 = _classPrivateFieldGet2(_state, this),
-    galleryContainer = _classPrivateFieldGet2$1.galleryContainer;
-  var introSection = galleryContainer === null || galleryContainer === void 0 ? void 0 : galleryContainer.querySelector('.gallery-intro');
+    galleryContainer = _classPrivateFieldGet2$1.galleryContainer,
+    introSection = _classPrivateFieldGet2$1.introSection;
   _classPrivateFieldGet2(_state, this).isOpen = isOpen;
-  if (isOpen && introSection) {
-    introSection.setAttribute('aria-hidden', 'false');
-  }
   galleryContainer === null || galleryContainer === void 0 || galleryContainer.classList.toggle('is-intro-open', isOpen);
   this.setAttribute('aria-expanded', String(isOpen));
   this.textContent = isOpen ? 'Close' : 'Intro';
-  if (!isOpen && introSection) {
-    introSection.setAttribute('aria-hidden', 'true');
+  if (introSection) {
+    introSection.setAttribute('aria-hidden', String(!isOpen));
   }
 }
 function _toggle() {

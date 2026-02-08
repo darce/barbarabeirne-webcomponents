@@ -272,6 +272,11 @@ var styles = ":root{--duration-fast: 0.15s;--duration-normal: 0.3s;--duration-sl
 
 var _DaxSidebar;
 var NAV_AUTO_CLOSE_DELAY_MS = 5000;
+
+// Gallery pages have a <main data-gallery-context> element
+var isGalleryPage = function isGalleryPage() {
+  return document.querySelector('main[data-gallery-context]') !== null;
+};
 var TEMPLATE = "\n<aside class=\"dax-sidebar\" id=\"sidebar\" role=\"navigation\" aria-label=\"Main navigation\">\n    <header class=\"dax-sidebar-header\">\n        <button class=\"dax-sidebar-toggle\" type=\"button\" aria-label=\"Open menu\" aria-expanded=\"false\" aria-controls=\"dax-nav-menu\">\n            <span class=\"material-symbols-sharp\" aria-hidden=\"true\">menu</span>\n        </button>\n        <a class=\"masthead\" href=\"/\">Barbara Beirne</a>\n    </header>\n    <slot></slot>\n</aside>\n<div class=\"dax-sidebar-backdrop\" aria-hidden=\"true\"></div>\n";
 var _isMenuOpen = /*#__PURE__*/new WeakMap();
 var _refs = /*#__PURE__*/new WeakMap();
@@ -321,7 +326,6 @@ var DaxSidebar = /*#__PURE__*/function (_BaseComponent) {
   }, {
     key: "disconnectedCallback",
     value: function disconnectedCallback() {
-      _assertClassBrand(_DaxSidebar_brand, this, _clearAutoCloseTimer).call(this);
       this.cleanup();
     }
   }]);
@@ -329,25 +333,9 @@ var DaxSidebar = /*#__PURE__*/function (_BaseComponent) {
 _DaxSidebar = DaxSidebar;
 function _render() {
   if (!this.shadowRoot) {
-    if (this.initShadow) {
-      var template = document.createElement('template');
-      // Inject styles directly into Shadow DOM
-      template.innerHTML = "<style>".concat(_DaxSidebar.styles, "</style>").concat(TEMPLATE);
-      this.initShadow(template);
-    } else {
-      // Fallback if initShadow is not available (e.g. if BaseComponent mixin issue)
-      this.attachShadow({
-        mode: 'open'
-      });
-      var _template = document.createElement('template');
-      _template.innerHTML = "<style>".concat(_DaxSidebar.styles, "</style>").concat(TEMPLATE);
-      this.shadowRoot.appendChild(_template.content.cloneNode(true));
-    }
-  } else if (!this.shadowRoot.querySelector('aside')) {
-    // Shadow root exists but content might be missing
-    var _template2 = document.createElement('template');
-    _template2.innerHTML = "<style>".concat(_DaxSidebar.styles, "</style>").concat(TEMPLATE);
-    this.shadowRoot.appendChild(_template2.content.cloneNode(true));
+    var template = document.createElement('template');
+    template.innerHTML = "<style>".concat(_DaxSidebar.styles, "</style>").concat(TEMPLATE);
+    this.initShadow(template);
   }
   _classPrivateFieldSet2(_refs, this, {
     container: this.shadowRoot.querySelector('.dax-sidebar'),
@@ -434,9 +422,8 @@ function _setMenuOpen(isOpen) {
 function _attachEventListeners() {
   var _this3 = this;
   var _classPrivateFieldGet3 = _classPrivateFieldGet2(_refs, this),
-    toggle = _classPrivateFieldGet3.toggle;
-    _classPrivateFieldGet3.masthead;
-    var backdrop = _classPrivateFieldGet3.backdrop;
+    toggle = _classPrivateFieldGet3.toggle,
+    backdrop = _classPrivateFieldGet3.backdrop;
   if (toggle) {
     this.addManagedListener(toggle, 'click', function () {
       return _assertClassBrand(_DaxSidebar_brand, _this3, _toggleMenu).call(_this3);
@@ -613,30 +600,20 @@ function _closeNavOnly() {
   // This ensures toggle button and host attributes remain in sync
   _assertClassBrand(_DaxSidebar_brand, this, _setMenuOpen).call(this, false, false);
 }
-function _isGalleryPage() {
-  // Gallery pages have a <main data-gallery-context> element
-  return document.querySelector('main[data-gallery-context]') !== null;
-}
-function _clearAutoCloseTimer() {
-  if (_classPrivateFieldGet2(_autoCloseTimerId, this) !== null) {
-    clearTimeout(_classPrivateFieldGet2(_autoCloseTimerId, this));
-    _classPrivateFieldSet2(_autoCloseTimerId, this, null);
-  }
-}
 function _initCarouselListener() {
-  var _this8 = this;
+  var _this7 = this;
   // Close nav after inactivity when carousel auto-play starts (only on gallery pages)
-  if (!_assertClassBrand(_DaxSidebar_brand, this, _isGalleryPage).call(this)) {
+  if (!isGalleryPage()) {
     return;
   }
   var startInactivityTimer = function startInactivityTimer() {
     // Only start timer if sidebar is open and no timer is already running
-    if (_classPrivateFieldGet2(_isMenuOpen, _this8) && _classPrivateFieldGet2(_autoCloseTimerId, _this8) === null) {
-      _classPrivateFieldSet2(_autoCloseTimerId, _this8, setTimeout(function () {
-        if (_classPrivateFieldGet2(_isMenuOpen, _this8)) {
-          _assertClassBrand(_DaxSidebar_brand, _this8, _closeNavOnly).call(_this8);
+    if (_classPrivateFieldGet2(_isMenuOpen, _this7) && _classPrivateFieldGet2(_autoCloseTimerId, _this7) === null) {
+      _classPrivateFieldSet2(_autoCloseTimerId, _this7, _this7.setManagedTimeout(function () {
+        if (_classPrivateFieldGet2(_isMenuOpen, _this7)) {
+          _assertClassBrand(_DaxSidebar_brand, _this7, _closeNavOnly).call(_this7);
         }
-        _classPrivateFieldSet2(_autoCloseTimerId, _this8, null);
+        _classPrivateFieldSet2(_autoCloseTimerId, _this7, null);
       }, NAV_AUTO_CLOSE_DELAY_MS));
     }
   };

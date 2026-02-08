@@ -268,10 +268,10 @@ var BaseComponent = function BaseComponent() {
   }
 };
 
-var styles = ":root{--duration-fast: 0.15s;--duration-normal: 0.3s;--duration-slow: 0.5s;--duration-clip: 0.6s;--duration-fade: 0.6s;--ease-default: ease;--ease-in-out: ease-in-out;--ease-out: ease-out}@media(prefers-reduced-motion: reduce){:root{--duration-fast: 0s;--duration-normal: 0s;--duration-slow: 0s;--duration-clip: 0s;--duration-fade: 0s}}dax-carousel{display:block;position:relative;width:100%;height:100%;z-index:1;background-color:#000}dax-carousel .material-symbols-sharp{font-family:\"Material Symbols Sharp\"}dax-carousel>.dax-slides{width:100%;height:100%;margin:0;padding:0;list-style:none}dax-carousel>ul:not(.dax-slides){width:100%;height:100%;margin:0;padding:0;list-style:none;position:absolute}dax-carousel>ul:not(.dax-slides)>li{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;visibility:hidden}dax-carousel>ul:not(.dax-slides)>li:first-child{opacity:1;visibility:visible;z-index:1}dax-carousel>ul:not(.dax-slides)>li picture{width:100%;height:100%;display:flex;align-items:center;justify-content:center}dax-carousel>ul:not(.dax-slides)>li img{display:block;width:auto;max-width:100%;height:100%;max-height:100%;object-fit:contain}dax-carousel .dax-slide{position:absolute;width:100%;height:inherit;z-index:0;opacity:0;visibility:hidden;pointer-events:none;transition:opacity var(--duration-fade) var(--ease-in-out),visibility var(--duration-fade) var(--ease-in-out)}dax-carousel .dax-slide figcaption,dax-carousel .dax-slide .dax-caption-close{pointer-events:none}dax-carousel .dax-slide.dax-active{z-index:1;opacity:1;visibility:visible;pointer-events:auto;cursor:pointer}dax-carousel .dax-slide.dax-active figcaption{pointer-events:auto}dax-carousel .dax-slide.dax-active .dax-caption-close{pointer-events:auto}dax-carousel .dax-slide figure{display:flex;align-items:center;justify-content:center;width:100%;height:100%}dax-carousel .dax-slide picture{width:100%;height:100%;display:flex;align-items:center;justify-content:center}dax-carousel .dax-slide img{width:auto;max-width:100%;height:100%;max-height:100%;object-fit:contain}dax-carousel .dax-slide figcaption{position:relative;display:block;box-sizing:border-box;max-height:33.33vh;overflow-y:auto;overflow-x:hidden;padding:16px;text-align:left;overflow-wrap:anywhere;margin:0;color:#000;background:#fff;box-shadow:4px 4px 0 rgba(0,0,0,.2)}dax-carousel .dax-slide figcaption .subject{font-weight:700;padding:0 10px 5px 0}dax-carousel .dax-slide figcaption p{padding-right:calc(42px + 8px)}dax-carousel .dax-slide figcaption .location{font-style:italic}dax-carousel .dax-slide figcaption .dax-caption-close{position:absolute;top:0;right:0;z-index:1;display:flex;align-items:center;justify-content:center;background:#fff;border:none;cursor:pointer;padding:8px 6px;color:#000}dax-carousel .dax-slide figcaption .dax-caption-close:hover{background:#666;color:#fff}dax-carousel .dax-slide figcaption .dax-caption-close:focus-visible{outline:1px solid #000;outline-offset:-1px}dax-carousel .dax-slide figcaption .dax-caption-close .material-symbols-sharp{font-size:24px;font-family:\"Material Symbols Sharp\";font-weight:400;font-style:normal;font-variation-settings:\"FILL\" 0,\"wght\" 400,\"GRAD\" 0,\"opsz\" 48;display:inline-block}dax-carousel .dax-slide figure{flex-direction:row}dax-carousel .dax-slide img{height:100%;max-height:100%}dax-carousel .dax-slide figcaption{position:absolute;bottom:calc(42px + 24px*2);left:auto;right:24px;max-height:50%;width:50%;height:auto;background:hsla(0,0%,100%,.5);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}dax-carousel .dax-control{display:flex;align-items:center;justify-content:center;border-radius:50%;cursor:pointer;transition:background var(--duration-fast) var(--ease-default),color var(--duration-fast) var(--ease-default);border:1px solid #000;background:#fff;color:#000;width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;font-size:24px}dax-carousel .dax-control--button:hover,dax-carousel .dax-control--button:active{background-color:#333;color:#fff}dax-carousel .dax-control--counter{font-size:14px;cursor:default;pointer-events:none}dax-carousel .dax-carousel-controls{display:flex;justify-content:flex-end;align-items:center;gap:12px;width:100%;position:absolute;padding:0 calc(24px*2);bottom:24px;pointer-events:none;opacity:0;transform:translateY(0);transition:opacity var(--duration-fast) var(--ease-default),transform var(--duration-normal) var(--ease-out);z-index:100}dax-carousel .dax-carousel-controls .dax-prev,dax-carousel .dax-carousel-controls .dax-next,dax-carousel .dax-carousel-controls .dax-play-pause{pointer-events:auto}dax-carousel.show-controls .dax-carousel-controls{opacity:1}dax-carousel.fullscreen{padding:0;position:fixed;inset:0;z-index:1;background:#000}dax-carousel.fullscreen .dax-slides{height:100%}dax-carousel.fullscreen .dax-slide{height:100%;display:flex;align-items:center;justify-content:center}dax-carousel.fullscreen .dax-slide img,dax-carousel.fullscreen .dax-slide picture{display:block;object-fit:cover;height:100vh;max-height:none;width:100vw}dax-carousel.no-controls .dax-carousel-controls{display:none}dax-sidebar[data-nav-open=false]+main[data-gallery-context] dax-carousel:not(.show-controls) .dax-carousel-controls{transform:translateY(100%);opacity:0;pointer-events:none}@media(max-width: 810px){[data-gallery-context] dax-carousel{flex:1;min-height:0;padding-top:0}dax-carousel .dax-carousel-controls,dax-carousel figcaption .dax-caption-close,.dax-caption-toggle{display:none}dax-carousel .dax-slide{display:flex;flex-direction:column;height:100%}dax-carousel .dax-slide figure{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}dax-carousel .dax-slide picture{flex-shrink:1;min-height:0;width:100%;height:100%;display:flex;flex-direction:column;overflow:hidden}dax-carousel .dax-slide img{flex-shrink:1;min-height:0;width:100%;max-width:100%;height:auto;object-fit:contain}dax-carousel .dax-slide figcaption{position:relative;bottom:auto;right:auto;width:100%;max-width:100%;background:#fff;backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:none;flex:1 1 auto;min-height:0;max-height:40vh;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-right:16px}}dax-carousel[data-caption-open=false] figcaption{opacity:0;visibility:hidden;pointer-events:none;transition:opacity var(--duration-fast) var(--ease-out),visibility var(--duration-fast) var(--ease-out)}dax-carousel[data-caption-open=true] figcaption{opacity:1;visibility:visible;pointer-events:auto;transition:opacity var(--duration-fast) var(--ease-out),visibility var(--duration-fast) var(--ease-out)}dax-carousel[data-caption-open=false] .dax-carousel-controls{opacity:0 !important;visibility:hidden;pointer-events:none}.dax-caption-toggle{position:absolute;bottom:24px;right:calc(24px*2);opacity:0;visibility:hidden;pointer-events:none;transition:opacity var(--duration-fast) var(--ease-out),visibility var(--duration-fast) var(--ease-out);z-index:100}.dax-caption-toggle.visible{opacity:1;visibility:visible;pointer-events:auto}\n";
+var styles = ":root{--duration-fast: 0.15s;--duration-normal: 0.3s;--duration-slow: 0.5s;--duration-clip: 0.6s;--duration-fade: 0.6s;--ease-default: ease;--ease-in-out: ease-in-out;--ease-out: ease-out}@media(prefers-reduced-motion: reduce){:root{--duration-fast: 0s;--duration-normal: 0s;--duration-slow: 0s;--duration-clip: 0s;--duration-fade: 0s}}dax-carousel{display:block;position:relative;width:100%;height:100%;z-index:1;background-color:#000}dax-carousel .material-symbols-sharp{font-family:\"Material Symbols Sharp\"}dax-carousel>.dax-slides{width:100%;height:100%;margin:0;padding:0;list-style:none}dax-carousel .dax-slide{position:absolute;width:100%;height:inherit;z-index:0;opacity:0;visibility:hidden;pointer-events:none;transition:opacity var(--duration-fade) var(--ease-in-out),visibility var(--duration-fade) var(--ease-in-out)}dax-carousel .dax-slide figcaption,dax-carousel .dax-slide .dax-caption-close{pointer-events:none}dax-carousel .dax-slide.dax-active{z-index:1;opacity:1;visibility:visible;pointer-events:auto;cursor:pointer}dax-carousel .dax-slide.dax-active figcaption{pointer-events:auto}dax-carousel .dax-slide.dax-active .dax-caption-close{pointer-events:auto}dax-carousel .dax-slide figure{display:flex;align-items:center;justify-content:center;width:100%;height:100%}dax-carousel .dax-slide img{width:auto;max-width:100%;height:100%;max-height:100%;object-fit:contain}dax-carousel .dax-slide figcaption{position:relative;display:block;box-sizing:border-box;max-height:33.33vh;overflow-y:auto;overflow-x:hidden;padding:16px;text-align:left;overflow-wrap:anywhere;margin:0;color:#000;background:#fff;box-shadow:4px 4px 0 rgba(0,0,0,.2)}dax-carousel .dax-slide figcaption .subject{font-weight:700;padding:0 10px 5px 0}dax-carousel .dax-slide figcaption p{padding-right:calc(42px + 8px)}dax-carousel .dax-slide figcaption .location{font-style:italic}dax-carousel .dax-slide figcaption .dax-caption-close{position:absolute;top:0;right:0;z-index:1;display:flex;align-items:center;justify-content:center;background:#fff;border:none;cursor:pointer;padding:8px 6px;color:#000}dax-carousel .dax-slide figcaption .dax-caption-close:hover{background:#666;color:#fff}dax-carousel .dax-slide figcaption .dax-caption-close:focus-visible{outline:1px solid #000;outline-offset:-1px}dax-carousel .dax-slide figcaption .dax-caption-close .material-symbols-sharp{font-size:24px;font-family:\"Material Symbols Sharp\";font-weight:400;font-style:normal;font-variation-settings:\"FILL\" 0,\"wght\" 400,\"GRAD\" 0,\"opsz\" 48;display:inline-block}dax-carousel .dax-slide figure{flex-direction:row}dax-carousel .dax-slide img{height:100%;max-height:100%}dax-carousel .dax-slide figcaption{position:absolute;bottom:calc(42px + 24px*2);left:auto;right:24px;max-height:50%;width:50%;height:auto;background:hsla(0,0%,100%,.5);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}dax-carousel .dax-control{display:flex;align-items:center;justify-content:center;border-radius:50%;cursor:pointer;transition:background var(--duration-fast) var(--ease-default),color var(--duration-fast) var(--ease-default);border:1px solid #000;background:#fff;color:#000;width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;font-size:24px}dax-carousel .dax-control--button:hover,dax-carousel .dax-control--button:active{background-color:#333;color:#fff}dax-carousel .dax-control--counter{font-size:14px;cursor:default;pointer-events:none}dax-carousel .dax-carousel-controls{display:flex;justify-content:flex-end;align-items:center;gap:12px;width:100%;position:absolute;padding:0 calc(24px*2);bottom:24px;pointer-events:none;opacity:0;transform:translateY(0);transition:opacity var(--duration-fast) var(--ease-default),transform var(--duration-normal) var(--ease-out);z-index:100}dax-carousel .dax-carousel-controls .dax-prev,dax-carousel .dax-carousel-controls .dax-next,dax-carousel .dax-carousel-controls .dax-play-pause{pointer-events:auto}dax-carousel.show-controls .dax-carousel-controls{opacity:1}dax-carousel.fullscreen{padding:0;position:fixed;inset:0;z-index:1;background:#000}dax-carousel.fullscreen .dax-slides{height:100%}dax-carousel.fullscreen .dax-slide{height:100%;display:flex;align-items:center;justify-content:center}dax-carousel.fullscreen .dax-slide img,dax-carousel.fullscreen .dax-slide picture{display:block;object-fit:cover;height:100vh;max-height:none;width:100vw}dax-carousel.no-controls .dax-carousel-controls{display:none}dax-sidebar[data-nav-open=false]+main[data-gallery-context] dax-carousel .dax-carousel-controls{transform:translateY(100%);opacity:0;pointer-events:none}@media(max-width: 810px){[data-gallery-context] dax-carousel{flex:1;min-height:0;padding-top:0}dax-carousel .dax-carousel-controls,dax-carousel figcaption .dax-caption-close,.dax-caption-toggle{display:none}dax-carousel .dax-slide{display:flex;flex-direction:column;height:100%}dax-carousel .dax-slide figure{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}dax-carousel .dax-slide img{flex-shrink:1;min-height:0;width:100%;max-width:100%;height:auto;object-fit:contain}dax-carousel .dax-slide figcaption{position:relative;bottom:auto;right:auto;width:100%;max-width:100%;background:#fff;backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:none;flex:1 1 auto;min-height:0;max-height:40vh;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-right:16px}}dax-carousel[data-caption-open=false] figcaption{opacity:0;visibility:hidden;pointer-events:none;transition:opacity var(--duration-fast) var(--ease-out),visibility var(--duration-fast) var(--ease-out)}dax-carousel[data-caption-open=true] figcaption{opacity:1;visibility:visible;pointer-events:auto;transition:opacity var(--duration-fast) var(--ease-out),visibility var(--duration-fast) var(--ease-out)}dax-carousel[data-caption-open=false] .dax-carousel-controls{opacity:0 !important;visibility:hidden;pointer-events:none}.dax-caption-toggle{position:absolute;bottom:24px;right:calc(24px*2);opacity:0;visibility:hidden;pointer-events:none;transition:opacity var(--duration-fast) var(--ease-out),visibility var(--duration-fast) var(--ease-out);z-index:100}.dax-caption-toggle.visible{opacity:1;visibility:visible;pointer-events:auto}\n";
 
-var DEFAULT_INTERVAL = 9995000;
-var CONTROLS_FADE_INTERVAL = 9992500;
+var DEFAULT_INTERVAL = 4000;
+var CONTROLS_FADE_INTERVAL = 2500;
 var CAPTION_AUTO_HIDE_DELAY_MS = 5000;
 
 // Swipe detection thresholds
@@ -287,18 +287,19 @@ var REF_SELECTORS = {
   nextButton: '.dax-next',
   playPauseButton: '.dax-play-pause',
   imageCounter: '.dax-image-counter',
-  captionCloseButton: '.dax-caption-close',
   captionToggleButton: '.dax-caption-toggle'
 };
 var _state = /*#__PURE__*/new WeakMap();
 var _refs = /*#__PURE__*/new WeakMap();
 var _DaxCarousel_brand = /*#__PURE__*/new WeakSet();
 var DaxCarousel = /*#__PURE__*/function (_BaseComponent) {
-  // Lifecycle methods
   function DaxCarousel() {
     var _this;
     _classCallCheck(this, DaxCarousel);
-    _this = _callSuper(this, DaxCarousel);
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+    _this = _callSuper(this, DaxCarousel, [].concat(args));
     // Private methods
     _classPrivateMethodInitSpec(_this, _DaxCarousel_brand);
     // Private state
@@ -310,6 +311,7 @@ var DaxCarousel = /*#__PURE__*/function (_BaseComponent) {
       currentIndex: 0,
       timer: null,
       controlsTimer: null,
+      controlsVisible: false,
       wheelLock: false,
       slides: [],
       isCaptionOpen: true,
@@ -320,16 +322,17 @@ var DaxCarousel = /*#__PURE__*/function (_BaseComponent) {
       touchStartTime: 0
     });
     _classPrivateFieldInitSpec(_this, _refs, {});
-    _classPrivateFieldGet2(_state, _this).intervalMs = _this.getNumberAttr('interval', DEFAULT_INTERVAL);
-    _classPrivateFieldGet2(_state, _this).autoplay = _this.getBooleanAttr('autoplay');
-    _classPrivateFieldGet2(_state, _this).fullscreen = _this.hasAttribute('fullscreen');
-    _classPrivateFieldGet2(_state, _this).noControls = _this.hasAttribute('no-controls');
     return _this;
   }
   _inherits(DaxCarousel, _BaseComponent);
   return _createClass(DaxCarousel, [{
     key: "connectedCallback",
     value: function connectedCallback() {
+      // Read attributes here (not constructor) per custom-elements spec
+      _classPrivateFieldGet2(_state, this).intervalMs = this.getNumberAttr('interval', DEFAULT_INTERVAL);
+      _classPrivateFieldGet2(_state, this).autoplay = this.getBooleanAttr('autoplay');
+      _classPrivateFieldGet2(_state, this).fullscreen = this.hasAttribute('fullscreen');
+      _classPrivateFieldGet2(_state, this).noControls = this.hasAttribute('no-controls');
       this.initStyles();
       if (_classPrivateFieldGet2(_state, this).fullscreen) {
         this.classList.add('fullscreen');
@@ -372,30 +375,24 @@ function _initControls() {
 }
 function _initCaptionToggle() {
   var _this2 = this;
-  // Inject close button into each figcaption
+  // Inject close button into each figcaption and bind listener immediately
   var figcaptions = this.querySelectorAll('figcaption');
   figcaptions.forEach(function (figcaption) {
     var closeTemplate = document.createElement('template');
     closeTemplate.innerHTML = CAPTION_CLOSE_TEMPLATE;
-    figcaption.insertBefore(closeTemplate.content.cloneNode(true), figcaption.firstChild);
+    var closeBtn = closeTemplate.content.firstElementChild;
+    _this2.addManagedListener(closeBtn, 'click', function (e) {
+      e.stopPropagation();
+      _assertClassBrand(_DaxCarousel_brand, _this2, _setCaptionOpen).call(_this2, false);
+    });
+    figcaption.insertBefore(closeBtn, figcaption.firstChild);
   });
 
   // Add info toggle button to carousel (positioned same as controls)
   var toggleTemplate = document.createElement('template');
   toggleTemplate.innerHTML = CAPTION_TOGGLE_TEMPLATE;
   this.appendChild(toggleTemplate.content.cloneNode(true));
-
-  // Store refs
-  _classPrivateFieldGet2(_refs, this).captionCloseButtons = this.querySelectorAll(REF_SELECTORS.captionCloseButton);
   _classPrivateFieldGet2(_refs, this).captionToggleButton = this.querySelector(REF_SELECTORS.captionToggleButton);
-
-  // Attach event listeners for caption toggle
-  _classPrivateFieldGet2(_refs, this).captionCloseButtons.forEach(function (btn) {
-    _this2.addManagedListener(btn, 'click', function (e) {
-      e.stopPropagation();
-      _assertClassBrand(_DaxCarousel_brand, _this2, _setCaptionOpen).call(_this2, false);
-    });
-  });
   if (_classPrivateFieldGet2(_refs, this).captionToggleButton) {
     this.addManagedListener(_classPrivateFieldGet2(_refs, this).captionToggleButton, 'click', function (e) {
       e.stopPropagation();
@@ -525,15 +522,8 @@ function _setActive(index) {
   if (nextSlide) {
     nextSlide.classList.add('dax-active');
     nextSlide.setAttribute('aria-hidden', 'false');
-    _assertClassBrand(_DaxCarousel_brand, this, _updateUrl).call(this, nextIndex);
     _assertClassBrand(_DaxCarousel_brand, this, _updateImageCounter).call(this, nextIndex);
   }
-
-  // Update dots
-  // const dots = Array.from(this.#refs.dotsContainer.children);
-  // dots[currentIndex]?.classList.remove('active');
-  // dots[nextIndex]?.classList.add('active');
-
   _classPrivateFieldGet2(_state, this).currentIndex = nextIndex;
 }
 function _attachEventListeners() {
@@ -544,14 +534,17 @@ function _attachEventListeners() {
     playPauseButton = _classPrivateFieldGet5.playPauseButton;
   this.addManagedListener(prevButton, 'click', function () {
     _assertClassBrand(_DaxCarousel_brand, _this3, _prev).call(_this3);
-    if (_classPrivateFieldGet2(_state, _this3).timer) _assertClassBrand(_DaxCarousel_brand, _this3, _restartTimer).call(_this3);
+    _assertClassBrand(_DaxCarousel_brand, _this3, _updateUrl).call(_this3, _classPrivateFieldGet2(_state, _this3).currentIndex);
+    _assertClassBrand(_DaxCarousel_brand, _this3, _maintainAutoplayAfterManualNavigation).call(_this3);
   });
   this.addManagedListener(nextButton, 'click', function () {
     _assertClassBrand(_DaxCarousel_brand, _this3, _next).call(_this3);
-    if (_classPrivateFieldGet2(_state, _this3).timer) _assertClassBrand(_DaxCarousel_brand, _this3, _restartTimer).call(_this3);
+    _assertClassBrand(_DaxCarousel_brand, _this3, _updateUrl).call(_this3, _classPrivateFieldGet2(_state, _this3).currentIndex);
+    _assertClassBrand(_DaxCarousel_brand, _this3, _maintainAutoplayAfterManualNavigation).call(_this3);
   });
   this.addManagedListener(playPauseButton, 'click', function () {
     if (_classPrivateFieldGet2(_state, _this3).timer) {
+      _classPrivateFieldGet2(_state, _this3).autoplay = false;
       _assertClassBrand(_DaxCarousel_brand, _this3, _stop).call(_this3);
     } else {
       // Advance to next slide then start autoplay
@@ -561,8 +554,10 @@ function _attachEventListeners() {
   });
 
   // Show controls on mouse move, fade out after timeout
+  // mousemove fires at ~60fps; use a dirty flag so we only schedule
+  // the fade-out timeout once per visibility cycle.
   this.addManagedListener(this, 'mousemove', function () {
-    return _assertClassBrand(_DaxCarousel_brand, _this3, _showControls).call(_this3);
+    if (!_classPrivateFieldGet2(_state, _this3).controlsVisible) _assertClassBrand(_DaxCarousel_brand, _this3, _showControls).call(_this3);
   });
   this.addManagedListener(this, 'mouseenter', function () {
     return _assertClassBrand(_DaxCarousel_brand, _this3, _showControls).call(_this3);
@@ -572,15 +567,20 @@ function _attachEventListeners() {
   this.addManagedListener(document, 'keydown', function (event) {
     if (event.key === 'ArrowLeft') {
       _assertClassBrand(_DaxCarousel_brand, _this3, _prev).call(_this3);
+      _assertClassBrand(_DaxCarousel_brand, _this3, _updateUrl).call(_this3, _classPrivateFieldGet2(_state, _this3).currentIndex);
+      _assertClassBrand(_DaxCarousel_brand, _this3, _maintainAutoplayAfterManualNavigation).call(_this3);
       _assertClassBrand(_DaxCarousel_brand, _this3, _showControls).call(_this3);
     }
     if (event.key === 'ArrowRight') {
       _assertClassBrand(_DaxCarousel_brand, _this3, _next).call(_this3);
+      _assertClassBrand(_DaxCarousel_brand, _this3, _updateUrl).call(_this3, _classPrivateFieldGet2(_state, _this3).currentIndex);
+      _assertClassBrand(_DaxCarousel_brand, _this3, _maintainAutoplayAfterManualNavigation).call(_this3);
       _assertClassBrand(_DaxCarousel_brand, _this3, _showControls).call(_this3);
     }
     if (event.key === ' ') {
       event.preventDefault();
       if (_classPrivateFieldGet2(_state, _this3).timer) {
+        _classPrivateFieldGet2(_state, _this3).autoplay = false;
         _assertClassBrand(_DaxCarousel_brand, _this3, _stop).call(_this3);
       } else {
         _assertClassBrand(_DaxCarousel_brand, _this3, _next).call(_this3);
@@ -636,9 +636,10 @@ function _attachEventListeners() {
     }
     _assertClassBrand(_DaxCarousel_brand, _this3, _showControls).call(_this3);
 
-    // Stop autoplay on manual navigation
-    if (didNavigate && _classPrivateFieldGet2(_state, _this3).timer) {
-      _assertClassBrand(_DaxCarousel_brand, _this3, _stop).call(_this3);
+    // Update URL and restart autoplay on manual navigation
+    if (didNavigate) {
+      _assertClassBrand(_DaxCarousel_brand, _this3, _updateUrl).call(_this3, _classPrivateFieldGet2(_state, _this3).currentIndex);
+      _assertClassBrand(_DaxCarousel_brand, _this3, _maintainAutoplayAfterManualNavigation).call(_this3);
     }
   });
 
@@ -648,6 +649,7 @@ function _attachEventListeners() {
 function _showControls() {
   var _this4 = this;
   this.classList.add('show-controls');
+  _classPrivateFieldGet2(_state, this).controlsVisible = true;
 
   // If caption is closed, show the info toggle button
   if (!_classPrivateFieldGet2(_state, this).isCaptionOpen) {
@@ -662,6 +664,7 @@ function _showControls() {
   // Set new timer to hide controls
   _classPrivateFieldGet2(_state, this).controlsTimer = this.setManagedTimeout(function () {
     _this4.classList.remove('show-controls');
+    _classPrivateFieldGet2(_state, _this4).controlsVisible = false;
   }, CONTROLS_FADE_INTERVAL);
 }
 function _handleWheel(event) {
@@ -684,11 +687,10 @@ function _handleWheel(event) {
     _assertClassBrand(_DaxCarousel_brand, this, _prev).call(this);
   }
   _assertClassBrand(_DaxCarousel_brand, this, _showControls).call(this);
+  _assertClassBrand(_DaxCarousel_brand, this, _updateUrl).call(this, _classPrivateFieldGet2(_state, this).currentIndex);
 
-  // Stop autoplay on manual scroll
-  if (_classPrivateFieldGet2(_state, this).timer) {
-    _assertClassBrand(_DaxCarousel_brand, this, _stop).call(this);
-  }
+  // Restart autoplay on manual scroll if active
+  _assertClassBrand(_DaxCarousel_brand, this, _maintainAutoplayAfterManualNavigation).call(this);
 
   // Release lock after delay
   this.setManagedTimeout(function () {
@@ -726,11 +728,10 @@ function _handleTouchEnd(event) {
     // Swipe right = previous slide
     _assertClassBrand(_DaxCarousel_brand, this, _prev).call(this);
   }
+  _assertClassBrand(_DaxCarousel_brand, this, _updateUrl).call(this, _classPrivateFieldGet2(_state, this).currentIndex);
 
-  // Stop autoplay on manual swipe
-  if (_classPrivateFieldGet2(_state, this).timer) {
-    _assertClassBrand(_DaxCarousel_brand, this, _stop).call(this);
-  }
+  // Restart autoplay on manual swipe if active
+  _assertClassBrand(_DaxCarousel_brand, this, _maintainAutoplayAfterManualNavigation).call(this);
 }
 function _next() {
   _assertClassBrand(_DaxCarousel_brand, this, _setActive).call(this, _classPrivateFieldGet2(_state, this).currentIndex + 1);
@@ -738,16 +739,19 @@ function _next() {
 function _prev() {
   _assertClassBrand(_DaxCarousel_brand, this, _setActive).call(this, _classPrivateFieldGet2(_state, this).currentIndex - 1);
 }
+function _advance() {
+  _assertClassBrand(_DaxCarousel_brand, this, _next).call(this);
+  this.dispatchEvent(new CustomEvent('dax-carousel-advance', {
+    bubbles: true,
+    composed: true
+  }));
+}
 function _start() {
   var _this6 = this;
   var isInitial = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
   if (_classPrivateFieldGet2(_state, this).timer) return;
   _classPrivateFieldGet2(_state, this).timer = this.setManagedInterval(function () {
-    _assertClassBrand(_DaxCarousel_brand, _this6, _next).call(_this6);
-    _this6.dispatchEvent(new CustomEvent('dax-carousel-advance', {
-      bubbles: true,
-      composed: true
-    }));
+    return _assertClassBrand(_DaxCarousel_brand, _this6, _advance).call(_this6);
   }, _classPrivateFieldGet2(_state, this).intervalMs);
   _classPrivateFieldGet2(_state, this).autoplay = true;
   _assertClassBrand(_DaxCarousel_brand, this, _updatePlayPauseLabel).call(this);
@@ -763,13 +767,23 @@ function _stop() {
   if (!_classPrivateFieldGet2(_state, this).timer) return;
   this.clearManagedInterval(_classPrivateFieldGet2(_state, this).timer);
   _classPrivateFieldGet2(_state, this).timer = null;
-  _classPrivateFieldGet2(_state, this).autoplay = false;
   _assertClassBrand(_DaxCarousel_brand, this, _updatePlayPauseLabel).call(this);
 }
-function _restartTimer() {
-  if (!_classPrivateFieldGet2(_state, this).timer) return;
-  _assertClassBrand(_DaxCarousel_brand, this, _stop).call(this);
-  _assertClassBrand(_DaxCarousel_brand, this, _start).call(this);
+function _maintainAutoplayAfterManualNavigation() {
+  var _this7 = this;
+  if (!_classPrivateFieldGet2(_state, this).autoplay) return;
+
+  // Unconditionally clear any existing timer and start fresh.
+  // Avoids guard-clause gaps where the interval could expire
+  // between the autoplay check and the restart attempt.
+  if (_classPrivateFieldGet2(_state, this).timer) {
+    this.clearManagedInterval(_classPrivateFieldGet2(_state, this).timer);
+    _classPrivateFieldGet2(_state, this).timer = null;
+  }
+  _classPrivateFieldGet2(_state, this).timer = this.setManagedInterval(function () {
+    return _assertClassBrand(_DaxCarousel_brand, _this7, _advance).call(_this7);
+  }, _classPrivateFieldGet2(_state, this).intervalMs);
+  _assertClassBrand(_DaxCarousel_brand, this, _updatePlayPauseLabel).call(this);
 }
 function _updatePlayPauseLabel() {
   var _classPrivateFieldGet6 = _classPrivateFieldGet2(_refs, this),
@@ -790,16 +804,12 @@ function _updateImageCounter(index) {
   imageCounter.textContent = "".concat(index + 1, "/").concat(total);
 }
 function _handleAttributeChange(name, newValue) {
-  var _this7 = this;
   if (name === 'interval') {
     var parsedInterval = Number(newValue);
     var newInterval = Number.isFinite(parsedInterval) && parsedInterval > 0 ? parsedInterval : DEFAULT_INTERVAL;
     _classPrivateFieldGet2(_state, this).intervalMs = newInterval;
     if (_classPrivateFieldGet2(_state, this).timer) {
-      this.clearManagedInterval(_classPrivateFieldGet2(_state, this).timer);
-      _classPrivateFieldGet2(_state, this).timer = this.setManagedInterval(function () {
-        return _assertClassBrand(_DaxCarousel_brand, _this7, _next).call(_this7);
-      }, newInterval);
+      _assertClassBrand(_DaxCarousel_brand, this, _maintainAutoplayAfterManualNavigation).call(this);
     }
   }
 }
