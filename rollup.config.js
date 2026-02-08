@@ -7,8 +7,9 @@ const { string } = require('rollup-plugin-string');
  * Rollup configuration
  * 
  * CSS is pre-compiled by build:css before bundling.
- * JS components import the compiled CSS files from lib/components/
+ * JS components import the compiled CSS files from .build/css/
  * using rollup-plugin-string to inline them as strings.
+ * All output goes directly to dist/lib/.
  */
 
 const plugins = [
@@ -38,7 +39,7 @@ module.exports = [
     {
         input: path.resolve(__dirname, 'src/init.js'),
         output: {
-            file: path.resolve(__dirname, 'lib/init.js'),
+            file: path.resolve(__dirname, 'dist/lib/init.js'),
             format: 'iife',
             name: 'GalleryInit',
             sourcemap: true,
@@ -48,7 +49,7 @@ module.exports = [
     {
         input: path.resolve(__dirname, 'src/components/dax-carousel/dax-carousel.js'),
         output: {
-            file: path.resolve(__dirname, 'lib/components/dax-carousel/dax-carousel.js'),
+            file: path.resolve(__dirname, 'dist/lib/components/dax-carousel/dax-carousel.js'),
             format: 'esm',
             sourcemap: true,
         },
@@ -57,7 +58,7 @@ module.exports = [
     {
         input: path.resolve(__dirname, 'src/components/gallery-intro-toggle/gallery-intro-toggle.js'),
         output: {
-            file: path.resolve(__dirname, 'lib/components/gallery-intro-toggle/gallery-intro-toggle.js'),
+            file: path.resolve(__dirname, 'dist/lib/components/gallery-intro-toggle/gallery-intro-toggle.js'),
             format: 'esm',
             sourcemap: true,
         },
@@ -66,7 +67,7 @@ module.exports = [
     {
         input: path.resolve(__dirname, 'src/components/dax-nav/dax-nav.js'),
         output: {
-            file: path.resolve(__dirname, 'lib/components/dax-nav/dax-nav.js'),
+            file: path.resolve(__dirname, 'dist/lib/components/dax-nav/dax-nav.js'),
             format: 'esm',
             sourcemap: true,
         },
@@ -75,7 +76,7 @@ module.exports = [
     {
         input: path.resolve(__dirname, 'src/components/dax-sidebar/dax-sidebar.js'),
         output: {
-            file: path.resolve(__dirname, 'lib/components/dax-sidebar/dax-sidebar.js'),
+            file: path.resolve(__dirname, 'dist/lib/components/dax-sidebar/dax-sidebar.js'),
             format: 'esm',
             sourcemap: true,
         },
