@@ -39,6 +39,27 @@ dax-carousel {
     background-color: $color-black;
 }
 
+// Fullscreen mode: match the .fullscreen class that JS adds in connectedCallback
+// On initial load, the attribute exists but the class hasn't been added yet.
+// Without this, the carousel has height:100% but <main> has no height,
+// so the carousel collapses to intrinsic image size until JS runs.
+dax-carousel[fullscreen] {
+    position: fixed;
+    inset: 0;
+    z-index: $z-index-base;
+
+    > ul:not(.dax-slides) > li:first-child {
+        img,
+        picture {
+            display: block;
+            object-fit: cover;
+            height: 100vh;
+            max-height: none;
+            width: 100vw;
+        }
+    }
+}
+
 // Hide undefined custom element completely until JS registers it
 // This is the nuclear option - prevents any FOUC at cost of showing nothing
 // dax-carousel:not(:defined) {
