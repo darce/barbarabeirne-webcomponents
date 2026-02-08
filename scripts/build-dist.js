@@ -21,6 +21,7 @@ const DIST = path.join(ROOT, 'dist');
 // Files / directories to copy into dist (HTML pages + static assets only)
 const COPY_LIST = [
     'index.html',
+    'contact.html',
     'exhibitions.html',
     'press.html',
     'bio.html',
