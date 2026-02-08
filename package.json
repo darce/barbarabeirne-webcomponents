@@ -9,7 +9,10 @@
     "build:babel": "babel src -d lib",
     "build:bundle": "rollup -c",
     "build:css": "node scripts/build-css.js",
-    "build": "npm run build:css && npm run build:babel && npm run build:bundle"
+    "build:webp": "node scripts/build-webp.js",
+    "build:webp:clean": "node scripts/build-webp.js --clean",
+    "build": "node scripts/build-dist.js",
+    "build:all": "npm run build:webp && npm run build"
   },
   "author": "",
   "license": "ISC",
@@ -22,6 +25,7 @@
     "eslint": "^8.2.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.32.0",
+    "jsdom": "^28.0.0",
     "rollup": "^4.53.2",
     "rollup-plugin-string": "^3.0.0",
     "sass": "^1.96.0"
