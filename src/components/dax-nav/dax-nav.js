@@ -29,6 +29,22 @@ class DaxNav extends BaseComponent(HTMLElement) {
         const projectList = this.querySelector('.dax-nav-projects, .project-list');
         if (projectList) {
             projectList.classList.add('dax-nav-projects');
+
+            // "Projects" link: set flag so menu stays open on the destination page
+            const projectsParentLi = projectList.closest('li');
+            const projectsLink = projectsParentLi?.querySelector(':scope > a');
+            if (projectsLink) {
+                this.addManagedListener(projectsLink, 'click', () => {
+                    sessionStorage.setItem('dax-nav-keep-open', 'true');
+                });
+            }
+
+            // Individual project links: clear flag so menu closes on destination
+            projectList.querySelectorAll('a[href]').forEach((link) => {
+                this.addManagedListener(link, 'click', () => {
+                    sessionStorage.removeItem('dax-nav-keep-open');
+                });
+            });
         }
 
         this.querySelectorAll('.dax-nav-menu a[href], .dax-nav-projects a[href]').forEach((link) => {

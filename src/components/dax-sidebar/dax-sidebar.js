@@ -84,12 +84,18 @@ class DaxSidebar extends BaseComponent(HTMLElement) {
     }
 
     #initMenuState() {
-        const nav = this.#getNavElement();
-        const navState = nav?.getAttribute('data-open');
-        const hasExplicitState = navState === 'true' || navState === 'false';
-        const isDesktop = this.#isDesktopView();
+        const keepOpen = sessionStorage.getItem('dax-nav-keep-open');
+        if (keepOpen) {
+            sessionStorage.removeItem('dax-nav-keep-open');
+            this.#isMenuOpen = true;
+        } else {
+            const nav = this.#getNavElement();
+            const navState = nav?.getAttribute('data-open');
+            const hasExplicitState = navState === 'true' || navState === 'false';
+            const isDesktop = this.#isDesktopView();
 
-        this.#isMenuOpen = hasExplicitState ? navState === 'true' : isDesktop;
+            this.#isMenuOpen = hasExplicitState ? navState === 'true' : isDesktop;
+        }
         this.#applyMenuState();
         this.#emitMenuToggle('init');
     }
