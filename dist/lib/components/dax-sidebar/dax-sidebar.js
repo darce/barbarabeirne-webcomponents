@@ -354,11 +354,17 @@ function _isDesktopView() {
   return window.innerWidth > _assertClassBrand(_DaxSidebar_brand, this, _getNavBreakpoint).call(this);
 }
 function _initMenuState() {
-  var nav = _assertClassBrand(_DaxSidebar_brand, this, _getNavElement).call(this);
-  var navState = nav === null || nav === void 0 ? void 0 : nav.getAttribute('data-open');
-  var hasExplicitState = navState === 'true' || navState === 'false';
-  var isDesktop = _assertClassBrand(_DaxSidebar_brand, this, _isDesktopView).call(this);
-  _classPrivateFieldSet2(_isMenuOpen, this, hasExplicitState ? navState === 'true' : isDesktop);
+  var keepOpen = sessionStorage.getItem('dax-nav-keep-open');
+  if (keepOpen) {
+    sessionStorage.removeItem('dax-nav-keep-open');
+    _classPrivateFieldSet2(_isMenuOpen, this, true);
+  } else {
+    var nav = _assertClassBrand(_DaxSidebar_brand, this, _getNavElement).call(this);
+    var navState = nav === null || nav === void 0 ? void 0 : nav.getAttribute('data-open');
+    var hasExplicitState = navState === 'true' || navState === 'false';
+    var isDesktop = _assertClassBrand(_DaxSidebar_brand, this, _isDesktopView).call(this);
+    _classPrivateFieldSet2(_isMenuOpen, this, hasExplicitState ? navState === 'true' : isDesktop);
+  }
   _assertClassBrand(_DaxSidebar_brand, this, _applyMenuState).call(this);
   _assertClassBrand(_DaxSidebar_brand, this, _emitMenuToggle).call(this, 'init');
 }

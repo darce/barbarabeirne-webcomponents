@@ -298,6 +298,7 @@ var DaxNav = /*#__PURE__*/function (_BaseComponent) {
   }]);
 }(BaseComponent(HTMLElement));
 function _initDOM() {
+  var _this2 = this;
   // Find and enhance existing menu list
   var existingMenu = this.querySelector(':scope > ul');
   if (existingMenu) {
@@ -309,6 +310,22 @@ function _initDOM() {
   var projectList = this.querySelector('.dax-nav-projects, .project-list');
   if (projectList) {
     projectList.classList.add('dax-nav-projects');
+
+    // "Projects" link: set flag so menu stays open on the destination page
+    var projectsParentLi = projectList.closest('li');
+    var projectsLink = projectsParentLi === null || projectsParentLi === void 0 ? void 0 : projectsParentLi.querySelector(':scope > a');
+    if (projectsLink) {
+      this.addManagedListener(projectsLink, 'click', function () {
+        sessionStorage.setItem('dax-nav-keep-open', 'true');
+      });
+    }
+
+    // Individual project links: clear flag so menu closes on destination
+    projectList.querySelectorAll('a[href]').forEach(function (link) {
+      _this2.addManagedListener(link, 'click', function () {
+        sessionStorage.removeItem('dax-nav-keep-open');
+      });
+    });
   }
   this.querySelectorAll('.dax-nav-menu a[href], .dax-nav-projects a[href]').forEach(function (link) {
     if (!link.hasAttribute('tabindex')) {

@@ -384,6 +384,10 @@ function _initCaptionToggle() {
     _this2.addManagedListener(closeBtn, 'click', function (e) {
       e.stopPropagation();
       _assertClassBrand(_DaxCarousel_brand, _this2, _setCaptionOpen).call(_this2, false);
+      _this2.dispatchEvent(new CustomEvent('dax-caption-close', {
+        bubbles: true,
+        composed: true
+      }));
     });
     figcaption.insertBefore(closeBtn, figcaption.firstChild);
   });
