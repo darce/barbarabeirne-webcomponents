@@ -58,11 +58,29 @@ dax-sidebar[data-nav-open="false"]+main[data-gallery-context] .gallery-header {
   opacity: 0;
 }
 
+// Override: keep header visible when it contains the intro toggle button
+dax-sidebar[data-nav-open="false"]+main[data-gallery-context] .gallery-header:has(gallery-intro-toggle) {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+  transition: none !important; // Prevent layout shift on initial load
+}
+
+// Collapsed state — must out-specifiy the :has() override above
+dax-sidebar[data-nav-open="false"]+main[data-gallery-context] .gallery-header:has(gallery-intro-toggle)[data-header-collapsed] {
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform $duration-normal $ease-out,
+    opacity $duration-normal $ease-out;
+}
+
 // =============================================================================
 // MOBILE STYLES
 // All mobile overrides consolidated below
 // =============================================================================
 @media (max-width: $breakpoint-nav) {
+
   // Position gallery-header below masthead on all pages
   .gallery-header {
     margin-top: $dax-sidebar-masthead-height;

@@ -19,6 +19,7 @@ class GalleryIntroToggle extends BaseComponent(HTMLElement) {
         isOpen: false,
         galleryContainer: null,
         introSection: null,
+        headerElement: null,
     };
 
     // Lifecycle methods
@@ -41,6 +42,7 @@ class GalleryIntroToggle extends BaseComponent(HTMLElement) {
 
         this.#state.galleryContainer = galleryContainer;
         this.#state.introSection = introSection;
+        this.#state.headerElement = this.closest('header.gallery-header');
         this.#state.isOpen = isOpen;
 
         if (introSection) {
@@ -61,12 +63,17 @@ class GalleryIntroToggle extends BaseComponent(HTMLElement) {
                 this.#toggle();
             }
         });
+
+        // Collapse the gallery header when a carousel caption is dismissed
+        this.addManagedListener(document, 'dax-caption-close', () => {
+            this.#state.headerElement?.setAttribute('data-header-collapsed', '');
+        });
     }
 
     #setOpen(isOpen) {
         if (this.#state.isOpen === isOpen) return;
 
-        const { galleryContainer, introSection } = this.#state;
+        const { galleryContainer, introSection, headerElement } = this.#state;
         this.#state.isOpen = isOpen;
 
         galleryContainer?.classList.toggle('is-intro-open', isOpen);
@@ -75,6 +82,11 @@ class GalleryIntroToggle extends BaseComponent(HTMLElement) {
 
         if (introSection) {
             introSection.setAttribute('aria-hidden', String(!isOpen));
+        }
+
+        // Re-expand the header when the intro is opened
+        if (isOpen) {
+            headerElement?.removeAttribute('data-header-collapsed');
         }
     }
 

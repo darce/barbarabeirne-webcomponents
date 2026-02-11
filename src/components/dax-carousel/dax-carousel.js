@@ -132,6 +132,10 @@ class DaxCarousel extends BaseComponent(HTMLElement) {
             this.addManagedListener(closeBtn, 'click', (e) => {
                 e.stopPropagation();
                 this.#setCaptionOpen(false);
+                this.dispatchEvent(new CustomEvent('dax-caption-close', {
+                    bubbles: true,
+                    composed: true,
+                }));
             });
             figcaption.insertBefore(closeBtn, figcaption.firstChild);
         });

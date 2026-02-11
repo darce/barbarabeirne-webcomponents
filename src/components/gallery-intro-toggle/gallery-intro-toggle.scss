@@ -22,6 +22,11 @@ dax-sidebar[data-nav-open="false"]+main[data-gallery-context] gallery-intro-togg
   pointer-events: none;
 }
 
+// Re-enable when header is visible (contains toggle) and not collapsed
+dax-sidebar[data-nav-open="false"]+main[data-gallery-context] .gallery-header:not([data-header-collapsed]) gallery-intro-toggle {
+  pointer-events: auto;
+}
+
 // ============================================================================
 // TOGGLE BUTTON (gallery-intro-toggle element)
 // ============================================================================
@@ -123,6 +128,7 @@ gallery-intro-toggle {
 // All mobile overrides consolidated below
 // =============================================================================
 @media (max-width: $breakpoint-nav) {
+
   // Re-enable pointer events when nav is closed on mobile
   dax-sidebar[data-nav-open="false"]+main[data-gallery-context] gallery-intro-toggle {
     pointer-events: auto;
